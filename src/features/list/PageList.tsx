@@ -13,7 +13,7 @@ import { RightSidebar } from "./containers/RightSidebar";
 import { Snackbar } from "../../components/Snackbar";
 import { CSSTransition } from "react-transition-group";
 import { ipcRenderer } from "electron";
-import { getAllTags, selectAllItems, upsertMany } from "./items/itemsSlice";
+import { getAllTags, selectAllItems, upsertMany, getImagesChanges } from "./items/itemsSlice";
 import { selectAllGroups } from "./groups/groupsSlice";
 import { createSelector } from "@reduxjs/toolkit";
 
@@ -42,6 +42,7 @@ export function PageList() {
     const selectedTags = useSelector(getSelectedTags);
     const snackbarMessage = useSelector(getSnackbar);
     const isFirstRun = useRef(true);
+    const itemsImageChanges = useSelector(getImagesChanges);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [itemInDisplay, setItemInDisplay] = useState('');
     const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
@@ -71,7 +72,7 @@ export function PageList() {
             dispatch(setSnackbar(['Editing list', 'text-primary']));
         }
         else if (!isEditing) {
-            ipcRenderer.invoke('save-list', list, listTitleText);
+            ipcRenderer.invoke('save-list', list, listTitleText, itemsImageChanges);
         }
     }, [isEditing]);
 

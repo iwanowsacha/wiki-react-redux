@@ -7,6 +7,7 @@ import { getDocuments, setSnackbar } from "../../general/generalSlice";
 import { getSelectedTags, resetSelectedTags } from "../tags/tagsSlice";
 import { addItem, selectById, selectIds, updateItem } from "./itemsSlice";
 import { getBrowseImage, setBrowseImage } from "../listSlice";
+import { basename } from "path";
 
 export function ListForm(props: any) {
     const dispatch = useDispatch();
@@ -69,6 +70,7 @@ export function ListForm(props: any) {
 
     const updateCurrentItem = (updatedItem: any) => {
         dispatch(setSnackbar(['Item updated correctly', 'text-primary']));
+        if (item.image == basename(updatedItem.image)) updatedItem.image = item.image;
         dispatch(updateItem({
             id: item.title,
             changes: updatedItem

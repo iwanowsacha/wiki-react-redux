@@ -4,6 +4,9 @@ import listReducer from "../features/list/listSlice";
 import listItemReducer from "../features/list/items/itemsSlice";
 import tagGroupReducer from "../features/list/groups/groupsSlice";
 import tagReducer from "../features/list/tags/tagsSlice";
+import { enableMapSet } from 'immer'
+
+enableMapSet();
 
 const listsReducer = combineReducers({
     list: listReducer,

@@ -10,14 +10,14 @@
  */
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import path, { resolve } from 'path';
+import path from 'path';
 import { app, BrowserWindow, ipcMain, Menu, MenuItem, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import MenuBuilder from './menu';
-import {loadDocuments} from './directories';
 import * as fs from 'fs-extra';
-import { rejects } from 'assert';
+import MenuBuilder from './menu';
+import { loadDocuments, DIRECTORIES } from './directories';
+import { DirectoriesList, List, ListItemImageChanges } from './types';
 
 export default class AppUpdater {
   constructor() {
@@ -28,7 +28,7 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
-let documents = {};
+let documents: DirectoriesList = {};
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -80,7 +80,9 @@ const createWindow = async () => {
       nodeIntegration: true,
     },
   });
-  loadDocuments().then((obj: any) => {
+
+
+  loadDocuments().then((obj: {[key: string]: Array<string>}) => {
     documents = obj;
     mainWindow?.loadFile(`${__dirname}/index.html`);
   });
@@ -109,18 +111,21 @@ const createWindow = async () => {
   menuBuilder.buildMenu();
 
   let menu = Menu.getApplicationMenu();
+  
   menu?.append(new MenuItem({
     click: () => { 
       mainWindow?.webContents.send('new-list');
     },
     label: 'New List'
   }));
+
   menu?.append(new MenuItem({
     click: () => {
       console.log('article');
     },
     label: 'New Article'
   }))
+
   Menu.setApplicationMenu(menu);
 
   // Open urls in the user's browser
@@ -154,52 +159,68 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-// ipcMain.handle('read-document', (event, title) => {
-//   return new Promise((resolve, reject) => {
-
-//     if (documents.articles.includes(title)) {
-//       mainWindow.webContents.send('document-read', 'article');
-//     } else if (documents.lists.includes(title)) {
-//       fs.readJSON(path.join(__dirname, 'lists', title, 'list.json'))
-//       .then((obj) => {
-//         resolve({type: 'list', document: obj});
-//       }).catch(err => reject(err));
-//     }
-
-//   });
-// });
-
-ipcMain.handle('read-list', (event, title) => {
-  return new Promise((resolve, reject) => {
-    if (!title) {
-      resolve({document: {}});
-    } else if ( documents.lists.includes(title) ) {
-      fs.readJSON(path.join(__dirname, 'lists', title, 'list.json'))
-      .then((obj) => {
-        resolve({type: 'list', document: obj});
-      }).catch(err => reject(err));
-    } else {
-      reject(`List: ${title} not found`);
-    }
-  })
+ipcMain.handle('read-list', async (_event, title) => {
+  if (!title) {
+    return {document: {}};
+  } else {
+    const obj: List | undefined = await fs.readJSON(path.join(DIRECTORIES.lists, title, 'list.json')).catch(console.log);
+    return obj ? {type: 'list', document: obj} : {document: {}};
+  }
 })
 
 ipcMain.handle('documents', () => {
   return documents;
 });
 
-ipcMain.handle('save-list', (event, list, newTitle) => {
-  console.log(list.title);
-  console.log(newTitle);
+ipcMain.handle('save-list', async (_event, list: List, newTitle: string, images: ListItemImageChanges) => {
+  console.log(images.rename);
+  let previousTitle: string = list.title;
   if (newTitle && list.title != newTitle) {
     list.title = newTitle;
   }
-  list.items[0].image = "000";
+  const directoryExists: boolean = fs.existsSync(path.join(DIRECTORIES.lists, previousTitle));
+  if (directoryExists) {
+    if (newTitle) renameDocumentDirectory(previousTitle, list.title, 'lists');
+  } else {
+    createDocumentDirectory(path.join(DIRECTORIES.lists, list.title), 'images');
+  }
+  
+  manageListItemImages(images, list);
   mainWindow?.webContents.send('list-saved', list.items);
   return;
-  if (documents.lists.includes(list.title)) {
-    let json = JSON.stringify(list);
-    fs.writeFile(path.join(__dirname, 'lists', list.title, 'list.json'), json);
-    mainWindow?.webContents.send('list-saved');
-  }
+  // if (documents.lists.includes(list.title)) {
+  //   let json = JSON.stringify(list);
+  //   fs.writeFile(path.join(__dirname, 'lists', list.title, 'list.json'), json);
+  //   mainWindow?.webContents.send('list-saved');
+  // }
 });
+
+const renameDocumentDirectory = async (previousTitle: string, newTitle: string, documentType: string) => {
+  await fs.rename(path.join(__dirname, documentType, previousTitle), path.join(__dirname, documentType, newTitle));
+}
+
+const createDocumentDirectory = async (directoryPath: string, subfolder?: string) => {
+  await fs.mkdir(directoryPath);
+  if (subfolder) await fs.mkdir(path.join(directoryPath, subfolder));
+}
+
+
+const manageListItemImages = async (images: ListItemImageChanges, list: List) => {
+
+  const pathStartsWithFile = (path: string) => path.startsWith('file://') ? path.slice(7) : path;
+
+  const unlink = images.delete.map((value: string) => {
+    return fs.unlink(path.join(DIRECTORIES.lists, list.title, 'images', decodeURI(pathStartsWithFile(value)))).catch(console.log);
+  });
+  const rename = Object.entries(images.rename).map(([key, value]) => {
+    list.items[list.items.findIndex((it) => it.title == key)].image = key+path.extname(value);
+    return fs.rename(path.join(DIRECTORIES.lists, list.title, 'images', value), path.join(DIRECTORIES.lists, list.title, 'images', key+path.extname(value))).catch(console.log);
+  });
+
+  const create = Object.entries(images.new).map(([key, value]) => {
+    list.items[list.items.findIndex((it) => it.title == key)].image = key+path.extname(value);
+    return fs.copyFile(decodeURI(pathStartsWithFile(value)), path.join(DIRECTORIES.lists, list.title, 'images', key+path.extname(value))).catch();
+  })
+
+  await Promise.all([unlink, rename, create]).catch(console.log);
+}

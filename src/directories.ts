@@ -1,45 +1,37 @@
-const path = require('path');
-const fs = require('fs-extra');
+import path from 'path';
+import * as fs from 'fs-extra';
+import { DirectoriesList } from './types';
 
 
-const DIRECTORIES = {
+export const DIRECTORIES: {[key: string]: string} = {
     articles: path.join(__dirname, 'articles'),
     lists: path.join(__dirname, 'lists')
 }
 
-
-async function directoryExists(path : string) {
-    const exists = await fs.pathExists(path)
-    if (!exists) {
-        await fs.mkdir(path);
-    }
-
+const createDirectoryIfNotExists = async(path: string) => {
+    const exists = await fs.pathExists(path);
+    if (!exists) fs.mkdir(path);
 }
 
-async function prepareDirectories() {
-    const promises = Object.values(DIRECTORIES).map((path) => directoryExists(path));
-    await Promise.all(promises)
-    .catch((err) => {
-      console.log("prepareDirs -> err", err)
-    });
+const prepareDirectories = async () => {
+    const promises = Object.values(DIRECTORIES).map((path: string) => createDirectoryIfNotExists(path));
+    await Promise.all(promises).catch(console.log);
 }
 
-export async function loadDocuments() {
-    console.log(DIRECTORIES);
+export const loadDocuments = async () => {
 
-    let obj : any = {}
+    let directoriesList: DirectoriesList = {};
 
     try {
-        await prepareDirectories()
+        await prepareDirectories();
 
         for (let directory of Object.values(DIRECTORIES)) {
-            obj[directory.slice(directory.lastIndexOf('/')+1)] = await fs.readdir(directory)
+            directoriesList[directory.slice(directory.lastIndexOf('/')+1)] = await fs.readdir(directory);
         }
 
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
-
-    console.log("returning object")
-    return obj
+    
+    return directoriesList;
 }

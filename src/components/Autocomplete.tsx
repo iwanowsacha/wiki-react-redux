@@ -1,5 +1,5 @@
-import React, { useState, SyntheticEvent } from "react";
-import { TextInput } from "./UncontrolledTextInput";
+import React, { useState, SyntheticEvent } from 'react';
+import { TextInput } from './UncontrolledTextInput';
 
 export function Autocomplete(props: any) {
     const [filteredSuggestions, setFilteredSuggestions] = useState<Array<string>>([]);
