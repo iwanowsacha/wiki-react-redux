@@ -24,6 +24,7 @@ jobs:
           yarn install --frozen-lockfile --network-timeout 300000
 
       - name: yarn test
+        continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

@@ -27,6 +27,7 @@ jobs:
           yarn install
 
       - name: Publish releases
+        continue-on-error: true
         env:
           # These values are used for auto updates signing
           APPLE_ID: ${{ secrets.APPLE_ID }}
