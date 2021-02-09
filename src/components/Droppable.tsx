@@ -1,27 +1,28 @@
-import React, { ReactNode, SyntheticEvent } from "react";
+import React, { ReactNode, DragEvent } from 'react';
 
 type DroppableProps = {
-    children: ReactNode,
-    droppableId: string,
-    onDrop(e: SyntheticEvent, droppableId: string): void
-}
+  children: ReactNode;
+  droppableId: string;
+  onDrop(e: DragEvent<HTMLDivElement>, droppableId: string): void;
+};
 
-export function Droppable(props: DroppableProps) {
+export default function Droppable(props: DroppableProps) {
+  const { children } = props;
 
-    const handleDrop = (e: SyntheticEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        props.onDrop(e, props.droppableId);
-    }
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    props.onDrop(e, props.droppableId);
+  };
 
-    const handleDragOver = (e: SyntheticEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-    }
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
-    return(
-        <div onDrop={handleDrop} onDragOver={handleDragOver}>
-            {props.children}
-        </div>
-    );
+  return (
+    <div onDrop={handleDrop} onDragOver={handleDragOver}>
+      {children}
+    </div>
+  );
 }

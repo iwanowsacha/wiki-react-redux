@@ -1,32 +1,40 @@
-import React, { SyntheticEvent} from "react";
+import React, { ChangeEvent, KeyboardEvent } from 'react';
 
 type UncontrolledTextInputProps = {
-    color?: string,
-    placeholder?: string,
-    onTextChange(value: string): void,
-    onKeyDown(e: SyntheticEvent): void
+  color?: string;
+  placeholder?: string;
+  onTextChange(value: string): void;
+  onKeyDown?(e: KeyboardEvent<HTMLInputElement>): void;
 } & typeof defaultProps;
 
 const defaultProps = {
-    color: 'bg-primary',
-    placeholder: '',
-    onKeyDown(e: SyntheticEvent){console.log('key down');}
-}
+  color: 'bg-primary',
+  placeholder: '',
+  onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    console.log(`${e.key}`);
+  },
+};
 
-export function TextInput(props: UncontrolledTextInputProps) {
+export default function TextInput(props: UncontrolledTextInputProps) {
+  const { color, placeholder } = props;
 
-    const handleTextChange = (e: SyntheticEvent) => {
-        props.onTextChange(e.target.value);
-    }
+  const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
+    props.onTextChange(e.target.value);
+  };
 
-    const handleKeyDown = (e: SyntheticEvent) => {
-        props.onKeyDown(e);
-    }
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    props.onKeyDown(e);
+  };
 
-    return (
-        <input type="text" className={`h-8 w-full rounded ${props.color}`}
-        placeholder={props.placeholder} onChange={handleTextChange} onKeyDown={handleKeyDown}/>
-    );
+  return (
+    <input
+      type="text"
+      className={`h-8 w-full rounded ${color}`}
+      placeholder={placeholder}
+      onChange={handleTextChange}
+      onKeyDown={handleKeyDown}
+    />
+  );
 }
 
 TextInput.defaultProps = defaultProps;

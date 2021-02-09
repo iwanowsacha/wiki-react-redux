@@ -1,31 +1,45 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { loadList } from "../../store/loaders";
+import { createSlice } from '@reduxjs/toolkit';
+import loadList from '../../store/loaders';
+import { DirectoriesList } from '../../types';
+
+type InitialStateType = {
+  documents: DirectoriesList;
+  isEditing: boolean;
+  documentType: string;
+  snackbar: Array<string>;
+};
+
+const initialState: InitialStateType = {
+  documents: {
+    articles: [],
+    lists: [],
+  },
+  isEditing: false,
+  documentType: 'index',
+  snackbar: ['', ''],
+};
 
 export const slice = createSlice({
-    name: 'general',
-    initialState: {
-        documents: {},
-        isEditing: false,
-        documentType: 'index',
-        snackbar: ['', '']
+  name: 'general',
+  initialState,
+  reducers: {
+    loadDocuments: (state, action) => {
+      Object.assign(state.documents, action.payload);
     },
-    reducers: {
-        loadDocuments: (state, action) => {
-            Object.assign(state.documents, action.payload);
-        },
-        toggleIsEditing: state => {
-            state.isEditing = !state.isEditing;
-        },
-        setSnackbar: (state, action) => {
-            state.snackbar = action.payload;
-        }
+    toggleIsEditing: (state) => {
+      state.isEditing = !state.isEditing;
     },
-    extraReducers: (builder) => {
-        builder.addCase(loadList.fulfilled, (state, action) => {
-            state.documentType = 'list';
-            if (!action.payload.document.hasOwnProperty('title')) state.isEditing = true;
-        })
-    }
+    setSnackbar: (state, action) => {
+      state.snackbar = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(loadList.fulfilled, (state, action) => {
+      const { document } = action.payload;
+      state.documentType = 'list';
+      if (!document.hasOwnProperty('title')) state.isEditing = true;
+    });
+  },
 });
 
 export const { loadDocuments, toggleIsEditing, setSnackbar } = slice.actions;

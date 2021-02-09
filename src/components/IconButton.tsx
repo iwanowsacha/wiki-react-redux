@@ -1,25 +1,31 @@
-import React, { ReactNode, SyntheticEvent } from "react";
+import React, { ReactNode, MouseEvent } from 'react';
 
 type IconButtonProps = {
-    children: ReactNode,
-    classNames?: string,
-    onClick(text: string): void
+  children: ReactNode;
+  classNames?: string;
+  onClick(text: string): void;
 } & typeof defaultProps;
 
 const defaultProps = {
-    classNames: 'text-base text-secondary'
-}
+  classNames: 'text-base text-secondary',
+};
 
-export function IconButton(props: IconButtonProps) {
-    const handleButtonClick = (e: SyntheticEvent) => {
-        props.onClick(e.target.innerHTML);
-    }
+export default function IconButton(props: IconButtonProps) {
+  const { classNames, children } = props;
 
-    return (
-        <button className={`rounded py-1 px-2 material-icons bg-secondary ${props.classNames }`} onClick={handleButtonClick}>
-            {props.children}
-        </button>
-    );
+  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => {
+    props.onClick(e.currentTarget.innerHTML);
+  };
+
+  return (
+    <button
+      type="button"
+      className={`rounded py-1 px-2 material-icons bg-secondary ${classNames}`}
+      onClick={handleButtonClick}
+    >
+      {children}
+    </button>
+  );
 }
 
 IconButton.defaultProps = defaultProps;

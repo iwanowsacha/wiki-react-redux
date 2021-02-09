@@ -1,21 +1,31 @@
-import React, { SyntheticEvent } from "react";
+import React, { ChangeEvent } from 'react';
 
 type RadioButtonProps = {
-    group: string,
-    title: string,
-    value: string,
-    checked: boolean,
-    onChange(value: string): void
-}
+  group: string;
+  title: string;
+  value: string;
+  checked: boolean;
+  onChange(value: string): void;
+};
 
-export function RadioButton(props: RadioButtonProps) {
-    const handleOptionChange = (e: SyntheticEvent) => {
-        props.onChange(e.target.value);
-    }
-    return(
-        <label className="block">
-            <input onChange={handleOptionChange} type="radio" name={props.group} title={props.title} defaultValue={props.value} defaultChecked={props.checked} />
-            <span className="hidden md:inline text-secondary ml-2">{props.title}</span>
-        </label>
-    );
+export default function RadioButton(props: RadioButtonProps) {
+  const { group, title, value, checked } = props;
+
+  const handleOptionChange = (e: ChangeEvent<HTMLInputElement>) => {
+    props.onChange(e.target.value);
+  };
+
+  return (
+    <span className="block">
+      <input
+        onChange={handleOptionChange}
+        type="radio"
+        name={group}
+        title={title}
+        defaultValue={value}
+        defaultChecked={checked}
+      />
+      <span className="hidden md:inline text-secondary ml-2">{title}</span>
+    </span>
+  );
 }
