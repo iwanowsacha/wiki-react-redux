@@ -77,8 +77,6 @@ export default function PageList() {
   }, []);
 
   useEffect(() => {
-    console.log(isFirstRun);
-    console.log(snackbarMessage);
     if (isFirstRun.current) {
       isFirstRun.current = false;
       return;
@@ -91,12 +89,10 @@ export default function PageList() {
   }, [isEditing]);
 
   useEffect(() => {
-    console.log('snack');
     if (snackbarMessage[0]) {
       setIsSnackbarOpen(true);
       setTimeout(() => {
         setIsSnackbarOpen(false);
-        dispatch(setSnackbar(['', '']));
       }, 1000);
     }
   }, [snackbarMessage]);
@@ -124,6 +120,7 @@ export default function PageList() {
   };
 
   const handleLeftSidebarButtonClick = (id: string) => {
+    if (isShowingForm && id !== 'items') return;
     if (id === 'items') {
       setItemInDisplay('');
     }
@@ -151,6 +148,10 @@ export default function PageList() {
   const handleListTitleChange = (value: string) => {
     setListTitleText(value);
   };
+
+  const handleFormEmpty = () => {
+    setItemInDisplay('');
+  }
 
   return (
     <main className="flex relative flex-auto">
@@ -199,7 +200,7 @@ export default function PageList() {
                 <List onItemClick={handleItemClick} />
               </section>
             ) : (
-              <ListForm item={itemInDisplay} />
+              <ListForm item={itemInDisplay} onFormEmptying={handleFormEmpty}/>
             )}
             <Snackbar
               isOpen={isSnackbarOpen}

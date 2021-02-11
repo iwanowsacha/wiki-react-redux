@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { basename } from 'path';
@@ -9,7 +9,12 @@ import { getSelectedTags, resetSelectedTags } from '../tags/tagsSlice';
 import { addItem, selectById, selectIds, updateItem } from './itemsSlice';
 import { getBrowseImage, getListTitle, setBrowseImage } from '../listSlice';
 
-export default function ListForm(props: any) {
+type ListFormProps = {
+  item: string,
+  onFormEmptying(): void
+}
+
+export default function ListForm(props: ListFormProps) {
   const dispatch = useDispatch();
   const allItems = useSelector(selectIds);
   const item = useSelector((state) => selectById(state, props.item));
@@ -103,6 +108,7 @@ export default function ListForm(props: any) {
     setNewTags('');
     dispatch(resetSelectedTags());
     dispatch(setBrowseImage(''));
+    props.onFormEmptying();
   };
 
   const sanitizeLink = () => {
