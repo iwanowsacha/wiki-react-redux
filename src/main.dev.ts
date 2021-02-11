@@ -139,6 +139,8 @@ const createWindow = async () => {
     event.preventDefault();
     console.log(url);
     if (url.startsWith('local://')) {
+      const document = url.replace('local://', '');
+      if (!documents.articles.includes(document) && !documents.lists.includes(document)) return;
       mainWindow?.webContents.send('open-list-link', url.replace('local://', ''));
     } else if (!url.endsWith('/src/index.html')) {
       shell.openExternal(url);

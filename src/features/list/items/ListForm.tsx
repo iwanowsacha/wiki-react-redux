@@ -7,7 +7,7 @@ import RadioButton from '../../../components/RadioButton';
 import { getDocuments, setSnackbar } from '../../general/generalSlice';
 import { getSelectedTags, resetSelectedTags } from '../tags/tagsSlice';
 import { addItem, selectById, selectIds, updateItem } from './itemsSlice';
-import { getBrowseImage, setBrowseImage } from '../listSlice';
+import { getBrowseImage, getListTitle, setBrowseImage } from '../listSlice';
 
 export default function ListForm(props: any) {
   const dispatch = useDispatch();
@@ -16,6 +16,7 @@ export default function ListForm(props: any) {
   const documents = useSelector(getDocuments);
   const selectedTags = useSelector(getSelectedTags);
   const selectedImage = useSelector(getBrowseImage);
+  const listTitle = useSelector(getListTitle);
   const [itemTitle, setItemTitle] = useState(item?.title || '');
   const [editorContent, setEditorContent] = useState(item?.body || '');
   const [newTags, setNewTags] = useState('');
@@ -104,6 +105,22 @@ export default function ListForm(props: any) {
     dispatch(setBrowseImage(''));
   };
 
+  const sanitizeLink = () => {
+    let link = '';
+    if (linkPath) {
+      if (linkType === 'local') {
+        if (!documents.articles.includes(linkPath) && !documents.lists.includes(linkPath)) return link;
+        link = `local://${linkPath}`;
+      } else if (linkType === 'external' && !linkPath.startsWith('http://') && !linkPath.startsWith('https://')) {
+        link = `http://${linkPath}`;
+      } else {
+        link = linkPath;
+      }
+    }
+    return link;
+  }
+  
+
   const handleSaveButtonClick = () => {
     if (!itemTitle || !selectedImage) {
       dispatch(setSnackbar(['Item must have title and image', 'text-red-500']));
@@ -116,20 +133,11 @@ export default function ListForm(props: any) {
       return;
     }
 
-    let link = '';
-    if (linkType === 'local') {
-      link = `local://${linkPath}`;
-    } else if (linkType === 'external' && !linkPath.startsWith('http://') && !linkPath.startsWith('https://')) {
-      link = `http://${linkPath}`;
-    } else {
-      link = linkPath;
-    }
-
     const newItem = {
       title: itemTitle,
       image: selectedImage,
       body: editorContent,
-      link: link,
+      link: sanitizeLink(),
       tags: sanitizeTags(),
     };
     isUpdatingItem ? updateCurrentItem(newItem) : addCurrentItem(newItem);
@@ -161,14 +169,17 @@ export default function ListForm(props: any) {
                 className="bg-primary text-secondary w-full h-8"
                 defaultValue={linkPath} onChange={handleLocalLinkChange}
               >
-                <option disabled value="">
+                <option value="">
                   Link to
                 </option>
-                {[...documents.articles, ...documents.lists].map((art) => (
-                  <option key={art} value={art}>
+                {[...documents.articles, ...documents.lists].map((art) => {
+                  if (art === listTitle) return;
+                  return (<option key={art} value={art}>
                     {art}
-                  </option>
-                ))}
+                  </option>)
+                }
+
+                )}
               </select>
             )}
           </div>
