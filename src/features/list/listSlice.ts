@@ -1,29 +1,43 @@
-import { createSlice } from '@reduxjs/toolkit';
-import loadList from '../../store/loaders';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { List } from '../../types';
+import loadList, { resetState } from '../../utils/loaders';
+
+interface ListState {
+  title: string;
+  isFormVisible: boolean;
+  selectedBrowseImage: string;
+}
+
+const initialState: ListState = {
+  title: '',
+  isFormVisible: false,
+  selectedBrowseImage: '',
+};
 
 export const slice = createSlice({
   name: 'list',
-  initialState: {
-    title: '',
-    isFormVisible: false,
-    selectedBrowseImage: '',
-  },
+  initialState,
   reducers: {
-    setFormVisiblity: (state, action) => {
+    setFormVisiblity: (state, action: PayloadAction<boolean>) => {
       state.isFormVisible = action.payload;
       state.selectedBrowseImage = '';
     },
-    setBrowseImage: (state, action) => {
+    setBrowseImage: (state, action: PayloadAction<string>) => {
       state.selectedBrowseImage = action.payload;
     },
-    setListTitle: (state, action) => {
+    setListTitle: (state, action: PayloadAction<string>) => {
       state.title = action.payload;
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadList.fulfilled, (state, action) => {
-      state.title = action.payload.document?.title || '';
-    });
+    builder.addCase(
+      loadList.fulfilled,
+      (state, action: PayloadAction<{ document: List | null }>) => {
+        state.isFormVisible = false;
+        state.selectedBrowseImage = '';
+        state.title = action.payload.document?.title || '';
+      }
+    );
   },
 });
 

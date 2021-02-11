@@ -134,9 +134,15 @@ const createWindow = async () => {
   Menu.setApplicationMenu(menu);
 
   // Open urls in the user's browser
+  // @TODO: look into open local urls in a different window
   mainWindow.webContents.on('new-window', (event, url) => {
     event.preventDefault();
-    shell.openExternal(url);
+    console.log(url);
+    if (url.startsWith('local://')) {
+      mainWindow?.webContents.send('open-list-link', url.replace('local://', ''));
+    } else if (!url.endsWith('/src/index.html')) {
+      shell.openExternal(url);
+    }
   });
 
   // Remove this if your app does not use auto updates
@@ -259,8 +265,7 @@ ipcMain.handle(
     newTitle: string,
     images: ListItemImageChanges
   ) => {
-    console.log(images.rename);
-    const previousTitle: string = list.title;
+    const previousTitle: string = list.title ? list.title : newTitle;
     if (newTitle && list.title !== newTitle) {
       list.title = newTitle;
     }
@@ -277,12 +282,12 @@ ipcMain.handle(
     }
 
     await manageListItemImages(images, list);
-    mainWindow?.webContents.send('list-saved', list.items);
+    // mainWindow?.webContents.send('list-saved', list.items);
 
     // if (documents.lists.includes(list.title)) {
-    //   let json = JSON.stringify(list);
-    //   fs.writeFile(path.join(__dirname, 'lists', list.title, 'list.json'), json);
-    //   mainWindow?.webContents.send('list-saved');
+      let json = JSON.stringify(list);
+      fs.writeFile(path.join(__dirname, 'lists', list.title, 'list.json'), json);
+      mainWindow?.webContents.send('list-saved', list.items);
     // }
   }
 );

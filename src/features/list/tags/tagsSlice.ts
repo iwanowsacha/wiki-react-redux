@@ -1,15 +1,16 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import loadList from '../../../utils/loaders';
 import { addItem } from '../items/itemsSlice';
 import { setFormVisiblity } from '../listSlice';
 
-interface SliceState {
+interface TagsState {
   selectedTags: Array<string>;
   customHas: Array<string>;
   customNot: Array<string>;
   filterType: string;
 }
 
-const initialState: SliceState = {
+const initialState: TagsState = {
   selectedTags: [],
   customHas: [],
   customNot: [],
@@ -72,7 +73,8 @@ export const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(addItem, resetTags).addCase(setFormVisiblity, resetTags);
+    builder.addCase(loadList.fulfilled, (state) => state = initialState)
+    .addCase(setFormVisiblity, resetTags);
   },
 });
 

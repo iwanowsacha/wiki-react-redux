@@ -9,7 +9,7 @@ import {
 import PageIndex from './Index/PageIndex';
 import Header from './Header';
 import PageList from '../features/list/PageList';
-import loadList from '../store/loaders';
+import loadList from '../utils/loaders';
 
 export default function PageController() {
   const dispatch = useDispatch();
@@ -32,6 +32,10 @@ export default function PageController() {
   ipcRenderer.on('new-list', () => {
     dispatch(loadList(''));
   });
+
+  ipcRenderer.on('open-list-link', (_event, title) => {
+    dispatch(loadList(title));
+  })
 
   let page = null;
   switch (documentType) {

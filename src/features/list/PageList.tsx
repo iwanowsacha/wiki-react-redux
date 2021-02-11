@@ -77,11 +77,8 @@ export default function PageList() {
   }, []);
 
   useEffect(() => {
-    setIsSnackbarOpen(true);
-    setTimeout(() => setIsSnackbarOpen(false), 1000);
-  }, [snackbarMessage]);
-
-  useEffect(() => {
+    console.log(isFirstRun);
+    console.log(snackbarMessage);
     if (isFirstRun.current) {
       isFirstRun.current = false;
       return;
@@ -93,7 +90,19 @@ export default function PageList() {
     }
   }, [isEditing]);
 
-  ipcRenderer.on('list-saved', (e, items) => {
+  useEffect(() => {
+    console.log('snack');
+    if (snackbarMessage[0]) {
+      setIsSnackbarOpen(true);
+      setTimeout(() => {
+        setIsSnackbarOpen(false);
+        dispatch(setSnackbar(['', '']));
+      }, 1000);
+    }
+  }, [snackbarMessage]);
+
+
+  ipcRenderer.on('list-saved', (_e, items) => {
     if (listTitleText) dispatch(setListTitle(listTitleText));
     dispatch(setSnackbar(['List saved successfully', 'text-primary']));
     dispatch(upsertMany(items));
@@ -115,8 +124,10 @@ export default function PageList() {
   };
 
   const handleLeftSidebarButtonClick = (id: string) => {
+    if (id === 'items') {
+      setItemInDisplay('');
+    }
     dispatch(setFormVisiblity(id !== 'items'));
-    setItemInDisplay('');
   };
 
   const handleRightSidebarButtonClick = () => {

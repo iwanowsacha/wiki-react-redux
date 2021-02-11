@@ -6,6 +6,7 @@ import { selectAllItems } from './itemsSlice';
 import { getListTitle } from '../listSlice';
 import { getFilterType, getSelectedTags } from '../tags/tagsSlice';
 import ListItem from './ListItem';
+import { ListItem as ListItemT} from '../../../types';
 
 const getFilteredItems = createSelector(
   [
@@ -14,23 +15,23 @@ const getFilteredItems = createSelector(
     getFilterType,
     selectAllItems,
   ],
-  (searchText, selectedTags, filterType, items) => {
+  (searchText: string, selectedTags: Array<string>, filterType: string, items: Array<ListItemT>) => {
     let filtered;
     if (selectedTags.length > 0) {
       switch (filterType) {
         case 'any':
-          filtered = items.filter((it: any) =>
-            selectedTags.some((t: string) => it.tags.includes(t))
+          filtered = items.filter((it) =>
+            selectedTags.some((t) => it.tags.includes(t))
           );
           break;
         case 'all':
-          filtered = items.filter((it: any) =>
-            selectedTags.every((t: string) => it.tags.includes(t))
+          filtered = items.filter((it) =>
+            selectedTags.every((t) => it.tags.includes(t))
           );
           break;
         case 'none':
           filtered = items.filter(
-            (it: any) => !selectedTags.some((t: string) => it.tags.includes(t))
+            (it) => !selectedTags.some((t) => it.tags.includes(t))
           );
           break;
         default:
@@ -38,13 +39,13 @@ const getFilteredItems = createSelector(
       }
       if (searchText) {
         filtered = filtered?.filter(
-          (it: any) =>
+          (it) =>
             it.title.toLowerCase().indexOf(searchText.toLowerCase()) > -1
         );
       }
     } else if (searchText) {
       filtered = items.filter(
-        (it: any) =>
+        (it) =>
           it.title.toLowerCase().indexOf(searchText.toLowerCase()) > -1
       );
     }

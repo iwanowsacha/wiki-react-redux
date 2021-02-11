@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { basename } from 'path';
@@ -16,11 +16,12 @@ export default function ListForm(props: any) {
   const documents = useSelector(getDocuments);
   const selectedTags = useSelector(getSelectedTags);
   const selectedImage = useSelector(getBrowseImage);
-  const [linkType, setLinkType] = useState('local');
   const [itemTitle, setItemTitle] = useState(item?.title || '');
   const [editorContent, setEditorContent] = useState(item?.body || '');
   const [newTags, setNewTags] = useState('');
   const [isUpdatingItem, setIsUpdatingItem] = useState(!!item);
+  const [linkType, setLinkType] = useState(!item?.link?.startsWith('local://') ? 'external' : 'local');
+  const [linkPath, setLinkPath] = useState(item?.link?.startsWith('local://') ? item?.link.replace('local://', '') : item?.link || '');
 
   const handleEditorContentChange = (content: any) => {
     setEditorContent(content);
@@ -31,23 +32,30 @@ export default function ListForm(props: any) {
   };
 
   const handleExternalLinkChange = (value: string) => {
-    console.log(value);
-  };
+    setLinkPath(value);
+  }
+
+  const handleLocalLinkChange = (e: ChangeEvent<HTMLSelectElement>) => {
+      setLinkPath(e.target.value);
+  }
+
+  const handleRadioChange = (value: string) => {
+    setLinkType(value);
+    if (value === 'local' && isUpdatingItem && item?.link?.startsWith('local://')) {
+      setLinkPath(item?.link.replace('local://', ''));
+    } else if (value === 'external' && isUpdatingItem && !item?.link?.startsWith('local://')) {
+      setLinkPath(item?.link || '');
+    } else {
+      setLinkPath('');
+    }
+  }
 
   const handleNewTagsChange = (value: string) => {
     setNewTags(value);
   };
 
-  const handleKeyDown = () => {
-    console.log('hey');
-  };
-
-  const handleRadioChange = (value: string) => {
-    setLinkType(value);
-  };
-
   const doesItemExist = () => {
-    if ((isUpdatingItem && item.title !== itemTitle) || !isUpdatingItem) {
+    if ((isUpdatingItem && item?.title !== itemTitle) || !isUpdatingItem) {
       const itemExists = allItems.find((it: any) => it.title === itemTitle);
       if (itemExists) {
         return true;
@@ -67,6 +75,7 @@ export default function ListForm(props: any) {
 
   const updateCurrentItem = (updatedItem: any) => {
     dispatch(setSnackbar(['Item updated correctly', 'text-primary']));
+    if (!item) return;
     if (item.image === basename(updatedItem.image))
       updatedItem.image = item.image;
     dispatch(
@@ -85,8 +94,10 @@ export default function ListForm(props: any) {
   };
 
   const emptyForm = () => {
-    setLinkType('local');
+    setIsUpdatingItem(false);
     setItemTitle('');
+    setLinkType('local');
+    setLinkPath('');
     setEditorContent('');
     setNewTags('');
     dispatch(resetSelectedTags());
@@ -105,17 +116,26 @@ export default function ListForm(props: any) {
       return;
     }
 
+    let link = '';
+    if (linkType === 'local') {
+      link = `local://${linkPath}`;
+    } else if (linkType === 'external' && !linkPath.startsWith('http://') && !linkPath.startsWith('https://')) {
+      link = `http://${linkPath}`;
+    } else {
+      link = linkPath;
+    }
+
     const newItem = {
       title: itemTitle,
       image: selectedImage,
       body: editorContent,
-      link: '',
+      link: link,
       tags: sanitizeTags(),
     };
     isUpdatingItem ? updateCurrentItem(newItem) : addCurrentItem(newItem);
     emptyForm();
   };
-
+  
   return (
     <section className="h-full bg-secondary">
       <div className="grid grid-cols-8 new-item-form h-full gap-x-2 p-4 items-center">
@@ -125,23 +145,21 @@ export default function ListForm(props: any) {
             color="bg-primary"
             placeholder="Title"
             onTextChange={handleItemTitleChange}
-            onKeyDown={handleKeyDown}
           />
         </div>
         <div className="col-span-5 my-2 py-2 px-3 grid grid-cols-4 gap-4">
           <div className="w-full my-2 py-2 px-6 relative inline-block col-span-3 bg-primary text-secondary">
             {linkType === 'external' ? (
               <TextInput
-                text={newTags}
+                text={linkPath}
                 color="bg-primary"
                 placeholder="Link to"
                 onTextChange={handleExternalLinkChange}
-                onKeyDown={handleKeyDown}
               />
             ) : (
               <select
                 className="bg-primary text-secondary w-full h-8"
-                defaultValue=""
+                defaultValue={linkPath} onChange={handleLocalLinkChange}
               >
                 <option disabled value="">
                   Link to
@@ -160,14 +178,14 @@ export default function ListForm(props: any) {
               group="link"
               title="Article link"
               value="local"
-              checked
+              checked={linkType === 'local'}
             />
             <RadioButton
               onChange={handleRadioChange}
               group="link"
               title="External link"
               value="external"
-              checked={false}
+              checked={linkType === 'external'}
             />
           </div>
         </div>
@@ -184,7 +202,6 @@ export default function ListForm(props: any) {
               color="bg-primary"
               placeholder="New tags"
               onTextChange={handleNewTagsChange}
-              onKeyDown={handleKeyDown}
             />
           </div>
           <small className="text-xs text-secondary">

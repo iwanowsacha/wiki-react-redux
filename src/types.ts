@@ -13,6 +13,7 @@ export interface ListItem {
   title: string;
   image: string;
   body: string;
+  link: string;
   tags: Array<string>;
 }
 

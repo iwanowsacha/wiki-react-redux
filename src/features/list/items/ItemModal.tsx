@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import IconButton from '../../../components/IconButton';
 import Snackbar from '../../../components/Snackbar';
 import { getIsEditing, setSnackbar } from '../../general/generalSlice';
-import { setBrowseImage, setFormVisiblity } from '../listSlice';
+import { getListTitle, setBrowseImage, setFormVisiblity } from '../listSlice';
 import { addManySelectedTags } from '../tags/tagsSlice';
 import { removeItem, selectById } from './itemsSlice';
+import { resetState } from '../../../utils/loaders';
 
 type ItemModalProps = {
   itemTitle: string;
@@ -16,19 +17,20 @@ type ItemModalProps = {
 
 export default function ItemModal(props: ItemModalProps) {
   const dispatch = useDispatch();
-  console.log('entering');
   const item = useSelector((state) => selectById(state, props.itemTitle));
   const isEditing = useSelector(getIsEditing);
+  const listTitle = useSelector(getListTitle);
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+
   const image =
-    basename(item.image) === item.image
-      ? `lists/List of Games/images/${item.image}`
-      : item.image;
+    basename(item?.image || '') === item?.image
+      ? `lists/${listTitle}/images/${item.image}`
+      : item?.image;
 
   const handleEditItemClick = () => {
     dispatch(setFormVisiblity(true));
-    dispatch(addManySelectedTags(item.tags));
-    dispatch(setBrowseImage(image));
+    if (item) dispatch(addManySelectedTags(item.tags));
+    if (image) dispatch(setBrowseImage(image));
     props.onEditItemClick();
   };
 
@@ -38,8 +40,10 @@ export default function ItemModal(props: ItemModalProps) {
 
   const handleDeleteItemConfirmation = () => {
     setIsSnackbarOpen(false);
-    dispatch(removeItem(item.title));
-    dispatch(setSnackbar([`Item ${item.title} deleted`, 'text-red-500']));
+    if (item) {
+      dispatch(removeItem(item.title));
+      dispatch(setSnackbar([`Item ${item.title} deleted`, 'text-red-500']));
+    }
     props.onDeleteItem();
   };
 
@@ -47,13 +51,17 @@ export default function ItemModal(props: ItemModalProps) {
     setIsSnackbarOpen(false);
   };
 
+  const handleItemLinkClick = () => {
+    if (item && item.link.startsWith('local://')) dispatch(resetState());
+  }
+
   return (
     <>
       <div className="flex flex-col min-h-full bg-secondary">
         <div className="mb-2 p-2 relative fill flex bg-primary">
-          <a target="_blank" rel="noreferrer" href={item.link}>
+          <a target="_blank" rel="noreferrer" href={item?.link} onClick={handleItemLinkClick}>
             <p className="text-left text-primary mt-1" style={{ flex: '75%' }}>
-              {item.title}
+              {item?.title}
             </p>
           </a>
           <div
@@ -88,12 +96,14 @@ export default function ItemModal(props: ItemModalProps) {
           </div>
           <div
             className="col-span-4 px-2 md:col-span-3 text-secondary"
-            dangerouslySetInnerHTML={{ __html: item.body }}
+            dangerouslySetInnerHTML={{ __html: item?.body || '' }}
           />
         </div>
         <div className="p-2 bg-primary mt-2 text-secondary">
           Tags:{' '}
-          <span id="itemDisplayTags">{item.tags.join(', ').toUpperCase()}</span>
+          <span id="itemDisplayTags">
+            {item?.tags.join(', ').toUpperCase()}
+          </span>
         </div>
       </div>
       <Snackbar

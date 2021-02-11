@@ -2,14 +2,13 @@ import React, { ReactNode } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
 type SnackbarProps = {
-  children?: ReactNode;
+  children?: ReactNode | undefined;
   isOpen: boolean;
   className?: string;
   message: string;
 } & typeof defaultProps;
 
 const defaultProps = {
-  children: undefined,
   className: 'text-primary',
 };
 

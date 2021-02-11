@@ -5,6 +5,7 @@ import { selectAllGroups, updateGroup, updateManyGroups } from './groupsSlice';
 import Droppable from '../../../components/Droppable';
 import TagGroup from './TagGroup';
 import TagPill from '../tags/TagPill';
+import { TagGroup as TagGroupT } from '../../../types';
 
 type TagGroupListProps = {
   onTagClick(title: string): void;
@@ -15,7 +16,7 @@ export default function TagGroupList(props: TagGroupListProps) {
   const isEditing = useSelector(getIsEditing);
   const dispatch = useDispatch();
 
-  const updateTagGroup = (dropGroup: any, tag: string) => {
+  const updateTagGroup = (dropGroup: TagGroupT, tag: string) => {
     const group = tagGroups.find((tg) => tg.tags.includes(tag));
     const updatableTargetGroup = {
       id: dropGroup.title,
@@ -24,7 +25,7 @@ export default function TagGroupList(props: TagGroupListProps) {
       },
     };
     if (group) {
-      const updateGroups: any = [
+      const updateGroups = [
         {
           id: group.title,
           changes: {
@@ -41,8 +42,8 @@ export default function TagGroupList(props: TagGroupListProps) {
 
   const handleTagGroupDrop = (e: DragEvent<HTMLDivElement>, zoneId: string) => {
     const tag = e.dataTransfer.getData('tag');
-    const dropGroup = tagGroups.find((t) => t.title === zoneId);
-    if (!tag || dropGroup.tags.includes(tag)) return;
+    const dropGroup = tagGroups.find((tg) => tg.title === zoneId);
+    if (!tag || !dropGroup || dropGroup.tags.includes(tag)) return;
     updateTagGroup(dropGroup, tag);
   };
 
