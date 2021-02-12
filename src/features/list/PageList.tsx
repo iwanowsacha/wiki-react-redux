@@ -71,12 +71,6 @@ export default function PageList() {
   const isMounted = useMounted();
 
   useEffect(() => {
-    window.addEventListener('click', () => {
-      if (isModalOpen) setItemInDisplay('');
-    });
-  }, []);
-
-  useEffect(() => {
     if (!isMounted) return;
     if (isEditing) {
       dispatch(setSnackbar(['Editing list', 'text-primary']));
@@ -105,7 +99,7 @@ export default function PageList() {
 
   useEffect(() => {
     setPlayFormAnimation(true);
-    setTimeout(() => setPlayFormAnimation(false), 500);
+    setTimeout(() => {setPlayFormAnimation(false), setItemInDisplay('')}, 500);
   }, [isShowingForm]);
 
   const toggleModalAndResetItemInDisplay = () => {
