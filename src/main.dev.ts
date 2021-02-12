@@ -141,7 +141,7 @@ const createWindow = async () => {
     if (url.startsWith('local://')) {
       const document = url.replace('local://', '');
       if (!documents.articles.includes(document) && !documents.lists.includes(document)) return;
-      mainWindow?.webContents.send('open-list-link', url.replace('local://', ''));
+      mainWindow?.webContents.send('open-list', url.replace('local://', ''));
     } else if (!url.endsWith('/src/index.html')) {
       shell.openExternal(url);
     }
@@ -284,12 +284,8 @@ ipcMain.handle(
     }
 
     await manageListItemImages(images, list);
-    // mainWindow?.webContents.send('list-saved', list.items);
-
-    // if (documents.lists.includes(list.title)) {
-      let json = JSON.stringify(list);
-      fs.writeFile(path.join(__dirname, 'lists', list.title, 'list.json'), json);
-      mainWindow?.webContents.send('list-saved', list.items);
-    // }
+    let json = JSON.stringify(list);
+    await fs.writeFile(path.join(__dirname, 'lists', list.title, 'list.json'), json);
+    mainWindow?.webContents.send('open-list', list.title);
   }
 );

@@ -15,8 +15,6 @@ export default function Header(props: HeaderProps) {
   const isEditing = useSelector(getIsEditing);
   const documents = useSelector(getDocuments);
   const suggestions = [...documents.articles, ...documents.lists];
-  // const suggestions = documents.articles ? [...documents.articles] : [];
-  // documents.lists ? suggestions.push(...documents.lists) : '';
 
   return (
     <header className="grid grid-cols-4 w-full gap-4 items-center bg-primary sticky top-0 z-100">

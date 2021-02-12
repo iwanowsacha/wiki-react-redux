@@ -10,6 +10,7 @@ import PageIndex from './Index/PageIndex';
 import Header from './Header';
 import PageList from '../features/list/PageList';
 import loadList from '../utils/loaders';
+import Spinner from './Spinner';
 
 export default function PageController() {
   const dispatch = useDispatch();
@@ -29,13 +30,9 @@ export default function PageController() {
     if (type === 'save' || type === 'edit') dispatch(toggleIsEditing());
   };
 
-  ipcRenderer.on('new-list', () => {
-    dispatch(loadList(''));
-  });
+  ipcRenderer.on('new-list', () => dispatch(loadList('')));
 
-  ipcRenderer.on('open-list-link', (_event, title) => {
-    dispatch(loadList(title));
-  })
+  ipcRenderer.on('open-list', (_event, title) => dispatch(loadList(title)));
 
   let page = null;
   switch (documentType) {
@@ -46,7 +43,7 @@ export default function PageController() {
       page = <PageList />;
       break;
     default:
-      page = <div>Not found</div>;
+      page = <Spinner />;
       break;
   }
 

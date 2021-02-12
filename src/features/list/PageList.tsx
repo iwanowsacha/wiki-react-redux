@@ -34,6 +34,8 @@ import {
   getImagesChanges,
 } from './items/itemsSlice';
 import { selectAllGroups } from './groups/groupsSlice';
+import useMounted from '../../utils/hooks/useMounted';
+import useModal from '../../utils/hooks/useModal';
 
 const getList = createSelector(
   [getListTitle, selectAllItems, getAllTags, selectAllGroups],
@@ -52,6 +54,7 @@ const getList = createSelector(
   }
 );
 
+
 export default function PageList() {
   const dispatch = useDispatch();
   const list = useSelector(getList);
@@ -59,31 +62,26 @@ export default function PageList() {
   const isShowingForm = useSelector(getFormVisibility);
   const selectedTags = useSelector(getSelectedTags);
   const snackbarMessage = useSelector(getSnackbar);
-  const isFirstRun = useRef(true);
   const itemsImageChanges = useSelector(getImagesChanges);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, toggleModal] = useModal();
   const [itemInDisplay, setItemInDisplay] = useState('');
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [playFormAnimation, setPlayFormAnimation] = useState(false);
   const [listTitleText, setListTitleText] = useState('');
+  const isMounted = useMounted();
 
   useEffect(() => {
-    window.addEventListener('click', (event) => {
-      if (event?.target?.id === 'modal') {
-        setIsModalOpen(false);
-        setItemInDisplay('');
-      }
+    window.addEventListener('click', () => {
+      if (isModalOpen) setItemInDisplay('');
     });
   }, []);
 
   useEffect(() => {
-    if (isFirstRun.current) {
-      isFirstRun.current = false;
-      return;
-    }
+    if (!isMounted) return;
     if (isEditing) {
       dispatch(setSnackbar(['Editing list', 'text-primary']));
     } else if (!isEditing) {
+      dispatch(setSnackbar(['List saved succesfully', 'text-primary']));
       ipcRenderer.invoke('save-list', list, listTitleText, itemsImageChanges);
     }
   }, [isEditing]);
@@ -110,12 +108,8 @@ export default function PageList() {
     setTimeout(() => setPlayFormAnimation(false), 500);
   }, [isShowingForm]);
 
-  const handleModalCloseClick = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleDeleteItemClick = () => {
-    handleModalCloseClick();
+  const toggleModalAndResetItemInDisplay = () => {
+    toggleModal();
     setItemInDisplay('');
   };
 
@@ -127,11 +121,6 @@ export default function PageList() {
     dispatch(setFormVisiblity(id !== 'items'));
   };
 
-  const handleRightSidebarButtonClick = () => {
-    setIsModalOpen(true);
-    setItemInDisplay('');
-  };
-
   const handleTagClick = (title: string) => {
     if (selectedTags.includes(title)) {
       dispatch(removeSelectedTag(title));
@@ -141,17 +130,13 @@ export default function PageList() {
   };
 
   const handleItemClick = (title: string) => {
-    setIsModalOpen(true);
+    toggleModal();
     setItemInDisplay(title);
   };
 
-  const handleListTitleChange = (value: string) => {
-    setListTitleText(value);
-  };
+  const handleListTitleChange = (value: string) => setListTitleText(value);
 
-  const handleFormEmpty = () => {
-    setItemInDisplay('');
-  }
+  const handleFormEmpty = () => setItemInDisplay('');
 
   return (
     <main className="flex relative flex-auto">
@@ -173,12 +158,12 @@ export default function PageList() {
       </CSSTransition>
       {!playFormAnimation && (
         <>
-          <Modal isOpen={isModalOpen} onCloseClick={handleModalCloseClick}>
+          <Modal isOpen={isModalOpen} onCloseClick={toggleModal}>
             {itemInDisplay && !isShowingForm ? (
               <ItemModal
                 itemTitle={itemInDisplay}
-                onEditItemClick={handleModalCloseClick}
-                onDeleteItem={handleDeleteItemClick}
+                onEditItemClick={toggleModal}
+                onDeleteItem={toggleModalAndResetItemInDisplay}
               />
             ) : (
               <TagsModal
@@ -210,7 +195,7 @@ export default function PageList() {
           </section>
           <RightSidebar
             isShowingForm={isShowingForm}
-            onButtonClick={handleRightSidebarButtonClick}
+            onButtonClick={toggleModalAndResetItemInDisplay}
             onTagClick={handleTagClick}
           />
         </>

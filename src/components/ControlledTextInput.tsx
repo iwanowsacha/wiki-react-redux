@@ -19,13 +19,9 @@ const defaultProps = {
 export default function TextInput(props: ControlledTextInputProps) {
   const { color, text, placeholder } = props;
 
-  const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
-    props.onTextChange(e.target.value);
-  };
+  const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => props.onTextChange(e.target.value);
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    props.onKeyDown(e);
-  };
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => props.onKeyDown(e);
 
   return (
     <input

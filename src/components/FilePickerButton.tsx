@@ -16,9 +16,7 @@ export default function FilePickerButton(props: FilePickerButtonProps) {
     }
   };
 
-  const handleClick = () => {
-    inputRef?.current?.click();
-  };
+  const handleClick = () => inputRef?.current?.click();
 
   return (
     <span onClick={handleClick}>

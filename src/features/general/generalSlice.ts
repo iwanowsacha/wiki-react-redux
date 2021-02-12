@@ -37,9 +37,8 @@ export const slice = createSlice({
     builder.addCase(
       loadList.fulfilled,
       (state, action: PayloadAction<{ document: List | null }>) => {
-        console.log('loaded');
         const { document } = action.payload;
-        state.documentType = 'list';
+        // state.documentType = 'list';
         !document?.hasOwnProperty('title') ? state.isEditing = true : state.isEditing = false;
       }
     ).addCase(loadList.pending, (state) => {console.log('loading'); state.documentType = 'loading'});
