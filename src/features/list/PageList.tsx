@@ -18,6 +18,7 @@ import {
   getIsEditing,
   getSnackbar,
   setSnackbar,
+  toggleIsEditing,
 } from '../general/generalSlice';
 import Modal from '../../components/Modal';
 import ItemModal from './items/ItemModal';
@@ -72,9 +73,14 @@ export default function PageList() {
 
   useEffect(() => {
     if (!isMounted) return;
-    if (isEditing) {
+    if (isEditing && snackbarMessage[0] !== "List must have a title") {
       dispatch(setSnackbar(['Editing list', 'text-primary']));
     } else if (!isEditing) {
+      if (!list.title && !listTitleText) {
+        dispatch(setSnackbar(['List must have a title', 'text-red-500']));
+        dispatch(toggleIsEditing());
+        return;
+      }
       dispatch(setSnackbar(['List saved succesfully', 'text-primary']));
       ipcRenderer.invoke('save-list', list, listTitleText, itemsImageChanges);
     }

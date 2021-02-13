@@ -35,7 +35,7 @@ export default function Header(props: HeaderProps) {
         )}
       </div>
       <div className="col-span-2 self-stretch my-2 bg-secondary text-secondary py-2 px-3 inline-flex rounded">
-        <Autocomplete suggestions={suggestions} onSuggestionEnter={handleAutocompleteEnter} />
+        <Autocomplete suggestions={suggestions} onSuggestionSelected={handleAutocompleteEnter} />
         <div className="hidden sm:block text-base md:text-2xl material-icons self-center ml-2 pl-2 border-l-2 border-secondary">
           search
         </div>

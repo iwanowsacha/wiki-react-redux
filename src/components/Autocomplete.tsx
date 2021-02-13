@@ -1,5 +1,4 @@
-import React, { useState, KeyboardEvent } from 'react';
-import { setSnackbar } from '../features/general/generalSlice';
+import React, { useState, KeyboardEvent, MouseEvent } from 'react';
 import TextInput from './ControlledTextInput';
 
 export default function Autocomplete(props: any) {
@@ -24,19 +23,18 @@ export default function Autocomplete(props: any) {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     const key = e.key.toLowerCase();
+    console.log(key);
     if (key === 'enter') {
       const active = filteredSuggestions[activeSuggestion];
-      setActiveSuggestion(0);
-      setFilteredSuggestions([]);
-      setSearchText('');
-      props.onSuggestionEnter(active);
-    } else if (key === 'up') {
+      resetState();
+      props.onSuggestionSelected(active);
+    } else if (key === 'arrowup') {
       e.preventDefault();
       if (activeSuggestion === 0) {
         return;
       }
       setActiveSuggestion(activeSuggestion - 1);
-    } else if (key === 'down') {
+    } else if (key === 'arrowdown') {
       e.preventDefault();
       if (activeSuggestion - 1 === filteredSuggestions.length) {
         return;
@@ -44,6 +42,18 @@ export default function Autocomplete(props: any) {
       setActiveSuggestion(activeSuggestion + 1);
     }
   };
+
+  const handleSuggestionClick = (e: MouseEvent<HTMLDivElement>) => {
+    const suggestion = e.currentTarget.innerHTML;
+    resetState();
+    props.onSuggestionSelected(suggestion);
+  }
+
+  const resetState = () => {
+    setActiveSuggestion(0);
+    setFilteredSuggestions([]);
+    setSearchText('');
+  }
 
   return (
     <div className="autocomplete relative w-full">
@@ -64,6 +74,7 @@ export default function Autocomplete(props: any) {
                 activeSuggestion === index ? 'autocomplete-active' : ''
               }
               key={f}
+              onClick={handleSuggestionClick}
             >
               {f}
             </div>

@@ -29,7 +29,7 @@ export default function LeftSidebar(props: LeftSidebarProps) {
         {isEditing && (
           <TextInput
             onTextChange={onListTitleChange}
-            placeholder={listTitle}
+            placeholder={listTitle || 'List Title'}
             color="bg-secondary"
           />
         )}
