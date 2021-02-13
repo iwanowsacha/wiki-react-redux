@@ -1,11 +1,13 @@
 import React, { useState, KeyboardEvent } from 'react';
-import TextInput from './UncontrolledTextInput';
+import { setSnackbar } from '../features/general/generalSlice';
+import TextInput from './ControlledTextInput';
 
 export default function Autocomplete(props: any) {
   const [filteredSuggestions, setFilteredSuggestions] = useState<Array<string>>(
     []
   );
   const [activeSuggestion, setActiveSuggestion] = useState(0);
+  const [searchText, setSearchText] = useState('');
 
   const handleInputChange = (value: string) => {
     if (value) {
@@ -17,12 +19,17 @@ export default function Autocomplete(props: any) {
       setFilteredSuggestions([]);
       setActiveSuggestion(0);
     }
+    setSearchText(value);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     const key = e.key.toLowerCase();
     if (key === 'enter') {
+      const active = filteredSuggestions[activeSuggestion];
       setActiveSuggestion(0);
+      setFilteredSuggestions([]);
+      setSearchText('');
+      props.onSuggestionEnter(active);
     } else if (key === 'up') {
       e.preventDefault();
       if (activeSuggestion === 0) {
@@ -41,6 +48,7 @@ export default function Autocomplete(props: any) {
   return (
     <div className="autocomplete relative w-full">
       <TextInput
+        text={searchText}
         color="bg-secondary"
         placeholder="Search"
         onTextChange={handleInputChange}

@@ -1,8 +1,9 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getDocuments, getIsEditing } from '../features/general/generalSlice';
 import IconButton from './IconButton';
 import Autocomplete from './Autocomplete';
+import { loadList } from '../utils/loaders';
 
 type HeaderProps = {
   showMenuButton: boolean;
@@ -12,9 +13,14 @@ type HeaderProps = {
 
 export default function Header(props: HeaderProps) {
   const { showMenuButton, showESButtons, onHeaderButtonClick } = props;
+  const dispatch = useDispatch();
   const isEditing = useSelector(getIsEditing);
   const documents = useSelector(getDocuments);
   const suggestions = [...documents.articles, ...documents.lists];
+
+  const handleAutocompleteEnter = (value: string) => {
+    if (documents.lists.includes(value)) dispatch(loadList(value));
+  }
 
   return (
     <header className="grid grid-cols-4 w-full gap-4 items-center bg-primary sticky top-0 z-100">
@@ -29,7 +35,7 @@ export default function Header(props: HeaderProps) {
         )}
       </div>
       <div className="col-span-2 self-stretch my-2 bg-secondary text-secondary py-2 px-3 inline-flex rounded">
-        <Autocomplete suggestions={suggestions} />
+        <Autocomplete suggestions={suggestions} onSuggestionEnter={handleAutocompleteEnter} />
         <div className="hidden sm:block text-base md:text-2xl material-icons self-center ml-2 pl-2 border-l-2 border-secondary">
           search
         </div>
