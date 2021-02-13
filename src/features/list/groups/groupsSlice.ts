@@ -4,9 +4,8 @@ import {
   PayloadAction,
   Update,
 } from '@reduxjs/toolkit';
-import { group } from 'console';
 import { List, ListItem, TagGroup } from '../../../types';
-import loadList from '../../../utils/loaders';
+import { loadList } from '../../../utils/loaders';
 import { updateItem } from '../items/itemsSlice';
 
 const groupAdapter = createEntityAdapter({

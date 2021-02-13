@@ -1,12 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ipcRenderer } from 'electron';
 
-const loadList = createAsyncThunk('list/loadList', async (title: string) => {
-  console.log(title);
+export const loadDocuments = createAsyncThunk('general/loadDocuments', () => {
+  const docs = ipcRenderer.invoke('get-documents');
+  return docs;
+})
+
+export const loadList = createAsyncThunk('list/loadList', (title: string) => {
   const data = ipcRenderer.invoke('read-list', title);
   return data;
 });
-
-export const resetState = createAsyncThunk('resetState', () => { return });
-
-export default loadList;

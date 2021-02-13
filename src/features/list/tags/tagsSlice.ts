@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import loadList from '../../../utils/loaders';
-import { addItem } from '../items/itemsSlice';
+import { loadList } from '../../../utils/loaders';
 import { setFormVisiblity } from '../listSlice';
 
 interface TagsState {

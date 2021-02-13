@@ -1,6 +1,6 @@
 import React, { MouseEvent } from 'react';
 import { useDispatch } from 'react-redux';
-import loadList from '../../utils/loaders';
+import { loadList } from '../../utils/loaders';
 
 type ListCardProps = {
   lists: Array<string>;

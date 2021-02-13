@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { List } from '../../types';
-import loadList, { resetState } from '../../utils/loaders';
+import { loadList } from '../../utils/loaders';
 
 interface ListState {
   title: string;

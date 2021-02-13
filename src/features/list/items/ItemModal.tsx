@@ -7,7 +7,6 @@ import { getIsEditing, setSnackbar } from '../../general/generalSlice';
 import { getListTitle, setBrowseImage, setFormVisiblity } from '../listSlice';
 import { addManySelectedTags } from '../tags/tagsSlice';
 import { removeItem, selectById } from './itemsSlice';
-import { resetState } from '../../../utils/loaders';
 
 type ItemModalProps = {
   itemTitle: string;
@@ -51,15 +50,11 @@ export default function ItemModal(props: ItemModalProps) {
     setIsSnackbarOpen(false);
   };
 
-  const handleItemLinkClick = () => {
-    if (item && item.link.startsWith('local://')) dispatch(resetState());
-  }
-
   return (
     <>
       <div className="flex flex-col min-h-full bg-secondary">
         <div className="mb-2 p-2 relative fill flex bg-primary">
-          <a target="_blank" rel="noreferrer" href={item?.link} onClick={handleItemLinkClick}>
+          <a target="_blank" rel="noreferrer" href={item?.link}>
             <p className="text-left text-primary mt-1" style={{ flex: '75%' }}>
               {item?.title}
             </p>

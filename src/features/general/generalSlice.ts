@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import loadList, { resetState } from '../../utils/loaders';
+import { loadList, loadDocuments as loadD } from '../../utils/loaders';
 import { DirectoriesList, List } from '../../types';
 
 interface GeneralState {
@@ -23,9 +23,6 @@ export const slice = createSlice({
   name: 'general',
   initialState,
   reducers: {
-    loadDocuments: (state, action: PayloadAction<DirectoriesList>) => {
-      Object.assign(state.documents, action.payload);
-    },
     toggleIsEditing: (state) => {
       state.isEditing = !state.isEditing;
     },
@@ -41,7 +38,8 @@ export const slice = createSlice({
         state.documentType = 'list';
         !document?.hasOwnProperty('title') ? state.isEditing = true : state.isEditing = false;
       }
-    ).addCase(loadList.pending, (state) => {console.log('loading'); state.documentType = 'loading'});
+    ).addCase(loadList.pending, (state) => {console.log('loading'); state.documentType = 'loading'})
+    .addCase(loadD.fulfilled, (state, action) => {Object.assign(state.documents, action.payload)});
   },
 });
 

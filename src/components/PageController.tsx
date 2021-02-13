@@ -2,14 +2,13 @@ import React, { useEffect } from 'react';
 import { ipcRenderer } from 'electron';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  loadDocuments,
   toggleIsEditing,
   getDocumentType,
 } from '../features/general/generalSlice';
 import PageIndex from './Index/PageIndex';
 import Header from './Header';
 import PageList from '../features/list/PageList';
-import loadList from '../utils/loaders';
+import { loadList, loadDocuments } from '../utils/loaders';
 import Spinner from './Spinner';
 
 export default function PageController() {
@@ -17,13 +16,8 @@ export default function PageController() {
   const documentType = useSelector(getDocumentType);
 
   useEffect(() => {
-    ipcRenderer
-      .invoke('documents')
-      .then((result) => {
-        dispatch(loadDocuments(result));
-        return true;
-      })
-      .catch(console.log);
+    console.log('dispatching');
+    dispatch(loadDocuments());
   });
 
   const handleEditSaveClick = (type: string) => {

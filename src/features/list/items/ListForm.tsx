@@ -18,6 +18,7 @@ export default function ListForm(props: ListFormProps) {
   const dispatch = useDispatch();
   const allItems = useSelector(selectIds);
   const item = useSelector((state) => selectById(state, props.item));
+  console.log(item);
   const documents = useSelector(getDocuments);
   const selectedTags = useSelector(getSelectedTags);
   const selectedImage = useSelector(getBrowseImage);
@@ -80,17 +81,17 @@ export default function ListForm(props: ListFormProps) {
   };
 
   const updateCurrentItem = (updatedItem: any) => {
-    dispatch(setSnackbar(['Item updated correctly', 'text-primary']));
+    console.log(item);
     if (!item) return;
-    if (item.image === basename(updatedItem.image))
-      updatedItem.image = item.image;
+    if (item.image === basename(updatedItem.image)) updatedItem.image = item.image;
     dispatch(
       updateItem({
         id: item.title,
         changes: updatedItem,
       })
     );
-
+      
+    dispatch(setSnackbar(['Item updated correctly', 'text-primary']));
     setIsUpdatingItem(false);
   };
 
@@ -146,6 +147,8 @@ export default function ListForm(props: ListFormProps) {
       link: sanitizeLink(),
       tags: sanitizeTags(),
     };
+    console.log(isUpdatingItem);
+    console.log(newItem);
     isUpdatingItem ? updateCurrentItem(newItem) : addCurrentItem(newItem);
     emptyForm();
   };

@@ -3,7 +3,7 @@ import {
   createEntityAdapter,
   PayloadAction,
 } from '@reduxjs/toolkit';
-import loadList, { resetState } from '../../../utils/loaders';
+import { loadList } from '../../../utils/loaders';
 import { List, ListItem, ListItemImageChanges } from '../../../types';
 import { setFormVisiblity } from '../listSlice';
 
@@ -91,8 +91,8 @@ export const slice = createSlice({
       );
       addNewTags(state, action.payload.changes.tags);
       handleImageChanges(state, action.payload);
+      console.log(action.payload);
       itemsAdapter.updateOne(state, action.payload);
-
       action.payload.tags = [...unused];
     },
     removeItem: (state, action: PayloadAction<string>) => {
@@ -115,6 +115,8 @@ export const slice = createSlice({
           if (action.payload.document?.hasOwnProperty('items')) {
             itemsAdapter.setAll(state, action.payload.document.items);
             state.allTags = [...action.payload.document.allTags];
+          } else {
+            itemsAdapter.removeAll(state);
           }
         }
       )

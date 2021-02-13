@@ -11,7 +11,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, ipcMain, Menu, MenuItem, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, ipcRenderer, Menu, MenuItem, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import * as fs from 'fs-extra';
@@ -172,6 +172,10 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
+ipcMain.handle('get-documents', (_event) => {
+  return documents;
+});
+
 ipcMain.handle('read-list', async (_event, title) => {
   if (!title) {
     return { document: {} };
@@ -180,10 +184,6 @@ ipcMain.handle('read-list', async (_event, title) => {
     .readJSON(path.join(DIRECTORIES.lists, title, 'list.json'))
     .catch(console.log);
   return obj ? { type: 'list', document: obj } : { document: {} };
-});
-
-ipcMain.handle('documents', () => {
-  return documents;
 });
 
 const renameDocumentDirectory = async (
@@ -271,12 +271,14 @@ ipcMain.handle(
     if (newTitle && list.title !== newTitle) {
       list.title = newTitle;
     }
+
     const directoryExists: boolean = fs.existsSync(
       path.join(DIRECTORIES.lists, previousTitle)
     );
-    if (directoryExists) {
-      if (newTitle) renameDocumentDirectory(previousTitle, list.title, 'lists');
-    } else {
+
+    if (directoryExists && newTitle) {
+      renameDocumentDirectory(previousTitle, list.title, 'lists');
+    } else if (!directoryExists) {
       await createDocumentDirectory(
         path.join(DIRECTORIES.lists, list.title),
         'images'
@@ -286,6 +288,15 @@ ipcMain.handle(
     await manageListItemImages(images, list);
     let json = JSON.stringify(list);
     await fs.writeFile(path.join(__dirname, 'lists', list.title, 'list.json'), json);
+
+    if (newTitle) {
+      if (previousTitle !== newTitle) {
+        documents.lists[documents.lists.indexOf(previousTitle)] = newTitle;
+      } else if (previousTitle === newTitle) {
+        documents.lists.push(newTitle);
+      }
+    }
+    
     mainWindow?.webContents.send('open-list', list.title);
   }
 );

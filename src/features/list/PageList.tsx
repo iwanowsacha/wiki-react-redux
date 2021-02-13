@@ -99,7 +99,8 @@ export default function PageList() {
 
   useEffect(() => {
     setPlayFormAnimation(true);
-    setTimeout(() => {setPlayFormAnimation(false), setItemInDisplay('')}, 500);
+    setTimeout(() => setPlayFormAnimation(false), 500);
+    if (!isShowingForm) setItemInDisplay('');
   }, [isShowingForm]);
 
   const toggleModalAndResetItemInDisplay = () => {
@@ -150,6 +151,13 @@ export default function PageList() {
       >
         <section className="absolute h-screen bg-primary right-0 z-100" />
       </CSSTransition>
+      <LeftSidebar
+            isEditing={isEditing}
+            isShowingForm={isShowingForm}
+            onButtonClick={handleLeftSidebarButtonClick}
+            itemInDisplay={itemInDisplay}
+            onListTitleChange={handleListTitleChange}
+          />
       {!playFormAnimation && (
         <>
           <Modal isOpen={isModalOpen} onCloseClick={toggleModal}>
@@ -166,13 +174,6 @@ export default function PageList() {
               />
             )}
           </Modal>
-          <LeftSidebar
-            isEditing={isEditing}
-            isShowingForm={isShowingForm}
-            onButtonClick={handleLeftSidebarButtonClick}
-            itemInDisplay={itemInDisplay}
-            onListTitleChange={handleListTitleChange}
-          />
           <section className="flex-1">
             {!isShowingForm ? (
               <section className="h-full" id="bookshelf">
