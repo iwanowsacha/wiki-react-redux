@@ -2,10 +2,13 @@ import {
   createSlice,
   createEntityAdapter,
   PayloadAction,
+  EntityId,
 } from '@reduxjs/toolkit';
 import { loadList } from '../../../utils/loaders';
 import { List, ListItem, ListItemImageChanges } from '../../../types';
 import { setFormVisiblity } from '../listSlice';
+
+let originalIdsOrder: Array<EntityId> = [];
 
 const itemsAdapter = createEntityAdapter({
   selectId: (item: ListItem) => item.title,
@@ -76,6 +79,7 @@ export const slice = createSlice({
     addItem: (state, action: PayloadAction<ListItem>) => {
       addNewTags(state, action.payload.tags);
       state.imagesChanges.new[action.payload.title] = action.payload.image;
+      originalIdsOrder.push(action.payload.title);
       itemsAdapter.addOne(state, action.payload);
     },
     updateItem: (
@@ -86,23 +90,33 @@ export const slice = createSlice({
         tags?: Array<string>;
       }>
     ) => {
-      const unused = removeUnusedTags(state, action.payload.id).filter(
-        (t: string) => !action.payload.changes.tags.includes(t)
+      const { id, changes } = action.payload;
+      const unused = removeUnusedTags(state, id).filter(
+        (t: string) => !changes.tags.includes(t)
       );
-      addNewTags(state, action.payload.changes.tags);
+      addNewTags(state, changes.tags);
       handleImageChanges(state, action.payload);
-      console.log(action.payload);
+      if (id !== changes.title) originalIdsOrder[originalIdsOrder.indexOf(id)] = changes.title;
       itemsAdapter.updateOne(state, action.payload);
       action.payload.tags = [...unused];
     },
     removeItem: (state, action: PayloadAction<string>) => {
       removeUnusedTags(state, action.payload);
+      originalIdsOrder = originalIdsOrder.filter((id) => id !== action.payload);
       itemsAdapter.removeOne(state, action.payload);
     },
     searchItem: (state, action: PayloadAction<string>) => {
       state.searchText = action.payload;
     },
-    upsertMany: itemsAdapter.upsertMany,
+    orderItemsAsc: (state) => {
+      state.ids.sort((a, b) => a > b ? 1 : -1);
+    },
+    orderItemsDesc: (state) => {
+      state.ids.sort((a, b) => a < b ? 1 : -1);
+    },
+    orderItemsRevert: (state) => {
+      state.ids = Array.from(originalIdsOrder);
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -115,7 +129,9 @@ export const slice = createSlice({
           if (action.payload.document?.hasOwnProperty('items')) {
             itemsAdapter.setAll(state, action.payload.document.items);
             state.allTags = [...action.payload.document.allTags];
+            originalIdsOrder = Array.from(state.ids);
           } else {
+            originalIdsOrder = [];
             itemsAdapter.removeAll(state);
           }
         }
@@ -131,7 +147,9 @@ export const {
   addItem,
   updateItem,
   removeItem,
-  upsertMany,
+  orderItemsAsc,
+  orderItemsDesc,
+  orderItemsRevert
 } = slice.actions;
 
 export default slice.reducer;
