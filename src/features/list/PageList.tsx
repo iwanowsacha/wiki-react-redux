@@ -16,6 +16,7 @@ import {
 } from './listSlice';
 import {
   getIsEditing,
+  getIsMenuOpen,
   getSnackbar,
   setSnackbar,
   toggleIsEditing,
@@ -64,6 +65,7 @@ export default function PageList() {
   const selectedTags = useSelector(getSelectedTags);
   const snackbarMessage = useSelector(getSnackbar);
   const itemsImageChanges = useSelector(getImagesChanges);
+  // const isMenuOpen = useSelector(getIsMenuOpen);
   const [isModalOpen, toggleModal] = useModal();
   const [itemInDisplay, setItemInDisplay] = useState('');
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
@@ -157,13 +159,15 @@ export default function PageList() {
       >
         <section className="absolute h-screen bg-primary right-0 z-100" />
       </CSSTransition>
-      <LeftSidebar
+      {/* {isMenuOpen && */}
+        <LeftSidebar
             isEditing={isEditing}
             isShowingForm={isShowingForm}
             onButtonClick={handleLeftSidebarButtonClick}
             itemInDisplay={itemInDisplay}
             onListTitleChange={handleListTitleChange}
           />
+        {/* } */}
       {!playFormAnimation && (
         <>
           <Modal isOpen={isModalOpen} onCloseClick={toggleModal}>
@@ -194,11 +198,13 @@ export default function PageList() {
               className={snackbarMessage[1]}
             />
           </section>
-          <RightSidebar
-            isShowingForm={isShowingForm}
-            onButtonClick={toggleModalAndResetItemInDisplay}
-            onTagClick={handleTagClick}
-          />
+          {/* {(isMenuOpen || isShowingForm) && */}
+            <RightSidebar
+              isShowingForm={isShowingForm}
+              onButtonClick={toggleModalAndResetItemInDisplay}
+              onTagClick={handleTagClick}
+            />
+          {/* } */}
         </>
       )}
     </main>

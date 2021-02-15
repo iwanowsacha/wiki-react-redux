@@ -17,7 +17,7 @@ import log from 'electron-log';
 import * as fs from 'fs-extra';
 import MenuBuilder from './menu';
 import { loadDocuments, DIRECTORIES } from './directories';
-import { DirectoriesList, List, ListItemImageChanges } from './types';
+import { Article, DirectoriesList, List, ListItemImageChanges } from './types';
 
 export default class AppUpdater {
   constructor() {
@@ -174,6 +174,14 @@ app.on('activate', () => {
 
 ipcMain.handle('get-documents', (_event) => {
   return documents;
+});
+
+ipcMain.handle('read-article', async (_event, title) => {
+  if (!title) {
+    return { document: {} };
+  }
+  const obj: Article | undefined = await fs.readJSON(path.join(DIRECTORIES.articles, title, 'article.json')).catch(console.log);
+  return obj ? { type: 'article', document: obj } : { document: {} };
 });
 
 ipcMain.handle('read-list', async (_event, title) => {

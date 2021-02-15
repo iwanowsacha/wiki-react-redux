@@ -52,3 +52,4 @@ npm-debug.log.*
 # App specific
 src/lists/*
 src/articles/*
+src/css/style.css

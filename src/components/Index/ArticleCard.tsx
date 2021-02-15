@@ -1,4 +1,6 @@
 import React, { MouseEvent } from 'react';
+import { useDispatch } from 'react-redux';
+import { loadArticle } from '../../utils/loaders';
 
 type ArticleCardProps = {
   title: string;
@@ -6,9 +8,10 @@ type ArticleCardProps = {
 
 export default function ArticleCard(props: ArticleCardProps) {
   const { title } = props;
+  const dispatch = useDispatch();
 
   const handleOpenArticle = (e: MouseEvent<HTMLButtonElement>) => {
-    console.log(`open: ${e.currentTarget.innerHTML}`);
+    dispatch(loadArticle(e.currentTarget.innerHTML));
   };
 
   return (
@@ -19,8 +22,8 @@ export default function ArticleCard(props: ArticleCardProps) {
         className="object-cover h-p-75 rounded-t-md"
         onError={(e) => {
           // Prevent infinite loop if article-placeholder doesn't exist
-          e.target.onerror = null;
-          e.target.src = '../assets/article-placeholder.png';
+          e.currentTarget.onerror = null;
+          e.currentTarget.src = '../assets/article-placeholder.png';
         }}
       />
       <button

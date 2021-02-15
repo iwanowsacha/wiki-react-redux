@@ -10,7 +10,7 @@ export default function SidePanel(props: SidePanelProps) {
   const [offset, setOffset] = useState(0);
 
   useEffect(() => {
-    setOffset(panelRef?.current?.offsetTop || 0);
+    setOffset(panelRef?.current?.offsetParent?.offsetTop || 0);
   }, [panelRef]);
 
   return (

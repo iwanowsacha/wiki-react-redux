@@ -1,5 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import generalReducer from '../features/general/generalSlice';
+import articleReducer from '../features/article/articleSlice';
 import listReducer from '../features/list/listSlice';
 import listItemReducer from '../features/list/items/itemsSlice';
 import tagGroupReducer from '../features/list/groups/groupsSlice';
@@ -15,6 +16,7 @@ const listsReducer = combineReducers({
 const rootReducer = combineReducers({
   general: generalReducer,
   list: listsReducer,
+  article: articleReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

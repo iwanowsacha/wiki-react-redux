@@ -31,3 +31,16 @@ export interface ListItemImageChanges {
   };
   delete: Array<string>;
 }
+
+export interface Article {
+  title: string;
+  image: string;
+  introduction: string;
+  sections: Array<ArticleSection>
+}
+
+export interface ArticleSection {
+  title: string;
+  body: string;
+  subsections: Array<ArticleSection>
+}

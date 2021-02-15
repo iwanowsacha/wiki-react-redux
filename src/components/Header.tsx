@@ -8,11 +8,12 @@ import { loadList } from '../utils/loaders';
 type HeaderProps = {
   showMenuButton: boolean;
   showESButtons: boolean;
-  onHeaderButtonClick(type: string): void;
+  onESButtonClick(type: string): void;
+  onMenuButtonClick(): void;
 };
 
 export default function Header(props: HeaderProps) {
-  const { showMenuButton, showESButtons, onHeaderButtonClick } = props;
+  const { showMenuButton, showESButtons, onESButtonClick, onMenuButtonClick } = props;
   const dispatch = useDispatch();
   const isEditing = useSelector(getIsEditing);
   const documents = useSelector(getDocuments);
@@ -28,7 +29,7 @@ export default function Header(props: HeaderProps) {
         {showMenuButton && (
           <IconButton
             classNames="text-base md:py-2 md:px-4 md:text-2xl text-secondary"
-            onClick={onHeaderButtonClick}
+            onClick={onMenuButtonClick}
           >
             menu
           </IconButton>
@@ -44,13 +45,13 @@ export default function Header(props: HeaderProps) {
         <div className="mr-6 justify-self-end flex flex-wrap gap-2">
           <IconButton
             classNames="text-base md:py-2 md:px-4 md:text-2xl text-red-500"
-            onClick={onHeaderButtonClick}
+            onClick={onESButtonClick}
           >
             delete
           </IconButton>
           <IconButton
             classNames="text-base md:py-2 md:px-4 md:text-2xl text-primary"
-            onClick={onHeaderButtonClick}
+            onClick={onESButtonClick}
           >
             {isEditing ? 'save' : 'edit'}
           </IconButton>

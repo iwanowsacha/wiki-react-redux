@@ -18,7 +18,6 @@ export default function ListForm(props: ListFormProps) {
   const dispatch = useDispatch();
   const allItems = useSelector(selectIds);
   const item = useSelector((state) => selectById(state, props.item));
-  console.log(item);
   const documents = useSelector(getDocuments);
   const selectedTags = useSelector(getSelectedTags);
   const selectedImage = useSelector(getBrowseImage);

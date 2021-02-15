@@ -16,9 +16,15 @@
         @apply bg-primary
     }
 
-    .autocomplete-active {
-        @apply bg-secondary !important
+    .autocomplete-active,
+    .autocomplete-items div:hover {
+        @apply bg-secondary text-primary !important
     }
+
+    .subsection-border::after {
+        @apply border-primary !important
+    }
+
 }
 
 * {
@@ -214,4 +220,17 @@ button:focus, button:active, input:focus {
 100% {
     transform: rotate(360deg);
 }
+}
+
+.subsection-border {
+    position: relative;
+}
+
+.subsection-border::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 50%;
+    border-bottom-width: 1px;
 }
