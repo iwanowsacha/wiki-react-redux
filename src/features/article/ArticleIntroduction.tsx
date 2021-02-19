@@ -2,20 +2,21 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import ArticleImage from './ArticleImage';
 import { getArticleIntroduction, getArticleTitle } from './articleSlice';
+import OptionsButton from './OptionsButton';
 
 export default function ArticleIntroduction() {
     const title = useSelector(getArticleTitle);
     const introduction = useSelector(getArticleIntroduction);
 
     return(
-        <section className="py-2" id="introduction">
+        <section className="py-2">
             <div className="border-b-2 pb-2 flex border-primary mb-2">
                 <h2 className="text-primary text-xl font-bold">
                     {title}
                 </h2>
-                <button className="material-icons ml-auto my-auto text-primary hidden" name="opts">more_vert</button>
-                <input type="text" className="bg-primary text-secondary h-8 w-full p-2 hidden"
-                placeholder="Article's title" />
+                <OptionsButton isIntroduction buttonClassNames="ml-auto my-auto" menuClassNames="right-0" />
+                {/* <input type="text" className="bg-primary text-secondary h-8 w-full p-2"
+                placeholder="Article's title" value={title}/> */}
             </div>
             <div className="clearfix float-right p-2 ml-4 bg-primary my-2 text-center max-w-md z-100 rounded">
                 <ArticleImage title={title}/>

@@ -66,7 +66,7 @@ export default function PageList() {
   const snackbarMessage = useSelector(getSnackbar);
   const itemsImageChanges = useSelector(getImagesChanges);
   // const isMenuOpen = useSelector(getIsMenuOpen);
-  const [isModalOpen, toggleModal] = useModal();
+  const [isModalOpen, toggleModal] = useModal(false);
   const [itemInDisplay, setItemInDisplay] = useState('');
   const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
   const [playFormAnimation, setPlayFormAnimation] = useState(false);

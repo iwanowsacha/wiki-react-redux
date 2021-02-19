@@ -1,4 +1,5 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import useOffset from '../utils/hooks/useOffset';
 
 type SidePanelProps = {
   children: ReactNode;
@@ -7,12 +8,8 @@ type SidePanelProps = {
 export default function SidePanel(props: SidePanelProps) {
   const { children } = props;
   const panelRef = useRef<HTMLSpanElement>(null);
-  const [offset, setOffset] = useState(0);
-
-  useEffect(() => {
-    setOffset(panelRef?.current?.offsetParent?.offsetTop || 0);
-  }, [panelRef]);
-
+  const offset = useOffset(panelRef);
+  
   return (
     <span
       className="bg-primary text-secondary border-t-2 border-secondary"

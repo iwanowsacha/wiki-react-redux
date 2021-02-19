@@ -1,6 +1,14 @@
 import { useState, useEffect } from 'react';
 
-export default function useModal(): [boolean, () => void] {
+/**
+ * 
+ * For modals, id="modal" must be set on an element to close on window click.
+ * For context menu, name="context" must be set on an element to close on window click.
+ * 
+ * @param isContextMenu @type boolean
+ * 
+ */
+export default function useModal(isContextMenu: boolean): [boolean, () => void] {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     function toggleModal() {
@@ -9,7 +17,7 @@ export default function useModal(): [boolean, () => void] {
 
     useEffect(() => {
         window.addEventListener('click', (event) => {
-            if (event?.target?.id === 'modal') {
+            if ((event?.target?.id === 'modal' && !isContextMenu) || (event?.target?.name !== 'context' && isContextMenu)) {
                 setIsModalOpen(false);
             }
         });

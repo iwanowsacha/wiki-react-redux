@@ -18,6 +18,15 @@ export const slice = createSlice({
     },
     setArticleImage: (state, action: PayloadAction<string>) => {
       state.image = action.payload;
+    },
+    addSubsection: (state, action: PayloadAction<string>) => {
+      const parents = action.payload.split('---');
+      let section = state.sections.find((s) => s.title == parents[0]);
+      for (let i = 1; i < parents.length; i++) {
+        section = section?.subsections.find((s) => s.title == parents[i]);
+      }
+      if (!section) return;
+      section.subsections.push({title: '', body: '', subsections: []});
     }
   },
   extraReducers: (builder) => {
@@ -33,7 +42,7 @@ export const slice = createSlice({
   },
 });
 
-export const { setArticleTitle, setArticleImage } = slice.actions;
+export const { setArticleTitle, setArticleImage, addSubsection } = slice.actions;
 
 export default slice.reducer;
 
