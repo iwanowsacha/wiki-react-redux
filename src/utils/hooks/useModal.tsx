@@ -15,12 +15,14 @@ export default function useModal(isContextMenu: boolean): [boolean, () => void] 
         setIsModalOpen(!isModalOpen);
     }
 
+    function windowListener(event) {
+        if ((event?.target?.id === 'modal' && !isContextMenu) || (event?.target?.name !== 'context' && isContextMenu)) {
+            setIsModalOpen(false);
+        }
+    }
+
     useEffect(() => {
-        window.addEventListener('click', (event) => {
-            if ((event?.target?.id === 'modal' && !isContextMenu) || (event?.target?.name !== 'context' && isContextMenu)) {
-                setIsModalOpen(false);
-            }
-        });
+        window.addEventListener('click', windowListener);
     }, []);
 
     return [isModalOpen, toggleModal];

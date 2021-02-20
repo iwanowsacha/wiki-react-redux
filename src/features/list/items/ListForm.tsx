@@ -29,7 +29,7 @@ export default function ListForm(props: ListFormProps) {
   const [linkType, setLinkType] = useState(!item?.link?.startsWith('local://') ? 'external' : 'local');
   const [linkPath, setLinkPath] = useState(item?.link?.startsWith('local://') ? item?.link.replace('local://', '') : item?.link || '');
 
-  const handleEditorContentChange = (content: any) => {
+  const handleEditorContentChange = (content: string) => {
     setEditorContent(content);
   };
 

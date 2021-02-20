@@ -6,6 +6,7 @@ type ArticleIndexProps = {
 
 export default function ArticleIndex(props: ArticleIndexProps) {
     const { articleTitle, children } = props;
+    
 
     return(
         <span className="bg-primary text-secondary p-2 h-full fixed w-1/4 z-100">

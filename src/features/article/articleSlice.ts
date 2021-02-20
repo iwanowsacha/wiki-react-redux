@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { stringify } from 'postcss';
 import { Article } from '../../types';
 import { loadArticle } from '../../utils/loaders';
 
@@ -19,6 +20,12 @@ export const slice = createSlice({
     setArticleImage: (state, action: PayloadAction<string>) => {
       state.image = action.payload;
     },
+    setArticleIntroduction: (state, action: PayloadAction<string>) => {
+      state.introduction = action.payload;
+    },
+    addSection: (state) => {
+      state.sections.push({title: '', body:'', subsections: []});
+    },
     addSubsection: (state, action: PayloadAction<string>) => {
       const parents = action.payload.split('---');
       let section = state.sections.find((s) => s.title == parents[0]);
@@ -27,6 +34,26 @@ export const slice = createSlice({
       }
       if (!section) return;
       section.subsections.push({title: '', body: '', subsections: []});
+    },
+    saveSection: (state, action: PayloadAction<{title: string, newTitle: string, body: string}>) => {
+      const { title, newTitle, body } = action.payload;
+      const section = state.sections.find((s) => s.title === title);
+      if (!section || (title !== newTitle && state.sections.find((s) => s.title === newTitle))) return;
+      section.title = newTitle;
+      section.body = body;
+    },
+    saveSubsection: (state, action: PayloadAction<{title: string, parent: string, newTitle: string, body: string}>) => {
+      const { title, newTitle, body } = action.payload;
+      const parents = action.payload.parent.split('---');
+      let section = state.sections.find((s) => s.title == parents[0]);
+      for (let i = 1; i < parents.length-1; i++) {
+        section = section?.subsections.find((s) => s.title == parents[i]);
+      }
+      if (!section) return;
+      const subsection = section.subsections.find((s) => s.title === title);
+      if (!subsection) return;
+      subsection.title = newTitle;
+      subsection.body = body;
     }
   },
   extraReducers: (builder) => {
@@ -42,7 +69,7 @@ export const slice = createSlice({
   },
 });
 
-export const { setArticleTitle, setArticleImage, addSubsection } = slice.actions;
+export const { setArticleTitle, setArticleImage, setArticleIntroduction, addSection, addSubsection, saveSection, saveSubsection } = slice.actions;
 
 export default slice.reducer;
 
