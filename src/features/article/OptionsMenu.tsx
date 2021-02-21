@@ -27,12 +27,12 @@ export default function OptionsMenu(props: any) {
             {isContextMenuOpen &&
                 <div className="relative" style={{zIndex: 99}}>
                     <div className={`absolute p-5 bg-primary text-secondary font-bold top-full ${menuPosition}`} style={{minWidth: 150}}>
-                        <button className="mb-2 hover:text-primary block" name="edit" onClick={props.onEditClick}>Edit</button>
+                        <button className="mb-2 hover:text-primary block" onClick={props.onEditClick}>Edit</button>
                         {!isIntroduction &&
                             <>
-                                <button className="mb-2 hover:text-primary block" name="up">Move Up</button>
-                                <button className="mb-2 hover:text-primary block" name="down">Move Down</button>
-                                <button className="hover:text-red-500 block" name="delete">Delete</button>
+                                <button className="mb-2 hover:text-primary block" onClick={() => props.onMoveClick('up')}>Move Up</button>
+                                <button className="mb-2 hover:text-primary block" onClick={() => props.onMoveClick('down')}>Move Down</button>
+                                <button className="hover:text-red-500 block" onClick={props.onDeleteClick}>Delete</button>
                             </>
                         }
                     </div>

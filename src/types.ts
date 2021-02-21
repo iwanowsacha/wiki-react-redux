@@ -42,5 +42,5 @@ export interface Article {
 export interface ArticleSection {
   title: string;
   body: string;
-  subsections: Array<ArticleSection>
+  sections: Array<ArticleSection>
 }

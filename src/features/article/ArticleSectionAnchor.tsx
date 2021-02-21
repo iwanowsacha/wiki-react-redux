@@ -7,7 +7,7 @@ type ArticleSectionAnchorProps = {
 }
 
 export default function ArticleSectionAnchor(props: ArticleSectionAnchorProps) {
-    const { title, subsections } = props.section;
+    const { title, sections } = props.section;
     const { parent } = props;
     const href = parent ? `${parent}---${title}` : title;
 
@@ -17,8 +17,8 @@ export default function ArticleSectionAnchor(props: ArticleSectionAnchorProps) {
                 {title}
             </a>
             <ol className="ml-2">
-                {subsections &&
-                    subsections.map((subsection) => <ArticleSectionAnchor key={subsection.title} section={subsection} parent={href}/>)
+                {sections &&
+                    sections.map((section) => <ArticleSectionAnchor key={section.title} section={section} parent={href}/>)
                 }
             </ol>
         </li>

@@ -2,7 +2,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TextInput from '../../components/ControlledTextInput';
-import { getDocuments } from '../general/generalSlice';
+import { getDocuments, setSnackbar } from '../general/generalSlice';
 import ArticleImage from './ArticleImage';
 import { getArticleIntroduction, getArticleTitle, setArticleIntroduction } from './articleSlice';
 import OptionsMenu from './OptionsMenu';
@@ -33,8 +33,16 @@ export default function ArticleIntroduction() {
     }
 
     const handleEditSave = () => {
-        if (titleText !== title && articles.includes(titleText)) return;
+        if (titleText !== title && articles.includes(titleText)) {
+            dispatch(setSnackbar(['A document with that name already exists', 'text-red-500']));
+            return;
+        };
+        if (!titleText) {
+            dispatch(setSnackbar(['Article must have a title', 'text-red-500']));
+            return;
+        }
         dispatch(setArticleIntroduction(editorContent));
+        dispatch(setSnackbar(['Article introduction saved', 'text-primary']));
         setIsBeingEdited(false);
     }
 

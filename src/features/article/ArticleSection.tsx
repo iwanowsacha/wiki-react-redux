@@ -1,9 +1,10 @@
 import { Editor } from '@tinymce/tinymce-react';
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import TextInput from '../../components/ControlledTextInput';
 import { ArticleSection as ArticleSectionType } from '../../types';
-import { addSubsection, saveSubsection } from './articleSlice';
+import { setSnackbar } from '../general/generalSlice';
+import { addSection, deleteSection, moveSection, saveSection } from './articleSlice';
 import OptionsMenu from './OptionsMenu';
 
 type ArticleSectionProps = {
@@ -12,7 +13,7 @@ type ArticleSectionProps = {
 }
 
 export default function ArticleSection(props: ArticleSectionProps) {
-    const { title, body, subsections } = props.section;
+    const { title, body, sections } = props.section;
     const { parent } = props;
     const [isBeingEdited, setIsBeingEdited] = useState(title === '');
     const [titleText, setTitleText] = useState(title);
@@ -32,15 +33,30 @@ export default function ArticleSection(props: ArticleSectionProps) {
     }
 
     const handleAddSectionClick = () => {
-        dispatch(addSubsection(id));
+        dispatch(addSection(id));
+        dispatch(setSnackbar([`Adding section: ${id}`, 'text-primary']));
     }
 
     const handleEditButtonClick = () => {
         setIsBeingEdited(true);
+        dispatch(setSnackbar([`Editing: ${title}`, 'text-primary']));
+    }
+
+    const handleDeleteButtonClick = () => {
+        dispatch(deleteSection({parent: id, title: title}));
+        dispatch(setSnackbar([`Deleted: ${title}`, 'text-red-500']));
+    }
+
+    const handleMoveSectionClick = (direction: string) => {
+        dispatch(moveSection({parent: id, title: title, direction: direction}));
     }
     
     const handleEditCancel = () => {
         setTitleText(title);
+        if (!title) {
+            dispatch(deleteSection({parent: id, title: ''}));
+        }
+        dispatch(setSnackbar([`Editing canceled`, 'text-red-500']));
         setIsBeingEdited(false);
     }
 
@@ -53,16 +69,18 @@ export default function ArticleSection(props: ArticleSectionProps) {
     }
 
     const handleEditSave = () => {
-        dispatch(saveSubsection({
-            title: title,
+        if (!titleText) {
+            dispatch(setSnackbar([`Section must have a title`, 'text-red-500']));
+            return;
+        }
+        dispatch(saveSection({
             parent: id,
             newTitle: titleText,
             body: editorContent
         }));
+        dispatch(setSnackbar([`Saved: ${titleText}`, 'text-primary']));
         setIsBeingEdited(false);
     }
-
-
 
     return(
         <section className="my-4 pb-2" id={id}>
@@ -71,7 +89,11 @@ export default function ArticleSection(props: ArticleSectionProps) {
                     ? <TextInput text={titleText} onTextChange={handleTitleChange} color="p-2 bg-primary text-secondary" />
                     :   (<>
                             <h2 className={`text-primary font-bold ${textClass}`}>{titleText}</h2>
-                            <OptionsMenu onEditClick={handleEditButtonClick} isIntroduction={false} buttonClassNames={parent ? 'ml-10' : 'ml-auto my-auto'} menuPosition={parent ? 'left-0' : 'right-0'}/>
+                            <OptionsMenu 
+                                onEditClick={handleEditButtonClick}
+                                onDeleteClick={handleDeleteButtonClick}
+                                onMoveClick={handleMoveSectionClick}
+                                isIntroduction={false} buttonClassNames={parent ? 'ml-10' : 'ml-auto my-auto'} menuPosition={parent ? 'left-0' : 'right-0'}/>
                         </>)
                 }
             </div>
@@ -85,10 +107,10 @@ export default function ArticleSection(props: ArticleSectionProps) {
                     </>)
                 : <div className="mt-2 py-2 break-all text-justify text-secondary" dangerouslySetInnerHTML={{__html: body}}></div>
             }
-            {subsections &&
-                subsections.map((section, index) => <ArticleSection key={section.title+index} section={section} parent={id}/>)
+            {sections &&
+                sections.map((section, index) => <ArticleSection key={section.title+index} section={section} parent={id}/>)
             }
-            {!subsections.find((s) => s.title === '') && title &&
+            {!sections.find((s) => s.title === '') && title &&
                 <aside className="ml-4 pb-2 mb-2">
                     <button className="bg-primary text-primary py-2 px-3" onClick={handleAddSectionClick}>
                         <span className="material-icons text-sm mr-2">add</span>
