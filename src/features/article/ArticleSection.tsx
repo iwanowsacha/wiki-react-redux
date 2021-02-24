@@ -10,11 +10,12 @@ import OptionsMenu from './OptionsMenu';
 type ArticleSectionProps = {
     section: ArticleSectionType;
     parent: string;
+    isArticleEditing: boolean;
 }
 
 export default function ArticleSection(props: ArticleSectionProps) {
     const { title, body, sections } = props.section;
-    const { parent } = props;
+    const { parent, isArticleEditing } = props;
     const [isBeingEdited, setIsBeingEdited] = useState(title === '');
     const [titleText, setTitleText] = useState(title);
     const [editorContent, setEditorContent] = useState(body);
@@ -89,11 +90,13 @@ export default function ArticleSection(props: ArticleSectionProps) {
                     ? <TextInput text={titleText} onTextChange={handleTitleChange} color="p-2 bg-primary text-secondary" />
                     :   (<>
                             <h2 className={`text-primary font-bold ${textClass}`}>{titleText}</h2>
-                            <OptionsMenu 
-                                onEditClick={handleEditButtonClick}
-                                onDeleteClick={handleDeleteButtonClick}
-                                onMoveClick={handleMoveSectionClick}
-                                isIntroduction={false} buttonClassNames={parent ? 'ml-10' : 'ml-auto my-auto'} menuPosition={parent ? 'left-0' : 'right-0'}/>
+                            {isArticleEditing &&
+                                <OptionsMenu 
+                                    onEditClick={handleEditButtonClick}
+                                    onDeleteClick={handleDeleteButtonClick}
+                                    onMoveClick={handleMoveSectionClick}
+                                    isIntroduction={false} buttonClassNames={parent ? 'ml-10' : 'ml-auto my-auto'} menuPosition={parent ? 'left-0' : 'right-0'}/>
+                            }
                         </>)
                 }
             </div>
@@ -108,9 +111,9 @@ export default function ArticleSection(props: ArticleSectionProps) {
                 : <div className="mt-2 py-2 break-all text-justify text-secondary" dangerouslySetInnerHTML={{__html: body}}></div>
             }
             {sections &&
-                sections.map((section, index) => <ArticleSection key={section.title+index} section={section} parent={id}/>)
+                sections.map((section, index) => <ArticleSection key={section.title+index} isArticleEditing={isArticleEditing} section={section} parent={id}/>)
             }
-            {!sections.find((s) => s.title === '') && title &&
+            {!sections.find((s) => s.title === '') && title && isArticleEditing &&
                 <aside className="ml-4 pb-2 mb-2">
                     <button className="bg-primary text-primary py-2 px-3" onClick={handleAddSectionClick}>
                         <span className="material-icons text-sm mr-2">add</span>

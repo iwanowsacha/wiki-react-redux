@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useDebugValue, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Snackbar from '../../components/Snackbar';
-import { getIsMenuOpen, getSnackbar } from '../general/generalSlice';
+import { getIsEditing, getIsMenuOpen, getSnackbar } from '../general/generalSlice';
 import ArticleIndex from './ArticleIndex';
 import ArticleIntroduction from './ArticleIntroduction';
 import ArticleSection from './ArticleSection';
@@ -14,6 +14,7 @@ export default function PageArticle() {
     const articleTitle = useSelector(getArticleTitle);
     const isMenuOpen = useSelector(getIsMenuOpen);
     const snackbarMessage = useSelector(getSnackbar);
+    const isEditing = useSelector(getIsEditing);
     const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
 
 
@@ -30,6 +31,12 @@ export default function PageArticle() {
         }
       }, [snackbarMessage]);
 
+    // useEffect(() => {
+    //     return function cleanup() {
+    //         console.log('unmounting');
+    //     }
+    // }, []);
+
     return(
         <>
             <main className="flex flex-auto">
@@ -43,7 +50,7 @@ export default function PageArticle() {
                 <div className="flex-grow px-6 pt-4 relative">
                     <ArticleIntroduction />
                     {sections &&
-                        sections.map((section: any) => <ArticleSection key={section.title} section={section} parent='' />)
+                        sections.map((section: any) => <ArticleSection key={section.title} section={section} isArticleEditing={isEditing} parent='' />)
                     }
                     <aside className="pb-2 flex border-primary mb-2">
                         <button className="bg-primary text-primary py-2 px-3" onClick={handleAddSection}>

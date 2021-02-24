@@ -16,7 +16,8 @@ const initialState: Article = {
   title: '',
   introduction: '',
   image: '',
-  sections: []
+  sections: [],
+  quickFacts: [],
 };
 
 export const slice = createSlice({
@@ -29,7 +30,7 @@ export const slice = createSlice({
     setArticleImage: (state, action: PayloadAction<string>) => {
       state.image = action.payload;
     },
-    setArticleIntroduction: (state, action: PayloadAction<string>) => {
+    saveArticleIntroduction: (state, action: PayloadAction<string>) => {
       state.introduction = action.payload;
     },
     addSection: (state, action: PayloadAction<string>) => {
@@ -58,6 +59,9 @@ export const slice = createSlice({
       const dirIndex = direction === 'up' ? -1 : 1;
       if ((index <= 0 && dirIndex === -1) || (index === section.sections.length-1 && dirIndex === 1)) return;
       [section.sections[index+dirIndex], section.sections[index]] = [section.sections[index], section.sections[index+dirIndex]];
+    },
+    addQuickFact: (state) => {
+      state.quickFacts.push({title: '', body:''});
     }
   },
   extraReducers: (builder) => {
@@ -68,12 +72,13 @@ export const slice = createSlice({
         state.introduction = action.payload.document?.introduction || '';
         state.image = action.payload.document?.image || '';
         Object.assign(state.sections, action.payload.document?.sections);
+        Object.assign(state.quickFacts, action.payload.document?.quickFacts);
       }
     );
   },
 });
 
-export const { setArticleTitle, setArticleImage, setArticleIntroduction, addSection, saveSection, deleteSection, moveSection } = slice.actions;
+export const { setArticleTitle, setArticleImage, saveArticleIntroduction, addSection, saveSection, deleteSection, moveSection, addQuickFact } = slice.actions;
 
 export default slice.reducer;
 
@@ -81,3 +86,4 @@ export const getArticleTitle = (state) => state.article.title;
 export const getArticleIntroduction = (state) => state.article.introduction;
 export const getArticleImage = (state) => state.article.image;
 export const getArticleSections = (state) => state.article.sections;
+export const getArticleQuickFacts = (state) => state.article.quickFacts;

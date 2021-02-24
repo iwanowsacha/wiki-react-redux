@@ -36,11 +36,17 @@ export interface Article {
   title: string;
   image: string;
   introduction: string;
-  sections: Array<ArticleSection>
+  sections: Array<ArticleSection>;
+  quickFacts: Array<ArticleQuickFact>;
 }
 
 export interface ArticleSection {
   title: string;
   body: string;
   sections: Array<ArticleSection>
+}
+
+export interface ArticleQuickFact {
+  title: string;
+  body: string;
 }

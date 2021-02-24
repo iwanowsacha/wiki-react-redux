@@ -2,15 +2,17 @@ import { Editor } from '@tinymce/tinymce-react';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TextInput from '../../components/ControlledTextInput';
-import { getDocuments, setSnackbar } from '../general/generalSlice';
+import { getDocuments, getIsEditing, setSnackbar } from '../general/generalSlice';
 import ArticleImage from './ArticleImage';
-import { getArticleIntroduction, getArticleTitle, setArticleIntroduction } from './articleSlice';
+import ArticleQuickFacts from './ArticleQuickFacts';
+import { getArticleIntroduction, getArticleTitle, saveArticleIntroduction } from './articleSlice';
 import OptionsMenu from './OptionsMenu';
 
 export default function ArticleIntroduction() {
     const dispatch = useDispatch();
     const title = useSelector(getArticleTitle);
     const introduction = useSelector(getArticleIntroduction);
+    const isArticleEditing = useSelector(getIsEditing);
     const [isBeingEdited, setIsBeingEdited] = useState(title === '');
     const [titleText, setTitleText] = useState(title);
     const [editorContent, setEditorContent] = useState(introduction);
@@ -41,7 +43,7 @@ export default function ArticleIntroduction() {
             dispatch(setSnackbar(['Article must have a title', 'text-red-500']));
             return;
         }
-        dispatch(setArticleIntroduction(editorContent));
+        dispatch(saveArticleIntroduction(editorContent));
         dispatch(setSnackbar(['Article introduction saved', 'text-primary']));
         setIsBeingEdited(false);
     }
@@ -56,20 +58,15 @@ export default function ArticleIntroduction() {
                             <h2 className="text-primary text-xl font-bold">
                                 {titleText}
                             </h2>
-                            <OptionsMenu isIntroduction buttonClassNames="ml-auto my-auto" menuPosition="right-0" onEditClick={handleIntroductionEdit}/>              
+                            {isArticleEditing &&
+                                <OptionsMenu isIntroduction buttonClassNames="ml-auto my-auto" menuPosition="right-0" onEditClick={handleIntroductionEdit}/>
+                            }              
                         </>)
                 }
             </div>
             <div className="clearfix float-right p-2 ml-4 bg-primary my-2 text-center max-w-md z-100 rounded">
-                <ArticleImage title={title}/>
-                <div className="mt-2 border-t-2 border-primary">
-                    <h2 className="text-primary mt-2 hidden">Quick Facts</h2>
-                    <div id="facts">
-                        -------quick facts---------
-                    </div>
-                    <button id="addFact"
-                    className="mt-2 w-full p-2 text-primary nav-element material-icons hidden">add</button>
-                </div>
+                <ArticleImage title={title} isArticleEditing={isArticleEditing}/>
+                <ArticleQuickFacts isArticleEditing={isArticleEditing}/>
             </div>
             {isBeingEdited
                 ?   (<>
