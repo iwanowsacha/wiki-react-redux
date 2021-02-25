@@ -19,11 +19,7 @@ export default function ArticleSectionAnchor(props: ArticleSectionAnchorProps) {
       <ol className="ml-2">
         {sections &&
           sections.map((s) => (
-            <ArticleSectionAnchor
-              key={s.title}
-              section={s}
-              parent={href}
-            />
+            <ArticleSectionAnchor key={s.title} section={s} parent={href} />
           ))}
       </ol>
     </li>

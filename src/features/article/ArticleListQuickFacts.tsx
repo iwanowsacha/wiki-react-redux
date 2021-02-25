@@ -7,9 +7,11 @@ import ArticleQuickFact from './ArticleQuickFact';
 
 type ArticleListQuickFactsProps = {
   isArticleEditing: boolean;
-}
+};
 
-export default function ArticleListQuickFacts(props: ArticleListQuickFactsProps) {
+export default function ArticleListQuickFacts(
+  props: ArticleListQuickFactsProps
+) {
   const { isArticleEditing } = props;
   const dispatch = useDispatch();
   const facts = useSelector(getArticleQuickFacts);

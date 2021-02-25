@@ -101,6 +101,30 @@ export const slice = createSlice({
       fact.title = quickFact.title;
       fact.body = quickFact.body;
     },
+    deleteQuickFact: (state, action: PayloadAction<string>) => {
+      const fact = state.quickFacts.find((f) => f.title === action.payload);
+      if (!fact) return;
+      state.quickFacts = state.quickFacts.filter(
+        (f) => f.title !== action.payload
+      );
+    },
+    moveQuickFact: (
+      state,
+      action: PayloadAction<{ direction: string; title: string }>
+    ) => {
+      const { title, direction } = action.payload;
+      const index = state.quickFacts.findIndex((f) => f.title === title);
+      const dirIndex = direction === 'up' ? -1 : 1;
+      if (
+        (index <= 0 && dirIndex === -1) ||
+        (index === state.quickFacts.length - 1 && dirIndex === 1)
+      )
+        return;
+      [state.quickFacts[index + dirIndex], state.quickFacts[index]] = [
+        state.quickFacts[index],
+        state.quickFacts[index + dirIndex],
+      ];
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -126,6 +150,8 @@ export const {
   moveSection,
   addQuickFact,
   saveQuickFact,
+  deleteQuickFact,
+  moveQuickFact,
 } = slice.actions;
 
 export default slice.reducer;
