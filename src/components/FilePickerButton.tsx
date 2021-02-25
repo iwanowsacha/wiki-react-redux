@@ -3,7 +3,7 @@ import React, { ReactNode, RefObject, useRef } from 'react';
 type FilePickerButtonProps = {
   children: ReactNode;
   fileTypes: string;
-  onFileChange(path: string): void;
+  onFileChange: (path: string) => void;
 };
 
 export default function FilePickerButton(props: FilePickerButtonProps) {

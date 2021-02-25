@@ -3,7 +3,7 @@ import React, { ReactNode, MouseEvent } from 'react';
 type IconButtonProps = {
   children: ReactNode;
   classNames?: string;
-  onClick(text: string): void;
+  onClick: (text: string) => void;
 } & typeof defaultProps;
 
 const defaultProps = {
@@ -13,7 +13,8 @@ const defaultProps = {
 export default function IconButton(props: IconButtonProps) {
   const { classNames, children } = props;
 
-  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) => props.onClick(e.currentTarget.innerHTML);
+  const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) =>
+    props.onClick(e.currentTarget.innerHTML);
 
   return (
     <button

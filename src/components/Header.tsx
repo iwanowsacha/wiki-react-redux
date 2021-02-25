@@ -8,12 +8,17 @@ import { loadList } from '../utils/loaders';
 type HeaderProps = {
   showMenuButton: boolean;
   showESButtons: boolean;
-  onESButtonClick(type: string): void;
-  onMenuButtonClick(): void;
+  onESButtonClick: (type: string) => void;
+  onMenuButtonClick: () => void;
 };
 
 export default function Header(props: HeaderProps) {
-  const { showMenuButton, showESButtons, onESButtonClick, onMenuButtonClick } = props;
+  const {
+    showMenuButton,
+    showESButtons,
+    onESButtonClick,
+    onMenuButtonClick,
+  } = props;
   const dispatch = useDispatch();
   const isEditing = useSelector(getIsEditing);
   const documents = useSelector(getDocuments);
@@ -21,7 +26,7 @@ export default function Header(props: HeaderProps) {
 
   const handleAutocompleteEnter = (value: string) => {
     if (documents.lists.includes(value)) dispatch(loadList(value));
-  }
+  };
 
   return (
     <header className="grid grid-cols-4 w-full gap-4 items-center bg-primary sticky top-0 z-100">
@@ -36,7 +41,10 @@ export default function Header(props: HeaderProps) {
         )}
       </div>
       <div className="col-span-2 self-stretch my-2 bg-secondary text-secondary py-2 px-3 inline-flex rounded">
-        <Autocomplete suggestions={suggestions} onSuggestionSelected={handleAutocompleteEnter} />
+        <Autocomplete
+          suggestions={suggestions}
+          onSuggestionSelected={handleAutocompleteEnter}
+        />
         <div className="hidden sm:block text-base md:text-2xl material-icons self-center ml-2 pl-2 border-l-2 border-secondary">
           search
         </div>

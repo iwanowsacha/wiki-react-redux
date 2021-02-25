@@ -10,20 +10,19 @@ type UncontrolledTextInputProps = {
 const defaultProps = {
   color: 'bg-primary',
   placeholder: '',
-  onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    console.log(`${e.key}`);
-  },
+  onKeyDown: undefined,
 };
 
 export default function TextInput(props: UncontrolledTextInputProps) {
-  const { color, placeholder } = props;
+  const { color, placeholder, onTextChange, onKeyDown } = props;
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => {
-    props.onTextChange(e.target.value);
+    onTextChange(e.target.value);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    props.onKeyDown(e);
+    if (!onKeyDown) return;
+    onKeyDown(e);
   };
 
   return (

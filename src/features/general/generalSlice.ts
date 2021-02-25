@@ -36,22 +36,35 @@ export const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(
-      loadList.fulfilled,
-      (state, action: PayloadAction<{ document: List | null }>) => {
-        const { document } = action.payload;
-        state.documentType = 'list';
-        state.isMenuOpen = true;
-        !document?.hasOwnProperty('title') ? state.isEditing = true : state.isEditing = false;
-      }
-    ).addCase(loadList.pending, (state) => { state.documentType = 'loading' })
-    .addCase(loadDocuments.fulfilled, (state, action) => { Object.assign(state.documents, action.payload) })
-    .addCase(loadArticle.fulfilled, (state, action: PayloadAction<{ document: Article | null }>) => { 
-      const { document } = action.payload;
-      state.documentType = 'article';
-      state.isMenuOpen = false;
-      !document?.hasOwnProperty('title') ? state.isEditing = true : state.isEditing = false;
-    })
+    builder
+      .addCase(
+        loadList.fulfilled,
+        (state, action: PayloadAction<{ document: List | null }>) => {
+          const { document } = action.payload;
+          state.documentType = 'list';
+          state.isMenuOpen = true;
+          !document?.hasOwnProperty('title')
+            ? (state.isEditing = true)
+            : (state.isEditing = false);
+        }
+      )
+      .addCase(loadList.pending, (state) => {
+        state.documentType = 'loading';
+      })
+      .addCase(loadDocuments.fulfilled, (state, action) => {
+        Object.assign(state.documents, action.payload);
+      })
+      .addCase(
+        loadArticle.fulfilled,
+        (state, action: PayloadAction<{ document: Article | null }>) => {
+          const { document } = action.payload;
+          state.documentType = 'article';
+          state.isMenuOpen = false;
+          !document?.hasOwnProperty('title')
+            ? (state.isEditing = true)
+            : (state.isEditing = false);
+        }
+      );
   },
 });
 

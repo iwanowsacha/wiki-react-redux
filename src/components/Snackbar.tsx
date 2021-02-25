@@ -10,6 +10,7 @@ type SnackbarProps = {
 
 const defaultProps = {
   className: 'text-primary',
+  children: <></>,
 };
 
 export default function Snackbar(props: SnackbarProps) {

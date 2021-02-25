@@ -6,7 +6,7 @@ import { selectAllItems } from './itemsSlice';
 import { getListTitle } from '../listSlice';
 import { getFilterType, getSelectedTags } from '../tags/tagsSlice';
 import ListItem from './ListItem';
-import { ListItem as ListItemT} from '../../../types';
+import { ListItem as ListItemT } from '../../../types';
 
 const getFilteredItems = createSelector(
   [
@@ -15,7 +15,12 @@ const getFilteredItems = createSelector(
     getFilterType,
     selectAllItems,
   ],
-  (searchText: string, selectedTags: Array<string>, filterType: string, items: Array<ListItemT>) => {
+  (
+    searchText: string,
+    selectedTags: Array<string>,
+    filterType: string,
+    items: Array<ListItemT>
+  ) => {
     let filtered;
     if (selectedTags.length > 0) {
       switch (filterType) {
@@ -39,14 +44,12 @@ const getFilteredItems = createSelector(
       }
       if (searchText) {
         filtered = filtered?.filter(
-          (it) =>
-            it.title.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+          (it) => it.title.toLowerCase().indexOf(searchText.toLowerCase()) > -1
         );
       }
     } else if (searchText) {
       filtered = items.filter(
-        (it) =>
-          it.title.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+        (it) => it.title.toLowerCase().indexOf(searchText.toLowerCase()) > -1
       );
     }
     return filtered || items;

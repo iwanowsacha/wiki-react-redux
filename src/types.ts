@@ -43,7 +43,7 @@ export interface Article {
 export interface ArticleSection {
   title: string;
   body: string;
-  sections: Array<ArticleSection>
+  sections: Array<ArticleSection>;
 }
 
 export interface ArticleQuickFact {

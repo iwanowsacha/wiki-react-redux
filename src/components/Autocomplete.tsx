@@ -1,7 +1,13 @@
 import React, { useState, KeyboardEvent, MouseEvent } from 'react';
 import TextInput from './ControlledTextInput';
 
-export default function Autocomplete(props: any) {
+type AutocompleteProps = {
+  suggestions: Array<string>;
+  onSuggestionSelected: (selected: string) => void;
+};
+
+export default function Autocomplete(props: AutocompleteProps) {
+  const { suggestions } = props;
   const [filteredSuggestions, setFilteredSuggestions] = useState<Array<string>>(
     []
   );
@@ -10,8 +16,8 @@ export default function Autocomplete(props: any) {
 
   const handleInputChange = (value: string) => {
     if (value) {
-      const filtered = props.suggestions.filter(
-        (s: string) => s.toLowerCase().indexOf(value.toLowerCase()) > -1
+      const filtered = suggestions.filter(
+        (s) => s.toLowerCase().indexOf(value.toLowerCase()) > -1
       );
       setFilteredSuggestions(filtered);
     } else {
@@ -19,6 +25,12 @@ export default function Autocomplete(props: any) {
       setActiveSuggestion(0);
     }
     setSearchText(value);
+  };
+
+  const resetState = () => {
+    setActiveSuggestion(0);
+    setFilteredSuggestions([]);
+    setSearchText('');
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -47,13 +59,7 @@ export default function Autocomplete(props: any) {
     const suggestion = e.currentTarget.innerHTML;
     resetState();
     props.onSuggestionSelected(suggestion);
-  }
-
-  const resetState = () => {
-    setActiveSuggestion(0);
-    setFilteredSuggestions([]);
-    setSearchText('');
-  }
+  };
 
   return (
     <div className="autocomplete relative w-full">

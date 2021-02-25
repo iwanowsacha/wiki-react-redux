@@ -4,24 +4,25 @@ type ControlledTextInputProps = {
   color?: string;
   text: string;
   placeholder?: string;
-  onTextChange(value: string): void;
-  onKeyDown?(e: KeyboardEvent<HTMLInputElement>): void;
+  onTextChange: (value: string) => void;
+  onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
 } & typeof defaultProps;
 
 const defaultProps = {
   color: 'bg-primary',
   placeholder: '',
-  onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    console.log(`${e.key}`);
-  },
 };
 
 export default function TextInput(props: ControlledTextInputProps) {
   const { color, text, placeholder } = props;
 
-  const handleTextChange = (e: ChangeEvent<HTMLInputElement>) => props.onTextChange(e.target.value);
+  const handleTextChange = (e: ChangeEvent<HTMLInputElement>) =>
+    props.onTextChange(e.target.value);
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => props.onKeyDown(e);
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (!props.onKeyDown) return;
+    props.onKeyDown(e);
+  };
 
   return (
     <input

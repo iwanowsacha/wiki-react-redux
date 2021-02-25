@@ -56,7 +56,6 @@ const getList = createSelector(
   }
 );
 
-
 export default function PageList() {
   const dispatch = useDispatch();
   const list = useSelector(getList);
@@ -75,7 +74,7 @@ export default function PageList() {
 
   useEffect(() => {
     if (!isMounted) return;
-    if (isEditing && snackbarMessage[0] !== "List must have a title") {
+    if (isEditing && snackbarMessage[0] !== 'List must have a title') {
       dispatch(setSnackbar(['Editing list', 'text-primary']));
     } else if (!isEditing) {
       if (!list.title && !listTitleText) {
@@ -96,7 +95,6 @@ export default function PageList() {
       }, 1000);
     }
   }, [snackbarMessage]);
-
 
   ipcRenderer.on('list-saved', (_e, items) => {
     if (listTitleText) dispatch(setListTitle(listTitleText));
@@ -160,14 +158,14 @@ export default function PageList() {
         <section className="absolute h-screen bg-primary right-0 z-100" />
       </CSSTransition>
       {/* {isMenuOpen && */}
-        <LeftSidebar
-            isEditing={isEditing}
-            isShowingForm={isShowingForm}
-            onButtonClick={handleLeftSidebarButtonClick}
-            itemInDisplay={itemInDisplay}
-            onListTitleChange={handleListTitleChange}
-          />
-        {/* } */}
+      <LeftSidebar
+        isEditing={isEditing}
+        isShowingForm={isShowingForm}
+        onButtonClick={handleLeftSidebarButtonClick}
+        itemInDisplay={itemInDisplay}
+        onListTitleChange={handleListTitleChange}
+      />
+      {/* } */}
       {!playFormAnimation && (
         <>
           <Modal isOpen={isModalOpen} onCloseClick={toggleModal}>
@@ -190,7 +188,7 @@ export default function PageList() {
                 <List onItemClick={handleItemClick} />
               </section>
             ) : (
-              <ListForm item={itemInDisplay} onFormEmptying={handleFormEmpty}/>
+              <ListForm item={itemInDisplay} onFormEmptying={handleFormEmpty} />
             )}
             <Snackbar
               isOpen={isSnackbarOpen}
@@ -199,11 +197,11 @@ export default function PageList() {
             />
           </section>
           {/* {(isMenuOpen || isShowingForm) && */}
-            <RightSidebar
-              isShowingForm={isShowingForm}
-              onButtonClick={toggleModalAndResetItemInDisplay}
-              onTagClick={handleTagClick}
-            />
+          <RightSidebar
+            isShowingForm={isShowingForm}
+            onButtonClick={toggleModalAndResetItemInDisplay}
+            onTagClick={handleTagClick}
+          />
           {/* } */}
         </>
       )}

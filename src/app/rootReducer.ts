@@ -16,7 +16,7 @@ const listsReducer = combineReducers({
 const rootReducer = combineReducers({
   general: generalReducer,
   list: listsReducer,
-  article: articleReducer
+  article: articleReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

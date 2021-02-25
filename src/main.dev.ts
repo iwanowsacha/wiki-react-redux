@@ -11,7 +11,15 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, ipcMain, ipcRenderer, Menu, MenuItem, shell } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  ipcRenderer,
+  Menu,
+  MenuItem,
+  shell,
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import * as fs from 'fs-extra';
@@ -140,7 +148,11 @@ const createWindow = async () => {
     console.log(url);
     if (url.startsWith('local://')) {
       const document = url.replace('local://', '');
-      if (!documents.articles.includes(document) && !documents.lists.includes(document)) return;
+      if (
+        !documents.articles.includes(document) &&
+        !documents.lists.includes(document)
+      )
+        return;
       mainWindow?.webContents.send('open-list', url.replace('local://', ''));
     } else if (!url.endsWith('/src/index.html')) {
       shell.openExternal(url);
@@ -180,7 +192,9 @@ ipcMain.handle('read-article', async (_event, title) => {
   if (!title) {
     return { document: {} };
   }
-  const obj: Article | undefined = await fs.readJSON(path.join(DIRECTORIES.articles, title, 'article.json')).catch(console.log);
+  const obj: Article | undefined = await fs
+    .readJSON(path.join(DIRECTORIES.articles, title, 'article.json'))
+    .catch(console.log);
   return obj ? { type: 'article', document: obj } : { document: {} };
 });
 
@@ -294,8 +308,11 @@ ipcMain.handle(
     }
 
     await manageListItemImages(images, list);
-    let json = JSON.stringify(list);
-    await fs.writeFile(path.join(__dirname, 'lists', list.title, 'list.json'), json);
+    const json = JSON.stringify(list);
+    await fs.writeFile(
+      path.join(__dirname, 'lists', list.title, 'list.json'),
+      json
+    );
 
     if (newTitle) {
       if (previousTitle !== newTitle) {
@@ -304,7 +321,7 @@ ipcMain.handle(
         documents.lists.push(newTitle);
       }
     }
-    
+
     mainWindow?.webContents.send('open-list', list.title);
   }
 );

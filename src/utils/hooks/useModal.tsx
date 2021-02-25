@@ -1,29 +1,34 @@
 import { useState, useEffect } from 'react';
 
 /**
- * 
+ *
  * For modals, id="modal" must be set on an element to close on window click.
  * For context menu, name="context" must be set on an element to close on window click.
- * 
+ *
  * @param isContextMenu @type boolean
- * 
+ *
  */
-export default function useModal(isContextMenu: boolean): [boolean, () => void] {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+export default function useModal(
+  isContextMenu: boolean
+): [boolean, () => void] {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    function toggleModal() {
-        setIsModalOpen(!isModalOpen);
+  function toggleModal() {
+    setIsModalOpen(!isModalOpen);
+  }
+
+  function windowListener(event) {
+    if (
+      (event?.target?.id === 'modal' && !isContextMenu) ||
+      (event?.target?.name !== 'context' && isContextMenu)
+    ) {
+      setIsModalOpen(false);
     }
+  }
 
-    function windowListener(event) {
-        if ((event?.target?.id === 'modal' && !isContextMenu) || (event?.target?.name !== 'context' && isContextMenu)) {
-            setIsModalOpen(false);
-        }
-    }
+  useEffect(() => {
+    window.addEventListener('click', windowListener);
+  }, []);
 
-    useEffect(() => {
-        window.addEventListener('click', windowListener);
-    }, []);
-
-    return [isModalOpen, toggleModal];
+  return [isModalOpen, toggleModal];
 }

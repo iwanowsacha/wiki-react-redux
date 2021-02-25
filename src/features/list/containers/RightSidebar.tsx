@@ -4,7 +4,12 @@ import FilePickerButton from '../../../components/FilePickerButton';
 import SidePanel from '../../../components/SidePanel';
 import SidePanelButton from '../../../components/SidePanelButton';
 import TextInput from '../../../components/UncontrolledTextInput';
-import { orderItemsAsc, orderItemsDesc, orderItemsRevert, searchItem } from '../items/itemsSlice';
+import {
+  orderItemsAsc,
+  orderItemsDesc,
+  orderItemsRevert,
+  searchItem,
+} from '../items/itemsSlice';
 import { getBrowseImage, setBrowseImage } from '../listSlice';
 import TagPill from '../tags/TagPill';
 import { getSelectedTags } from '../tags/tagsSlice';
@@ -39,15 +44,15 @@ export default function RightSidebar(props: RightSidebarProps) {
 
   const handleOrderAsc = () => {
     dispatch(orderItemsAsc());
-  }
+  };
 
   const handleOrderDesc = () => {
     dispatch(orderItemsDesc());
-  }
+  };
 
   const handleOriginalOrder = () => {
     dispatch(orderItemsRevert());
-  }
+  };
 
   return (
     <SidePanel>
@@ -62,22 +67,13 @@ export default function RightSidebar(props: RightSidebarProps) {
               />
             </div>
           </div>
-          <SidePanelButton
-            id="orderAsc"
-            onClick={handleOrderAsc}
-          >
+          <SidePanelButton id="orderAsc" onClick={handleOrderAsc}>
             Order Asc (A-Z)
           </SidePanelButton>
-          <SidePanelButton
-            id="orderDesc"
-            onClick={handleOrderDesc}
-          >
+          <SidePanelButton id="orderDesc" onClick={handleOrderDesc}>
             Order Desc (Z-A)
           </SidePanelButton>
-          <SidePanelButton
-            id="orderOriginal"
-            onClick={handleOriginalOrder}
-          >
+          <SidePanelButton id="orderOriginal" onClick={handleOriginalOrder}>
             Original Order
           </SidePanelButton>
         </>

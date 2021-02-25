@@ -72,8 +72,9 @@ export const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadList.fulfilled, (state) => state = initialState)
-    .addCase(setFormVisiblity, resetTags);
+    builder
+      .addCase(loadList.fulfilled, (state) => (state = initialState))
+      .addCase(setFormVisiblity, resetTags);
   },
 });
 

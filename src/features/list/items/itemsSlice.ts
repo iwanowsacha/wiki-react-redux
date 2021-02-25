@@ -96,7 +96,8 @@ export const slice = createSlice({
       );
       addNewTags(state, changes.tags);
       handleImageChanges(state, action.payload);
-      if (id !== changes.title) originalIdsOrder[originalIdsOrder.indexOf(id)] = changes.title;
+      if (id !== changes.title)
+        originalIdsOrder[originalIdsOrder.indexOf(id)] = changes.title;
       itemsAdapter.updateOne(state, action.payload);
       action.payload.tags = [...unused];
     },
@@ -109,14 +110,14 @@ export const slice = createSlice({
       state.searchText = action.payload;
     },
     orderItemsAsc: (state) => {
-      state.ids.sort((a, b) => a > b ? 1 : -1);
+      state.ids.sort((a, b) => (a > b ? 1 : -1));
     },
     orderItemsDesc: (state) => {
-      state.ids.sort((a, b) => a < b ? 1 : -1);
+      state.ids.sort((a, b) => (a < b ? 1 : -1));
     },
     orderItemsRevert: (state) => {
       state.ids = Array.from(originalIdsOrder);
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -124,7 +125,7 @@ export const slice = createSlice({
         loadList.fulfilled,
         (state, action: PayloadAction<{ document: List | null }>) => {
           state.allTags = [];
-          state.imagesChanges = { new: {}, rename: {}, delete: []};
+          state.imagesChanges = { new: {}, rename: {}, delete: [] };
           state.searchText = '';
           if (action.payload.document?.hasOwnProperty('items')) {
             itemsAdapter.setAll(state, action.payload.document.items);
@@ -149,7 +150,7 @@ export const {
   removeItem,
   orderItemsAsc,
   orderItemsDesc,
-  orderItemsRevert
+  orderItemsRevert,
 } = slice.actions;
 
 export default slice.reducer;

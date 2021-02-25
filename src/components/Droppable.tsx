@@ -3,16 +3,16 @@ import React, { ReactNode, DragEvent } from 'react';
 type DroppableProps = {
   children: ReactNode;
   droppableId: string;
-  onDrop(e: DragEvent<HTMLDivElement>, droppableId: string): void;
+  onDrop: (e: DragEvent<HTMLDivElement>, droppableId: string) => void;
 };
 
 export default function Droppable(props: DroppableProps) {
-  const { children } = props;
+  const { children, droppableId } = props;
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    props.onDrop(e, props.droppableId);
+    props.onDrop(e, droppableId);
   };
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {

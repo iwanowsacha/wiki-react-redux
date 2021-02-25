@@ -10,9 +10,9 @@ import { addItem, selectById, selectIds, updateItem } from './itemsSlice';
 import { getBrowseImage, getListTitle, setBrowseImage } from '../listSlice';
 
 type ListFormProps = {
-  item: string,
-  onFormEmptying(): void
-}
+  item: string;
+  onFormEmptying(): void;
+};
 
 export default function ListForm(props: ListFormProps) {
   const dispatch = useDispatch();
@@ -26,8 +26,14 @@ export default function ListForm(props: ListFormProps) {
   const [editorContent, setEditorContent] = useState(item?.body || '');
   const [newTags, setNewTags] = useState('');
   const [isUpdatingItem, setIsUpdatingItem] = useState(!!item);
-  const [linkType, setLinkType] = useState(!item?.link?.startsWith('local://') ? 'external' : 'local');
-  const [linkPath, setLinkPath] = useState(item?.link?.startsWith('local://') ? item?.link.replace('local://', '') : item?.link || '');
+  const [linkType, setLinkType] = useState(
+    !item?.link?.startsWith('local://') ? 'external' : 'local'
+  );
+  const [linkPath, setLinkPath] = useState(
+    item?.link?.startsWith('local://')
+      ? item?.link.replace('local://', '')
+      : item?.link || ''
+  );
 
   const handleEditorContentChange = (content: string) => {
     setEditorContent(content);
@@ -39,22 +45,30 @@ export default function ListForm(props: ListFormProps) {
 
   const handleExternalLinkChange = (value: string) => {
     setLinkPath(value);
-  }
+  };
 
   const handleLocalLinkChange = (e: ChangeEvent<HTMLSelectElement>) => {
-      setLinkPath(e.target.value);
-  }
+    setLinkPath(e.target.value);
+  };
 
   const handleRadioChange = (value: string) => {
     setLinkType(value);
-    if (value === 'local' && isUpdatingItem && item?.link?.startsWith('local://')) {
+    if (
+      value === 'local' &&
+      isUpdatingItem &&
+      item?.link?.startsWith('local://')
+    ) {
       setLinkPath(item?.link.replace('local://', ''));
-    } else if (value === 'external' && isUpdatingItem && !item?.link?.startsWith('local://')) {
+    } else if (
+      value === 'external' &&
+      isUpdatingItem &&
+      !item?.link?.startsWith('local://')
+    ) {
       setLinkPath(item?.link || '');
     } else {
       setLinkPath('');
     }
-  }
+  };
 
   const handleNewTagsChange = (value: string) => {
     setNewTags(value);
@@ -82,14 +96,15 @@ export default function ListForm(props: ListFormProps) {
   const updateCurrentItem = (updatedItem: any) => {
     console.log(item);
     if (!item) return;
-    if (item.image === basename(updatedItem.image)) updatedItem.image = item.image;
+    if (item.image === basename(updatedItem.image))
+      updatedItem.image = item.image;
     dispatch(
       updateItem({
         id: item.title,
         changes: updatedItem,
       })
     );
-      
+
     dispatch(setSnackbar(['Item updated correctly', 'text-primary']));
     setIsUpdatingItem(false);
   };
@@ -115,17 +130,24 @@ export default function ListForm(props: ListFormProps) {
     let link = '';
     if (linkPath) {
       if (linkType === 'local') {
-        if (!documents.articles.includes(linkPath) && !documents.lists.includes(linkPath)) return link;
+        if (
+          !documents.articles.includes(linkPath) &&
+          !documents.lists.includes(linkPath)
+        )
+          return link;
         link = `local://${linkPath}`;
-      } else if (linkType === 'external' && !linkPath.startsWith('http://') && !linkPath.startsWith('https://')) {
+      } else if (
+        linkType === 'external' &&
+        !linkPath.startsWith('http://') &&
+        !linkPath.startsWith('https://')
+      ) {
         link = `http://${linkPath}`;
       } else {
         link = linkPath;
       }
     }
     return link;
-  }
-  
+  };
 
   const handleSaveButtonClick = () => {
     if (!itemTitle || !selectedImage) {
@@ -151,7 +173,7 @@ export default function ListForm(props: ListFormProps) {
     isUpdatingItem ? updateCurrentItem(newItem) : addCurrentItem(newItem);
     emptyForm();
   };
-  
+
   return (
     <section className="h-full bg-secondary">
       <div className="grid grid-cols-8 new-item-form h-full gap-x-2 p-4 items-center">
@@ -175,19 +197,18 @@ export default function ListForm(props: ListFormProps) {
             ) : (
               <select
                 className="bg-primary text-secondary w-full h-8"
-                defaultValue={linkPath} onChange={handleLocalLinkChange}
+                defaultValue={linkPath}
+                onChange={handleLocalLinkChange}
               >
-                <option value="">
-                  Link to
-                </option>
+                <option value="">Link to</option>
                 {[...documents.articles, ...documents.lists].map((art) => {
                   if (art === listTitle) return;
-                  return (<option key={art} value={art}>
-                    {art}
-                  </option>)
-                }
-
-                )}
+                  return (
+                    <option key={art} value={art}>
+                      {art}
+                    </option>
+                  );
+                })}
               </select>
             )}
           </div>

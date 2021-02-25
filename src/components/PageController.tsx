@@ -18,7 +18,6 @@ export default function PageController() {
   const documentType = useSelector(getDocumentType);
 
   useEffect(() => {
-    console.log('dispatching');
     dispatch(loadDocuments());
   });
 
@@ -41,7 +40,7 @@ export default function PageController() {
       page = <PageList />;
       break;
     case 'article':
-      page = <PageArticle />
+      page = <PageArticle />;
       break;
     default:
       page = <Spinner />;

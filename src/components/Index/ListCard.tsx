@@ -9,8 +9,9 @@ type ListCardProps = {
 export default function ListCard(props: ListCardProps) {
   const { lists } = props;
   const dispatch = useDispatch();
-  
-  const handleOpenList = (e: MouseEvent<HTMLButtonElement>) => dispatch(loadList(e.currentTarget.innerHTML));
+
+  const handleOpenList = (e: MouseEvent<HTMLButtonElement>) =>
+    dispatch(loadList(e.currentTarget.innerHTML));
 
   return (
     <section className="bg-primary h-full rounded-md">
