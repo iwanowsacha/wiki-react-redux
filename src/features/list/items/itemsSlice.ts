@@ -163,3 +163,4 @@ export const {
 
 export const getAllTags = (state) => state.list.items.allTags;
 export const getImagesChanges = (state) => state.list.items.imagesChanges;
+export const getSearchText = (state) => state.list.items.searchText;

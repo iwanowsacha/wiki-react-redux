@@ -9,7 +9,8 @@ import { useState, useEffect } from 'react';
  *
  */
 export default function useModal(
-  isContextMenu: boolean
+  isContextMenu: boolean,
+  onWindowClickClose?: () => void
 ): [boolean, () => void] {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -23,6 +24,7 @@ export default function useModal(
       (event?.target?.name !== 'context' && isContextMenu)
     ) {
       setIsModalOpen(false);
+      if (onWindowClickClose) onWindowClickClose();
     }
   }
 

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getDocuments, getIsEditing } from '../features/general/generalSlice';
 import IconButton from './IconButton';
 import Autocomplete from './Autocomplete';
-import { loadList } from '../utils/loaders';
+import { loadArticle, loadList } from '../utils/loaders';
 
 type HeaderProps = {
   showMenuButton: boolean;
@@ -26,6 +26,7 @@ export default function Header(props: HeaderProps) {
 
   const handleAutocompleteEnter = (value: string) => {
     if (documents.lists.includes(value)) dispatch(loadList(value));
+    if (documents.articles.includes(value)) dispatch(loadArticle(value));
   };
 
   return (

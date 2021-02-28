@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { selectAllItems } from './itemsSlice';
+import { getSearchText, selectAllItems } from './itemsSlice';
 import { getListTitle } from '../listSlice';
 import { getFilterType, getSelectedTags } from '../tags/tagsSlice';
 import ListItem from './ListItem';
@@ -11,7 +11,7 @@ import { filter, filterByText } from '../../../utils/filters/filters';
 
 const getFilteredItems = createSelector(
   [
-    (state) => state.list.items.searchText,
+    getSearchText,
     getSelectedTags,
     getFilterType,
     selectAllItems,

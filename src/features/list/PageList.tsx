@@ -11,6 +11,7 @@ import {
 import { getFormVisibility, getListTitle, setFormVisiblity } from './listSlice';
 import {
   getIsEditing,
+  getIsMenuOpen,
   getSnackbar,
   setSnackbar,
   toggleIsEditing,
@@ -58,8 +59,8 @@ export default function PageList() {
   const selectedTags = useSelector(getSelectedTags);
   const snackbarMessage = useSelector(getSnackbar);
   const itemsImageChanges = useSelector(getImagesChanges);
-  // const isMenuOpen = useSelector(getIsMenuOpen);
-  const [isModalOpen, toggleModal] = useModal(false);
+  const isMenuOpen = useSelector(getIsMenuOpen);
+  const [isModalOpen, toggleModal] = useModal(false, () => { if (!isShowingForm) setItemInDisplay('') });
   const [itemInDisplay, setItemInDisplay] = useState('');
   const [isSnackbarOpen, openSnackbar] = useSnacbkbar(true);
   const [playFormAnimation, setPlayFormAnimation] = useState(false);
@@ -82,9 +83,7 @@ export default function PageList() {
   }, [isEditing]);
 
   useEffect(() => {
-    if (snackbarMessage[0]) {
-      openSnackbar();
-    }
+    if (snackbarMessage[0]) openSnackbar();
   }, [snackbarMessage]);
 
   useEffect(() => {
@@ -141,18 +140,18 @@ export default function PageList() {
       >
         <section className="absolute h-screen bg-primary right-0 z-100" />
       </CSSTransition>
-      {/* {isMenuOpen && */}
-      <LeftSidebar
-        isEditing={isEditing}
-        isShowingForm={isShowingForm}
-        onButtonClick={handleLeftSidebarButtonClick}
-        itemInDisplay={itemInDisplay}
-        onListTitleChange={handleListTitleChange}
-      />
-      {/* } */}
+      {isMenuOpen &&
+        <LeftSidebar
+          isEditing={isEditing}
+          isShowingForm={isShowingForm}
+          onButtonClick={handleLeftSidebarButtonClick}
+          itemInDisplay={itemInDisplay}
+          onListTitleChange={handleListTitleChange}
+        />
+      }
       {!playFormAnimation && (
         <>
-          <Modal isOpen={isModalOpen} onCloseClick={toggleModal}>
+          <Modal isOpen={isModalOpen} onCloseClick={toggleModalAndResetItemInDisplay}>
             {itemInDisplay && !isShowingForm ? (
               <ItemModal
                 itemTitle={itemInDisplay}
@@ -180,13 +179,13 @@ export default function PageList() {
               className={snackbarMessage[1]}
             />
           </section>
-          {/* {(isMenuOpen || isShowingForm) && */}
-          <RightSidebar
-            isShowingForm={isShowingForm}
-            onButtonClick={toggleModalAndResetItemInDisplay}
-            onTagClick={handleTagClick}
-          />
-          {/* } */}
+          {(isMenuOpen || isShowingForm) &&
+            <RightSidebar
+              isShowingForm={isShowingForm}
+              onButtonClick={toggleModalAndResetItemInDisplay}
+              onTagClick={handleTagClick}
+            />
+          }
         </>
       )}
     </main>

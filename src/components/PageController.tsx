@@ -55,8 +55,7 @@ export default function PageController() {
     <div className="flex flex-col min-h-full">
       <Header
         showESButtons={documentType !== 'index' && documentType !== 'loading'}
-        // showMenuButton={documentType === 'article' || documentType === 'list'}
-        showMenuButton={documentType === 'article'}
+        showMenuButton={documentType === 'article' || documentType === 'list'}
         onESButtonClick={handleEditSaveClick}
         onMenuButtonClick={handleMenuClick}
       />

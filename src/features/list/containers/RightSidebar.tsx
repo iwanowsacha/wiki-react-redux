@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import FilePickerButton from '../../../components/FilePickerButton';
 import SidePanel from '../../../components/SidePanel';
 import SidePanelButton from '../../../components/SidePanelButton';
 import TextInput from '../../../components/UncontrolledTextInput';
 import {
+  getSearchText,
   orderItemsAsc,
   orderItemsDesc,
   orderItemsRevert,
@@ -25,6 +26,7 @@ export default function RightSidebar(props: RightSidebarProps) {
   const { isShowingForm, onButtonClick, onTagClick } = props;
   const selectedImage = useSelector(getBrowseImage);
   const selectedTags = useSelector(getSelectedTags);
+  const searchText = useSelector(getSearchText)
 
   const handleImageFilePicked = (path: string) => {
     dispatch(setBrowseImage(path));
@@ -61,6 +63,7 @@ export default function RightSidebar(props: RightSidebarProps) {
           <div className=" px-2 pb-2 text-center my-4 border-b-2 border-dotted border-secondary">
             <div className="bg-secondary text-secondary py-2 px-3 rounded">
               <TextInput
+                initialValue={searchText}
                 color="bg-secondary"
                 placeholder="Search items"
                 onTextChange={delay(handleItemSearch, 500)}

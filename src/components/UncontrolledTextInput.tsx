@@ -3,12 +3,14 @@ import React, { ChangeEvent, KeyboardEvent } from 'react';
 type UncontrolledTextInputProps = {
   color?: string;
   placeholder?: string;
+  initialValue?: string;
   onTextChange(value: string): void;
   onKeyDown?(e: KeyboardEvent<HTMLInputElement>): void;
 };
 
 export default function TextInput(props: UncontrolledTextInputProps) {
   const {
+    initialValue = '',
     color = 'bg-primary',
     placeholder = '',
     onTextChange,
@@ -26,6 +28,7 @@ export default function TextInput(props: UncontrolledTextInputProps) {
 
   return (
     <input
+      defaultValue={initialValue}
       type="text"
       className={`h-8 w-full rounded ${color}`}
       placeholder={placeholder}
