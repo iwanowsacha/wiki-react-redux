@@ -11,15 +11,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import {
-  app,
-  BrowserWindow,
-  ipcMain,
-  ipcRenderer,
-  Menu,
-  MenuItem,
-  shell,
-} from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, MenuItem, shell } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import * as fs from 'fs-extra';
@@ -223,8 +215,9 @@ const createDocumentDirectory = async (
   directoryPath: string,
   subfolder?: string
 ) => {
-  await fs.mkdir(directoryPath);
-  if (subfolder) await fs.mkdir(path.join(directoryPath, subfolder));
+  return fs.mkdir(path.join(directoryPath, subfolder || ''), {
+    recursive: true,
+  });
 };
 
 const manageListItemImages = async (
@@ -310,7 +303,7 @@ ipcMain.handle(
     await manageListItemImages(images, list);
     const json = JSON.stringify(list);
     await fs.writeFile(
-      path.join(__dirname, 'lists', list.title, 'list.json'),
+      path.join(DIRECTORIES.lists, list.title, 'list.json'),
       json
     );
 
@@ -323,5 +316,45 @@ ipcMain.handle(
     }
 
     mainWindow?.webContents.send('open-list', list.title);
+  }
+);
+
+ipcMain.handle(
+  'save-article',
+  async (_event, article: Article, newTitle: string) => {
+    const previousTitle: string = article.title ? article.title : newTitle;
+    if (newTitle && article.title !== newTitle) {
+      article.title = newTitle;
+    }
+
+    const directoryExists: boolean = fs.existsSync(
+      path.join(DIRECTORIES.articles, previousTitle)
+    );
+
+    if (directoryExists && newTitle) {
+      renameDocumentDirectory(previousTitle, article.title, 'articles');
+    } else if (!directoryExists) {
+      await createDocumentDirectory(
+        path.join(DIRECTORIES.articles, article.title)
+      );
+    }
+
+    const json = JSON.stringify(article);
+    await fs.writeFile(
+      path.join(DIRECTORIES.articles, article.title, 'article.json'),
+      json
+    );
+
+    if (newTitle) {
+      if (previousTitle !== newTitle) {
+        documents.articles[
+          documents.articles.indexOf(previousTitle)
+        ] = newTitle;
+      } else if (previousTitle === newTitle) {
+        documents.articles.push(newTitle);
+      }
+    }
+
+    mainWindow?.webContents.send('open-article', article.title);
   }
 );

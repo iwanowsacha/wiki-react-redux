@@ -28,11 +28,6 @@ export const loadDocuments = async () => {
     Object.entries(DIRECTORIES).forEach(([key, directory]) => {
       directoriesList[key] = fs.readdirSync(directory);
     });
-    // for (const directory of Object.values(DIRECTORIES)) {
-    //   directoriesList[
-    //     directory.slice(directory.lastIndexOf('/') + 1)
-    //   ] = await fs.readdir(directory);
-    // }
   } catch (err) {
     console.log(err);
   }

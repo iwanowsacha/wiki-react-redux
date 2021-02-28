@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import IconButton from '../../../components/IconButton';
 import Snackbar from '../../../components/Snackbar';
+import useSnacbkbar from '../../../utils/hooks/useSnackbar';
 import { getIsEditing, setSnackbar } from '../../general/generalSlice';
 import { getListTitle, setBrowseImage, setFormVisiblity } from '../listSlice';
 import { addManySelectedTags } from '../tags/tagsSlice';
@@ -19,7 +20,7 @@ export default function ItemModal(props: ItemModalProps) {
   const item = useSelector((state) => selectById(state, props.itemTitle));
   const isEditing = useSelector(getIsEditing);
   const listTitle = useSelector(getListTitle);
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [isSnackbarOpen, toggleSnackbar] = useSnacbkbar(false);
 
   const image =
     basename(item?.image || '') === item?.image
@@ -34,20 +35,16 @@ export default function ItemModal(props: ItemModalProps) {
   };
 
   const handleDeleteItemClick = () => {
-    setIsSnackbarOpen(true);
+    toggleSnackbar();
   };
 
   const handleDeleteItemConfirmation = () => {
-    setIsSnackbarOpen(false);
+    toggleSnackbar();
     if (item) {
       dispatch(removeItem(item.title));
       dispatch(setSnackbar([`Item ${item.title} deleted`, 'text-red-500']));
     }
     props.onDeleteItem();
-  };
-
-  const handleDeleteItemCancel = () => {
-    setIsSnackbarOpen(false);
   };
 
   return (
@@ -114,7 +111,7 @@ export default function ItemModal(props: ItemModalProps) {
         </button>
         <button
           className="text-primary mx-2 p-2 bg-secondary"
-          onClick={handleDeleteItemCancel}
+          onClick={handleDeleteItemClick}
         >
           Cancel
         </button>

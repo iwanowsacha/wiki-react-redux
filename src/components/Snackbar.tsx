@@ -6,15 +6,15 @@ type SnackbarProps = {
   isOpen: boolean;
   className?: string;
   message: string;
-} & typeof defaultProps;
-
-const defaultProps = {
-  className: 'text-primary',
-  children: <></>,
 };
 
 export default function Snackbar(props: SnackbarProps) {
-  const { isOpen, className, message, children } = props;
+  const {
+    isOpen,
+    className = 'text-primary',
+    message,
+    children = null,
+  } = props;
 
   return (
     <CSSTransition in={isOpen} timeout={300} unmountOnExit classNames="fade-in">
@@ -29,5 +29,3 @@ export default function Snackbar(props: SnackbarProps) {
     </CSSTransition>
   );
 }
-
-Snackbar.defaultProps = defaultProps;

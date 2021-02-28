@@ -6,15 +6,10 @@ type ControlledTextInputProps = {
   placeholder?: string;
   onTextChange: (value: string) => void;
   onKeyDown?: (e: KeyboardEvent<HTMLInputElement>) => void;
-} & typeof defaultProps;
-
-const defaultProps = {
-  color: 'bg-primary',
-  placeholder: '',
 };
 
 export default function TextInput(props: ControlledTextInputProps) {
-  const { color, text, placeholder } = props;
+  const { color = 'bg-primary', text, placeholder = '' } = props;
 
   const handleTextChange = (e: ChangeEvent<HTMLInputElement>) =>
     props.onTextChange(e.target.value);
@@ -35,5 +30,3 @@ export default function TextInput(props: ControlledTextInputProps) {
     />
   );
 }
-
-TextInput.defaultProps = defaultProps;

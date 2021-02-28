@@ -6,7 +6,9 @@ import { ArticleSection as ArticleSectionType } from '../../types';
 import { setSnackbar } from '../general/generalSlice';
 import {
   addSection,
+  decrementOpenEditors,
   deleteSection,
+  incrementOpenEditors,
   moveSection,
   saveSection,
 } from './articleSlice';
@@ -46,6 +48,7 @@ export default function ArticleSection(props: ArticleSectionProps) {
   const handleEditButtonClick = () => {
     setIsBeingEdited(true);
     dispatch(setSnackbar([`Editing: ${title}`, 'text-primary']));
+    dispatch(incrementOpenEditors());
   };
 
   const handleDeleteButtonClick = () => {
@@ -63,6 +66,7 @@ export default function ArticleSection(props: ArticleSectionProps) {
       dispatch(deleteSection({ parent: id, title: '' }));
     }
     dispatch(setSnackbar([`Editing canceled`, 'text-red-500']));
+    dispatch(decrementOpenEditors());
     setIsBeingEdited(false);
   };
 
@@ -148,11 +152,11 @@ export default function ArticleSection(props: ArticleSectionProps) {
         />
       )}
       {sections &&
-        sections.map((section) => (
+        sections.map((s) => (
           <ArticleSection
-            key={section.title}
+            key={s.title}
             isArticleEditing={isArticleEditing}
-            section={section}
+            section={s}
             parent={id}
           />
         ))}

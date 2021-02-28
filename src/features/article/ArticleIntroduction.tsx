@@ -10,8 +10,10 @@ import {
 import ArticleImage from './ArticleImage';
 import ArticleListQuickFacts from './ArticleListQuickFacts';
 import {
+  decrementOpenEditors,
   getArticleIntroduction,
   getArticleTitle,
+  incrementOpenEditors,
   saveArticleIntroduction,
 } from './articleSlice';
 import OptionsMenu from './OptionsMenu';
@@ -25,13 +27,16 @@ export default function ArticleIntroduction() {
   const [titleText, setTitleText] = useState(title);
   const [editorContent, setEditorContent] = useState(introduction);
   const { articles } = useSelector(getDocuments);
+
   const handleIntroductionEdit = () => {
     setIsBeingEdited(true);
+    dispatch(incrementOpenEditors());
   };
 
   const handleEditCancel = () => {
     setTitleText(title);
     setIsBeingEdited(false);
+    dispatch(decrementOpenEditors());
   };
 
   const handleTitleChange = (value: string) => {

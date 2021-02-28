@@ -7,10 +7,6 @@ type OptionsMenuProps = {
   onEditClick?: () => void;
   onMoveClick?: (direction: string) => void;
   onDeleteClick?: () => void;
-} & typeof defaultProps;
-
-const defaultProps = {
-  buttonClassNames: '',
 };
 
 export default function OptionsMenu(props: OptionsMenuProps) {
@@ -18,7 +14,7 @@ export default function OptionsMenu(props: OptionsMenuProps) {
     onEditClick,
     onMoveClick,
     onDeleteClick,
-    buttonClassNames,
+    buttonClassNames = '',
     menuPosition,
   } = props;
   const [isContextMenuOpen, toggleContextMenu] = useModal(true);
@@ -87,5 +83,3 @@ export default function OptionsMenu(props: OptionsMenuProps) {
     </>
   );
 }
-
-OptionsMenu.defaultProps = defaultProps;

@@ -3,7 +3,12 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import TextInput from '../../components/ControlledTextInput';
 import IconButton from '../../components/IconButton';
-import { saveQuickFact, deleteQuickFact, moveQuickFact } from './articleSlice';
+import {
+  saveQuickFact,
+  deleteQuickFact,
+  moveQuickFact,
+  incrementOpenEditors,
+} from './articleSlice';
 import OptionsMenu from './OptionsMenu';
 
 export default function ArticleQuickFact(props: any) {
@@ -18,6 +23,7 @@ export default function ArticleQuickFact(props: any) {
   };
 
   const handleSaveFactClick = () => {
+    if (!factTitle) return;
     dispatch(
       saveQuickFact({
         oldTitle: title,
@@ -33,6 +39,7 @@ export default function ArticleQuickFact(props: any) {
 
   const handleEditButtonClick = () => {
     setIsBeingEdited(true);
+    dispatch(incrementOpenEditors());
   };
 
   const handleMoveButtonClick = (direction: string) => {

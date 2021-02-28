@@ -22,28 +22,28 @@ export default function FilterOptions() {
           group="options"
           title="Has one of selected"
           value="any"
-          checked
+          checked={filterType === 'any'}
         />
         <RadioButton
           onChange={handleFilterTypeChange}
           group="options"
           title="Has all selected"
           value="all"
-          checked={false}
+          checked={filterType === 'all'}
         />
         <RadioButton
           onChange={handleFilterTypeChange}
           group="options"
           title="Has none of selected"
           value="none"
-          checked={false}
+          checked={filterType === 'none'}
         />
         <RadioButton
           onChange={handleFilterTypeChange}
           group="options"
           title="Custom"
           value="custom"
-          checked={false}
+          checked={filterType === 'custom'}
         />
       </div>
       {filterType === 'custom' && <CustomTagFilter />}

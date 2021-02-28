@@ -1,11 +1,17 @@
+import { createSelector, current } from '@reduxjs/toolkit';
+import { ipcRenderer } from 'electron/renderer';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Snackbar from '../../components/Snackbar';
 import { ArticleSection as ArticleSectionT } from '../../types';
+import useMounted from '../../utils/hooks/useMounted';
+import useSnacbkbar from '../../utils/hooks/useSnackbar';
 import {
   getIsEditing,
   getIsMenuOpen,
   getSnackbar,
+  setSnackbar,
+  toggleIsEditing,
 } from '../general/generalSlice';
 import ArticleIndex from './ArticleIndex';
 import ArticleIntroduction from './ArticleIntroduction';
@@ -15,29 +21,42 @@ import {
   addSection,
   getArticleSections,
   getArticleTitle,
+  getOpenEditorsTotal,
 } from './articleSlice';
 
 export default function PageArticle() {
   const dispatch = useDispatch();
+  const isMounted = useMounted();
   const sections = useSelector(getArticleSections);
   const articleTitle = useSelector(getArticleTitle);
   const isMenuOpen = useSelector(getIsMenuOpen);
   const snackbarMessage = useSelector(getSnackbar);
   const isEditing = useSelector(getIsEditing);
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [isSnackbarOpen, openSnackbar] = useSnacbkbar(true);
+  const openEditors = useSelector(getOpenEditorsTotal);
 
   const handleAddSection = () => {
     dispatch(addSection(''));
   };
 
   useEffect(() => {
-    if (snackbarMessage[0]) {
-      setIsSnackbarOpen(true);
-      setTimeout(() => {
-        setIsSnackbarOpen(false);
-      }, 1000);
-    }
+    if (snackbarMessage[0]) openSnackbar();
   }, [snackbarMessage]);
+
+  useEffect(() => {
+    if (!isMounted) return;
+    if (isEditing && snackbarMessage[0] !== 'There are unsaved changes') {
+      dispatch(setSnackbar(['Editing article', 'text-primary']));
+    } else if (!isEditing) {
+      if (openEditors > 0) {
+        dispatch(setSnackbar(['There are unsaved changes', 'text-red-500']));
+        dispatch(toggleIsEditing());
+        return;
+      }
+      dispatch(setSnackbar(['Article saved succesfully', 'text-primary']));
+      // ipcRenderer.invoke('save-article', );
+    }
+  }, [isEditing]);
 
   // useEffect(() => {
   //     return function cleanup() {

@@ -7,6 +7,7 @@ import { getListTitle } from '../listSlice';
 import { getFilterType, getSelectedTags } from '../tags/tagsSlice';
 import ListItem from './ListItem';
 import { ListItem as ListItemT } from '../../../types';
+import { filter, filterByText } from '../../../utils/filters/filters';
 
 const getFilteredItems = createSelector(
   [
@@ -23,35 +24,9 @@ const getFilteredItems = createSelector(
   ) => {
     let filtered;
     if (selectedTags.length > 0) {
-      switch (filterType) {
-        case 'any':
-          filtered = items.filter((it) =>
-            selectedTags.some((t) => it.tags.includes(t))
-          );
-          break;
-        case 'all':
-          filtered = items.filter((it) =>
-            selectedTags.every((t) => it.tags.includes(t))
-          );
-          break;
-        case 'none':
-          filtered = items.filter(
-            (it) => !selectedTags.some((t) => it.tags.includes(t))
-          );
-          break;
-        default:
-          break;
-      }
-      if (searchText) {
-        filtered = filtered?.filter(
-          (it) => it.title.toLowerCase().indexOf(searchText.toLowerCase()) > -1
-        );
-      }
-    } else if (searchText) {
-      filtered = items.filter(
-        (it) => it.title.toLowerCase().indexOf(searchText.toLowerCase()) > -1
-      );
+      filtered = filter(filterType, items, selectedTags);
     }
+    if (searchText) filtered = filterByText(filtered || items, searchText);
     return filtered || items;
   }
 );

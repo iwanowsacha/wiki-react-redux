@@ -9,7 +9,7 @@ import {
 import PageIndex from './Index/PageIndex';
 import Header from './Header';
 import PageList from '../features/list/PageList';
-import { loadList, loadDocuments } from '../utils/loaders';
+import { loadList, loadDocuments, loadArticle } from '../utils/loaders';
 import Spinner from './Spinner';
 import PageArticle from '../features/article/PageArticle';
 
@@ -27,9 +27,13 @@ export default function PageController() {
 
   const handleMenuClick = () => dispatch(toggleMenu());
 
-  ipcRenderer.on('new-list', () => dispatch(loadList('')));
+  ipcRenderer?.on('new-list', () => dispatch(loadList('')));
 
-  ipcRenderer.on('open-list', (_event, title) => dispatch(loadList(title)));
+  ipcRenderer?.on('open-list', (_event, title) => dispatch(loadList(title)));
+
+  ipcRenderer?.on('open-article', (_event, title) =>
+    dispatch(loadArticle(title))
+  );
 
   let page = null;
   switch (documentType) {

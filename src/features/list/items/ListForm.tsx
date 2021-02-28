@@ -201,8 +201,9 @@ export default function ListForm(props: ListFormProps) {
                 onChange={handleLocalLinkChange}
               >
                 <option value="">Link to</option>
+                {/* @TODO: Single array in state */}
                 {[...documents.articles, ...documents.lists].map((art) => {
-                  if (art === listTitle) return;
+                  if (art === listTitle) return '';
                   return (
                     <option key={art} value={art}>
                       {art}

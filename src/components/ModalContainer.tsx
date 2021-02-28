@@ -4,14 +4,10 @@ type ModalContainerProps = {
   children: ReactNode;
   className?: string;
   title: string;
-} & typeof defaultProps;
-
-const defaultProps = {
-  className: '',
 };
 
 export default function ModalContainer(props: ModalContainerProps) {
-  const { className, title, children } = props;
+  const { className = '', title, children } = props;
 
   return (
     <div className={`border-secondary box mb-2 ${className}`}>
@@ -22,5 +18,3 @@ export default function ModalContainer(props: ModalContainerProps) {
     </div>
   );
 }
-
-ModalContainer.defaultProps = defaultProps;

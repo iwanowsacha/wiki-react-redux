@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 import { ipcRenderer } from 'electron';
@@ -8,15 +8,9 @@ import {
   addSelectedTag,
   removeSelectedTag,
 } from './tags/tagsSlice';
-import {
-  getFormVisibility,
-  getListTitle,
-  setFormVisiblity,
-  setListTitle,
-} from './listSlice';
+import { getFormVisibility, getListTitle, setFormVisiblity } from './listSlice';
 import {
   getIsEditing,
-  getIsMenuOpen,
   getSnackbar,
   setSnackbar,
   toggleIsEditing,
@@ -32,12 +26,12 @@ import Snackbar from '../../components/Snackbar';
 import {
   getAllTags,
   selectAllItems,
-  upsertMany,
   getImagesChanges,
 } from './items/itemsSlice';
 import { selectAllGroups } from './groups/groupsSlice';
 import useMounted from '../../utils/hooks/useMounted';
 import useModal from '../../utils/hooks/useModal';
+import useSnacbkbar from '../../utils/hooks/useSnackbar';
 
 const getList = createSelector(
   [getListTitle, selectAllItems, getAllTags, selectAllGroups],
@@ -67,7 +61,7 @@ export default function PageList() {
   // const isMenuOpen = useSelector(getIsMenuOpen);
   const [isModalOpen, toggleModal] = useModal(false);
   const [itemInDisplay, setItemInDisplay] = useState('');
-  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [isSnackbarOpen, openSnackbar] = useSnacbkbar(true);
   const [playFormAnimation, setPlayFormAnimation] = useState(false);
   const [listTitleText, setListTitleText] = useState('');
   const isMounted = useMounted();
@@ -89,19 +83,9 @@ export default function PageList() {
 
   useEffect(() => {
     if (snackbarMessage[0]) {
-      setIsSnackbarOpen(true);
-      setTimeout(() => {
-        setIsSnackbarOpen(false);
-      }, 1000);
+      openSnackbar();
     }
   }, [snackbarMessage]);
-
-  ipcRenderer.on('list-saved', (_e, items) => {
-    if (listTitleText) dispatch(setListTitle(listTitleText));
-    dispatch(setSnackbar(['List saved successfully', 'text-primary']));
-    dispatch(upsertMany(items));
-    setListTitleText('');
-  });
 
   useEffect(() => {
     setPlayFormAnimation(true);

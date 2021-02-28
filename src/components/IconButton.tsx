@@ -4,14 +4,10 @@ type IconButtonProps = {
   children: ReactNode;
   classNames?: string;
   onClick: (text: string) => void;
-} & typeof defaultProps;
-
-const defaultProps = {
-  classNames: 'text-base text-secondary',
 };
 
 export default function IconButton(props: IconButtonProps) {
-  const { classNames, children } = props;
+  const { classNames = 'text-base text-secondary', children } = props;
 
   const handleButtonClick = (e: MouseEvent<HTMLButtonElement>) =>
     props.onClick(e.currentTarget.innerHTML);
@@ -26,5 +22,3 @@ export default function IconButton(props: IconButtonProps) {
     </button>
   );
 }
-
-IconButton.defaultProps = defaultProps;

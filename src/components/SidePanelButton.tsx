@@ -5,14 +5,10 @@ type SidePanelButtonProps = {
   isSelected?: boolean;
   id: string;
   onClick(id: string): void;
-} & typeof defaultProps;
-
-const defaultProps = {
-  isSelected: false,
 };
 
 export default function SidePanelButton(props: SidePanelButtonProps) {
-  const { isSelected, id, children } = props;
+  const { isSelected = false, id, children } = props;
 
   const handleButtonClick = () => {
     props.onClick(props.id);
@@ -30,5 +26,3 @@ export default function SidePanelButton(props: SidePanelButtonProps) {
     </div>
   );
 }
-
-SidePanelButton.defaultProps = defaultProps;

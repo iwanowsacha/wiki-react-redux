@@ -35,7 +35,6 @@ export default function Autocomplete(props: AutocompleteProps) {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     const key = e.key.toLowerCase();
-    console.log(key);
     if (key === 'enter') {
       const active = filteredSuggestions[activeSuggestion];
       resetState();

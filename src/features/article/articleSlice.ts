@@ -20,12 +20,17 @@ function findSection(
   return section || state;
 }
 
-const initialState: Article = {
+interface InitialState extends Article {
+  openEditors: number;
+}
+
+const initialState: InitialState = {
   title: '',
   introduction: '',
   image: '',
   sections: [],
   quickFacts: [],
+  openEditors: 0,
 };
 
 export const slice = createSlice({
@@ -48,6 +53,7 @@ export const slice = createSlice({
         const section = findSection(state, action.payload);
         section.sections.push({ title: '', body: '', sections: [] });
       }
+      state.openEditors += 1;
     },
     saveSection: (
       state,
@@ -57,6 +63,7 @@ export const slice = createSlice({
       const section = findSection(state, parent);
       section.title = newTitle;
       section.body = body;
+      state.openEditors -= 1;
     },
     deleteSection: (
       state,
@@ -90,6 +97,7 @@ export const slice = createSlice({
     },
     addQuickFact: (state) => {
       state.quickFacts.push({ title: '', body: '' });
+      state.openEditors += 1;
     },
     saveQuickFact: (
       state,
@@ -100,6 +108,7 @@ export const slice = createSlice({
       if (!fact) return;
       fact.title = quickFact.title;
       fact.body = quickFact.body;
+      state.openEditors -= 1;
     },
     deleteQuickFact: (state, action: PayloadAction<string>) => {
       const fact = state.quickFacts.find((f) => f.title === action.payload);
@@ -124,6 +133,12 @@ export const slice = createSlice({
         state.quickFacts[index],
         state.quickFacts[index + dirIndex],
       ];
+    },
+    incrementOpenEditors: (state) => {
+      state.openEditors += 1;
+    },
+    decrementOpenEditors: (state) => {
+      state.openEditors -= 1;
     },
   },
   extraReducers: (builder) => {
@@ -152,6 +167,8 @@ export const {
   saveQuickFact,
   deleteQuickFact,
   moveQuickFact,
+  incrementOpenEditors,
+  decrementOpenEditors,
 } = slice.actions;
 
 export default slice.reducer;
@@ -161,3 +178,4 @@ export const getArticleIntroduction = (state) => state.article.introduction;
 export const getArticleImage = (state) => state.article.image;
 export const getArticleSections = (state) => state.article.sections;
 export const getArticleQuickFacts = (state) => state.article.quickFacts;
+export const getOpenEditorsTotal = (state) => state.article.openEditors;
