@@ -1,4 +1,4 @@
-import { ListItem } from '../../types';
+import { ListItem } from '../../../types';
 import { filter } from './filters';
 
 describe('filters', () => {

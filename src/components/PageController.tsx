@@ -29,6 +29,8 @@ export default function PageController() {
 
   ipcRenderer?.on('new-list', () => dispatch(loadList('')));
 
+  ipcRenderer?.on('new-article', () => dispatch(loadArticle('')));
+
   ipcRenderer?.on('open-list', (_event, title) => dispatch(loadList(title)));
 
   ipcRenderer?.on('open-article', (_event, title) =>

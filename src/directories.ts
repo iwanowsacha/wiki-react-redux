@@ -7,9 +7,9 @@ export const DIRECTORIES: { [key: string]: string } = {
   lists: path.join(__dirname, 'lists'),
 };
 
-const createDirectoryIfNotExists = async (directoryPath: string) => {
+export const createDirectoryIfNotExists = async (directoryPath: string) => {
   const exists = await fs.pathExists(directoryPath);
-  if (!exists) fs.mkdir(directoryPath);
+  if (!exists) await fs.mkdir(directoryPath, {recursive: true});
 };
 
 const prepareDirectories = async () => {
@@ -17,6 +17,16 @@ const prepareDirectories = async () => {
     createDirectoryIfNotExists(directoryPath)
   );
   await Promise.all(promises).catch(console.log);
+};
+
+export const renameDirectory = async (
+  previousPath: string,
+  newPath: string
+) => {
+  fs.rename(
+    previousPath,
+    newPath
+  );
 };
 
 export const loadDocuments = async () => {

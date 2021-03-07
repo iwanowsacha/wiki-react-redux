@@ -18,6 +18,8 @@ import * as fs from 'fs-extra';
 import MenuBuilder from './menu';
 import { loadDocuments, DIRECTORIES } from './directories';
 import { Article, DirectoriesList, List, ListItemImageChanges } from './types';
+import { saveList } from './utils/list/list';
+import { saveArticle } from './utils/article/article';
 
 export default class AppUpdater {
   constructor() {
@@ -125,7 +127,7 @@ const createWindow = async () => {
   menu?.append(
     new MenuItem({
       click: () => {
-        console.log('article');
+        mainWindow?.webContents.send('new-article');
       },
       label: 'New Article',
     })
@@ -180,100 +182,6 @@ ipcMain.handle('get-documents', (_event) => {
   return documents;
 });
 
-ipcMain.handle('read-article', async (_event, title) => {
-  if (!title) {
-    return { document: {} };
-  }
-  const obj: Article | undefined = await fs
-    .readJSON(path.join(DIRECTORIES.articles, title, 'article.json'))
-    .catch(console.log);
-  return obj ? { type: 'article', document: obj } : { document: {} };
-});
-
-ipcMain.handle('read-list', async (_event, title) => {
-  if (!title) {
-    return { document: {} };
-  }
-  const obj: List | undefined = await fs
-    .readJSON(path.join(DIRECTORIES.lists, title, 'list.json'))
-    .catch(console.log);
-  return obj ? { type: 'list', document: obj } : { document: {} };
-});
-
-const renameDocumentDirectory = async (
-  previousTitle: string,
-  newTitle: string,
-  documentType: string
-) => {
-  await fs.rename(
-    path.join(__dirname, documentType, previousTitle),
-    path.join(__dirname, documentType, newTitle)
-  );
-};
-
-const createDocumentDirectory = async (
-  directoryPath: string,
-  subfolder?: string
-) => {
-  return fs.mkdir(path.join(directoryPath, subfolder || ''), {
-    recursive: true,
-  });
-};
-
-const manageListItemImages = async (
-  images: ListItemImageChanges,
-  list: List
-) => {
-  const pathStartsWithFile = (filePath: string) =>
-    filePath.startsWith('file://') ? filePath.slice(7) : filePath;
-
-  const unlink = images.delete.map((value: string) => {
-    return fs
-      .unlink(
-        path.join(
-          DIRECTORIES.lists,
-          list.title,
-          'images',
-          decodeURI(pathStartsWithFile(value))
-        )
-      )
-      .catch(console.log);
-  });
-  const rename = Object.entries(images.rename).map(([key, value]) => {
-    list.items[list.items.findIndex((it) => it.title === key)].image =
-      key + path.extname(value);
-    return fs
-      .rename(
-        path.join(DIRECTORIES.lists, list.title, 'images', value),
-        path.join(
-          DIRECTORIES.lists,
-          list.title,
-          'images',
-          key + path.extname(value)
-        )
-      )
-      .catch(console.log);
-  });
-
-  const create = Object.entries(images.new).map(([key, value]) => {
-    list.items[list.items.findIndex((it) => it.title === key)].image =
-      key + path.extname(value);
-    return fs
-      .copyFile(
-        decodeURI(pathStartsWithFile(value)),
-        path.join(
-          DIRECTORIES.lists,
-          list.title,
-          'images',
-          key + path.extname(value)
-        )
-      )
-      .catch();
-  });
-
-  await Promise.all([unlink, rename, create]).catch(console.log);
-};
-
 ipcMain.handle(
   'save-list',
   async (
@@ -283,29 +191,8 @@ ipcMain.handle(
     images: ListItemImageChanges
   ) => {
     const previousTitle: string = list.title ? list.title : newTitle;
-    if (newTitle && list.title !== newTitle) {
-      list.title = newTitle;
-    }
 
-    const directoryExists: boolean = fs.existsSync(
-      path.join(DIRECTORIES.lists, previousTitle)
-    );
-
-    if (directoryExists && newTitle) {
-      renameDocumentDirectory(previousTitle, list.title, 'lists');
-    } else if (!directoryExists) {
-      await createDocumentDirectory(
-        path.join(DIRECTORIES.lists, list.title),
-        'images'
-      );
-    }
-
-    await manageListItemImages(images, list);
-    const json = JSON.stringify(list);
-    await fs.writeFile(
-      path.join(DIRECTORIES.lists, list.title, 'list.json'),
-      json
-    );
+    await saveList(list, newTitle, images);
 
     if (newTitle) {
       if (previousTitle !== newTitle) {
@@ -323,27 +210,8 @@ ipcMain.handle(
   'save-article',
   async (_event, article: Article, newTitle: string) => {
     const previousTitle: string = article.title ? article.title : newTitle;
-    if (newTitle && article.title !== newTitle) {
-      article.title = newTitle;
-    }
 
-    const directoryExists: boolean = fs.existsSync(
-      path.join(DIRECTORIES.articles, previousTitle)
-    );
-
-    if (directoryExists && newTitle) {
-      renameDocumentDirectory(previousTitle, article.title, 'articles');
-    } else if (!directoryExists) {
-      await createDocumentDirectory(
-        path.join(DIRECTORIES.articles, article.title)
-      );
-    }
-
-    const json = JSON.stringify(article);
-    await fs.writeFile(
-      path.join(DIRECTORIES.articles, article.title, 'article.json'),
-      json
-    );
+    await saveArticle(article, newTitle);
 
     if (newTitle) {
       if (previousTitle !== newTitle) {

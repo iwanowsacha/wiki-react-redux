@@ -1,4 +1,4 @@
-import { ListItem } from '../../types';
+import { ListItem } from '../../../types';
 
 export const filter = (
   filterType: string,

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`directories createDirectoryIfNotExists should match snapshot of calls (mkdir) 1`] = `
+Array [
+  Array [
+    "some/test/path",
+    Object {
+      "recursive": true,
+    },
+  ],
+]
+`;
+
+exports[`directories createDirectoryIfNotExists should match snapshot of calls (pathExists) 1`] = `
+Array [
+  Array [
+    "some/test/path",
+  ],
+  Array [
+    "some/test/path",
+  ],
+]
+`;

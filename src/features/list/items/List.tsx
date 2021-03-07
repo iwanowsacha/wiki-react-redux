@@ -7,7 +7,7 @@ import { getListTitle } from '../listSlice';
 import { getFilterType, getSelectedTags } from '../tags/tagsSlice';
 import ListItem from './ListItem';
 import { ListItem as ListItemT } from '../../../types';
-import { filter, filterByText } from '../../../utils/filters/filters';
+import { filter, filterByText } from '../../../utils/list/filters/filters';
 
 const getFilteredItems = createSelector(
   [
