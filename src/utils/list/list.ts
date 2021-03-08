@@ -108,10 +108,10 @@ const pathStartsWithFile = (filePath: string) =>
 
 ipcMain.handle('read-list', async (_event, title) => {
   if (!title) {
-    return { document: {} };
+    return null;
   }
   const obj: List | undefined = await fs
     .readJSON(path.join(DIRECTORIES.lists, title, 'list.json'))
     .catch(console.log);
-  return obj ? { type: 'list', document: obj } : { document: {} };
+  return obj || null;
 });

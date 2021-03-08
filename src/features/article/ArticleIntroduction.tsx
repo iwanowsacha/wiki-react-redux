@@ -100,12 +100,14 @@ export default function ArticleIntroduction() {
             onEditorChange={handleEditorContentChange}
           />
           <div className="my-2 flex justify-center">
-            <button
-              className="uppercase text-red-500 hover:text-hover text-base py-2 px-3"
-              onClick={handleEditCancel}
-            >
-              Cancel
-            </button>
+            {title &&
+              <button
+                className="uppercase text-red-500 hover:text-hover text-base py-2 px-3"
+                onClick={handleEditCancel}
+              >
+                Cancel
+              </button>
+            }
             <button
               className="uppercase text-primary hover:text-hover text-base py-2 px-3 bg-primary"
               onClick={handleEditSave}

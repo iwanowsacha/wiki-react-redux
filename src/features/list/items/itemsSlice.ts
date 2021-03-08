@@ -132,11 +132,11 @@ export const slice = createSlice({
     builder
       .addCase(
         loadList.fulfilled,
-        (state, action: PayloadAction<{ document: List | null }>) => {
+        (state, action: PayloadAction<List | null>) => {
           resetState(state);
-          if (action.payload.document?.hasOwnProperty('items')) {
-            itemsAdapter.setAll(state, action.payload.document.items);
-            state.allTags = [...action.payload.document.allTags];
+          if (action.payload?.hasOwnProperty('items')) {
+            itemsAdapter.setAll(state, action.payload.items);
+            state.allTags = [...action.payload.allTags];
             originalIdsOrder = Array.from(state.ids);
           }
         }

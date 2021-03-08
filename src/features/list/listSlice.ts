@@ -33,10 +33,10 @@ export const slice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(
       loadList.fulfilled,
-      (state, action: PayloadAction<{ document: List | null }>) => {
+      (state, action: PayloadAction<List | null>) => {
         state.isFormVisible = false;
         state.selectedBrowseImage = '';
-        state.title = action.payload.document?.title || '';
+        state.title = action.payload?.title || '';
       }
     )
     .addCase(loadArticle.fulfilled, (state) => { state = initialState})

@@ -26,9 +26,9 @@ export const slice = createSlice({
     builder
       .addCase(
         loadList.fulfilled,
-        (state, action: PayloadAction<{ document: List | null }>) => {
-          if (action.payload.document?.hasOwnProperty('tagGroups')) {
-            groupAdapter.setAll(state, action.payload.document.tagGroups);
+        (state, action: PayloadAction<List | null>) => {
+          if (action.payload?.hasOwnProperty('tagGroups')) {
+            groupAdapter.setAll(state, action.payload.tagGroups);
           }
         }
       )

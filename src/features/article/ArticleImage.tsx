@@ -1,5 +1,5 @@
 import { basename } from 'path';
-import React from 'react';
+import React, { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import FilePickerButton from '../../components/FilePickerButton';
 import { getArticleImage, setArticleImage } from './articleSlice';
@@ -20,6 +20,12 @@ export default function ArticleImage(props: ArticleImageProps) {
     dispatch(setArticleImage(path));
   };
 
+  const handleImageError = (e: SyntheticEvent<HTMLImageElement>) => {
+    // Prevent infinite loop if article-placeholder doesn't exist
+    e.currentTarget.onerror = null;
+    e.currentTarget.src = '../assets/article-placeholder.png';
+  };
+
   return (
     <>
       <img
@@ -27,6 +33,7 @@ export default function ArticleImage(props: ArticleImageProps) {
         alt=""
         className="rounded mx-auto"
         style={{ maxWidth: 300, height: 'auto' }}
+        onError={handleImageError}
       />
       {isArticleEditing && (
         <FilePickerButton fileTypes="img/*" onFileChange={handleImageChange}>

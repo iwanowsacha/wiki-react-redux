@@ -145,12 +145,14 @@ export const slice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(
       loadArticle.fulfilled,
-      (state, action: PayloadAction<{ document: Article | null }>) => {
-        state.title = action.payload.document?.title || '';
-        state.introduction = action.payload.document?.introduction || '';
-        state.image = action.payload.document?.image || '';
-        Object.assign(state.sections, action.payload.document?.sections);
-        Object.assign(state.quickFacts, action.payload.document?.quickFacts);
+      (state, action: PayloadAction<Article | null>) => {
+        state.title = action.payload?.title || '';
+        state.introduction = action.payload?.introduction || '';
+        state.image = action.payload?.image || '';
+        state.sections = [];
+        state.quickFacts = [];
+        Object.assign(state.sections, action.payload?.sections || []);
+        Object.assign(state.quickFacts, action.payload?.quickFacts || []);
       }
     )
     .addCase(loadList.fulfilled, (state) => { state = initialState })

@@ -52,24 +52,22 @@ export const slice = createSlice({
       .addCase(loadArticle.pending, (state) => { state.documentType = 'loading' })
       .addCase(
         loadArticle.fulfilled,
-        (state, action: PayloadAction<{ document: Article | null }>) => {
-          const { document } = action.payload;
+        (state, action: PayloadAction<Article | null>) => {
           state.documentType = 'article';
-          state.documentTitle = document?.title || '';
+          state.documentTitle = action.payload?.title || '';
           state.isMenuOpen = false;
-          !document?.hasOwnProperty('title')
+          !action.payload?.hasOwnProperty('title')
             ? (state.isEditing = true)
             : (state.isEditing = false);
         }
       )
       .addCase(
         loadList.fulfilled,
-        (state, action: PayloadAction<{ document: List | null }>) => {
-          const { document } = action.payload;
+        (state, action: PayloadAction<List | null>) => {
           state.documentType = 'list';
-          state.documentTitle = document?.title || '';
+          state.documentTitle = action.payload?.title || '';
           state.isMenuOpen = true;
-          !document?.hasOwnProperty('title')
+          !action.payload?.hasOwnProperty('title')
             ? (state.isEditing = true)
             : (state.isEditing = false);
         }

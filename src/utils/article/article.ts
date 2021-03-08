@@ -42,10 +42,10 @@ export const saveArticle = async (article: Article, newTitle: string) => {
 
 ipcMain.handle('read-article', async (_event, title) => {
   if (!title) {
-    return { document: {} };
+    return null;
   }
   const obj: Article | undefined = await fs
     .readJSON(path.join(DIRECTORIES.articles, title, 'article.json'))
     .catch(console.log);
-  return obj ? { type: 'article', document: obj } : { document: {} };
+  return obj || null;
 });
