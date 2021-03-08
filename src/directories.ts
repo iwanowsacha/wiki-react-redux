@@ -9,7 +9,7 @@ export const DIRECTORIES: { [key: string]: string } = {
 
 export const createDirectoryIfNotExists = async (directoryPath: string) => {
   const exists = await fs.pathExists(directoryPath);
-  if (!exists) await fs.mkdir(directoryPath, {recursive: true});
+  if (!exists) await fs.mkdir(directoryPath, { recursive: true });
 };
 
 const prepareDirectories = async () => {
@@ -23,10 +23,7 @@ export const renameDirectory = async (
   previousPath: string,
   newPath: string
 ) => {
-  fs.rename(
-    previousPath,
-    newPath
-  );
+  fs.rename(previousPath, newPath);
 };
 
 export const loadDocuments = async () => {

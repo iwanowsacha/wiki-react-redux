@@ -5,6 +5,8 @@ import {
   toggleIsEditing,
   getDocumentType,
   toggleMenu,
+  getDocumentTitle,
+  setDocumentTypeIndex,
 } from '../features/general/generalSlice';
 import PageIndex from './Index/PageIndex';
 import Header from './Header';
@@ -16,6 +18,7 @@ import PageArticle from '../features/article/PageArticle';
 export default function PageController() {
   const dispatch = useDispatch();
   const documentType = useSelector(getDocumentType);
+  const documentTitle = useSelector(getDocumentTitle);
 
   useEffect(() => {
     dispatch(loadDocuments());
@@ -25,17 +28,30 @@ export default function PageController() {
     if (type === 'save' || type === 'edit') dispatch(toggleIsEditing());
   };
 
+  const handleDeleteClick = () => {
+    if (!documentTitle) return;
+    ipcRenderer.invoke('delete-document', documentTitle, documentType);
+  }
+
   const handleMenuClick = () => dispatch(toggleMenu());
 
-  ipcRenderer?.on('new-list', () => dispatch(loadList('')));
+  ipcRenderer?.on('new-list', () => {
+    dispatch(loadList(''));
+  });
 
-  ipcRenderer?.on('new-article', () => dispatch(loadArticle('')));
+  ipcRenderer?.on('new-article', () => {
+    dispatch(loadArticle(''));
+  });
 
-  ipcRenderer?.on('open-list', (_event, title) => dispatch(loadList(title)));
+  ipcRenderer?.on('open-list', (_event, title) => {
+    dispatch(loadList(title));
+  });
 
-  ipcRenderer?.on('open-article', (_event, title) =>
-    dispatch(loadArticle(title))
-  );
+  ipcRenderer?.on('open-article', (_event, title) => {
+    dispatch(loadArticle(title));
+  });
+
+  ipcRenderer?.on('open-index', () => dispatch(setDocumentTypeIndex()));
 
   let page = null;
   switch (documentType) {
@@ -59,6 +75,7 @@ export default function PageController() {
         showESButtons={documentType !== 'index' && documentType !== 'loading'}
         showMenuButton={documentType === 'article' || documentType === 'list'}
         onESButtonClick={handleEditSaveClick}
+        onDeleteButtonClick={handleDeleteClick}
         onMenuButtonClick={handleMenuClick}
       />
       {page}

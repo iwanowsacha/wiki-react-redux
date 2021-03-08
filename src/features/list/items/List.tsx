@@ -10,12 +10,7 @@ import { ListItem as ListItemT } from '../../../types';
 import { filter, filterByText } from '../../../utils/list/filters/filters';
 
 const getFilteredItems = createSelector(
-  [
-    getSearchText,
-    getSelectedTags,
-    getFilterType,
-    selectAllItems,
-  ],
+  [getSearchText, getSelectedTags, getFilterType, selectAllItems],
   (
     searchText: string,
     selectedTags: Array<string>,

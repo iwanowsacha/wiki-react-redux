@@ -10,7 +10,7 @@ module.exports = {
     '@typescript-eslint/no-unused-expressions': 'off',
     '@typescript-eslint/no-implied-eval': 'off',
     'react/require-default-props': 'off',
-    'no-plusplus': 'off'
+    'no-plusplus': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

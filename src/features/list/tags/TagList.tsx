@@ -31,7 +31,11 @@ export default function TagList(props: TagListProps) {
   return (
     <ModalContainer className="border-2" title="All tags">
       <div className="m-2 flex bg-primary p-2 text-secondary">
-        <TextInput color="bg-primary" onTextChange={handleTagSearch} placeholder="Search tags" />
+        <TextInput
+          color="bg-primary"
+          onTextChange={handleTagSearch}
+          placeholder="Search tags"
+        />
         <div className="hidden ml-2 lg:block text-base text-secondary lg:text-2xl material-icons self-center justify-self-center lg:justify-self-end pl-1 lg:border-l-2 border-secondary">
           search
         </div>
@@ -39,20 +43,10 @@ export default function TagList(props: TagListProps) {
       <div className={`grid p-2 ${className}`}>
         {isSearching
           ? filteredTags.map((f: string) => (
-              <TagPill
-                onTagClick={onTagClick}
-                isDraggable
-                key={f}
-                title={f}
-              />
+              <TagPill onTagClick={onTagClick} isDraggable key={f} title={f} />
             ))
           : tags.map((t: string) => (
-              <TagPill
-                onTagClick={onTagClick}
-                isDraggable
-                key={t}
-                title={t}
-              />
+              <TagPill onTagClick={onTagClick} isDraggable key={t} title={t} />
             ))}
       </div>
     </ModalContainer>

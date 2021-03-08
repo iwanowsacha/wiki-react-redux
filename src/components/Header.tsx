@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ipcRenderer } from 'electron';
 import { getDocuments, getIsEditing } from '../features/general/generalSlice';
 import IconButton from './IconButton';
 import Autocomplete from './Autocomplete';
@@ -9,6 +10,7 @@ type HeaderProps = {
   showMenuButton: boolean;
   showESButtons: boolean;
   onESButtonClick: (type: string) => void;
+  onDeleteButtonClick: () => void;
   onMenuButtonClick: () => void;
 };
 
@@ -17,6 +19,7 @@ export default function Header(props: HeaderProps) {
     showMenuButton,
     showESButtons,
     onESButtonClick,
+    onDeleteButtonClick,
     onMenuButtonClick,
   } = props;
   const dispatch = useDispatch();
@@ -54,7 +57,7 @@ export default function Header(props: HeaderProps) {
         <div className="mr-6 justify-self-end flex flex-wrap gap-2">
           <IconButton
             classNames="text-base md:py-2 md:px-4 md:text-2xl text-red-500"
-            onClick={onESButtonClick}
+            onClick={onDeleteButtonClick}
           >
             delete
           </IconButton>

@@ -26,7 +26,7 @@ export default function RightSidebar(props: RightSidebarProps) {
   const { isShowingForm, onButtonClick, onTagClick } = props;
   const selectedImage = useSelector(getBrowseImage);
   const selectedTags = useSelector(getSelectedTags);
-  const searchText = useSelector(getSearchText)
+  const searchText = useSelector(getSearchText);
 
   const handleImageFilePicked = (path: string) => {
     dispatch(setBrowseImage(path));

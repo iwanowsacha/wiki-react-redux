@@ -11,15 +11,24 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, ipcMain, Menu, MenuItem, shell } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  Menu,
+  MenuItem,
+  shell,
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import * as fs from 'fs-extra';
+import { MessageBoxOptions, MessageBoxSyncOptions } from 'electron/main';
 import MenuBuilder from './menu';
-import { loadDocuments, DIRECTORIES } from './directories';
+import { loadDocuments } from './directories';
 import { Article, DirectoriesList, List, ListItemImageChanges } from './types';
-import { saveList } from './utils/list/list';
-import { saveArticle } from './utils/article/article';
+import { deleteList, saveList } from './utils/list/list';
+import { deleteArticle, saveArticle } from './utils/article/article';
 
 export default class AppUpdater {
   constructor() {
@@ -226,3 +235,36 @@ ipcMain.handle(
     mainWindow?.webContents.send('open-article', article.title);
   }
 );
+
+ipcMain.handle('delete-document', async (_event, title: string, type: string) => {
+  const clicked = showMessageDialog(true, {
+    title: 'DELETE',
+    message: "Are you sure you want to delete this document? This action can't be undone!",
+    buttons: ['Cancel', 'Accept'],
+    type: 'warning',
+    defaultId: 0, cancelId: 0});
+  if (clicked !== 0) {
+    try {
+      if (type === 'list') {
+        await deleteList(title)
+      } else if (type === 'article') {
+        await deleteArticle(title);
+      }
+    } catch (e) {
+      showMessageDialog(false, {title: 'ERROR', type: 'error', message: `Document couldn't be deleted`, detail: e});
+      return;
+    }
+    documents[type+'s'].splice(documents[type+'s'].indexOf(title), 1);
+    mainWindow?.webContents.send('open-index');
+    showMessageDialog(false, {title: 'ERROR', type: 'info', message: `Document: ${title} deleted successfully`});
+  }
+});
+
+const showMessageDialog = (isSync: boolean = false, options: MessageBoxOptions) => {
+  if (!mainWindow) return;
+  if (isSync) {
+    return dialog.showMessageBoxSync(mainWindow, options);
+  } else {
+    return dialog.showMessageBox(mainWindow, options);
+  }
+}

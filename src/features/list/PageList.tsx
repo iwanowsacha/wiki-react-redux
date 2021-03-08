@@ -60,11 +60,13 @@ export default function PageList() {
   const snackbarMessage = useSelector(getSnackbar);
   const itemsImageChanges = useSelector(getImagesChanges);
   const isMenuOpen = useSelector(getIsMenuOpen);
-  const [isModalOpen, toggleModal] = useModal(false, () => { if (!isShowingForm) setItemInDisplay('') });
   const [itemInDisplay, setItemInDisplay] = useState('');
   const [isSnackbarOpen, openSnackbar] = useSnacbkbar(true);
   const [playFormAnimation, setPlayFormAnimation] = useState(false);
   const [listTitleText, setListTitleText] = useState('');
+  const [isModalOpen, toggleModal] = useModal(false, () => {
+    if (!isShowingForm) setItemInDisplay('');
+  });
   const isMounted = useMounted();
 
   useEffect(() => {
@@ -140,7 +142,7 @@ export default function PageList() {
       >
         <section className="absolute h-screen bg-primary right-0 z-100" />
       </CSSTransition>
-      {isMenuOpen &&
+      {isMenuOpen && (
         <LeftSidebar
           isEditing={isEditing}
           isShowingForm={isShowingForm}
@@ -148,10 +150,13 @@ export default function PageList() {
           itemInDisplay={itemInDisplay}
           onListTitleChange={handleListTitleChange}
         />
-      }
+      )}
       {!playFormAnimation && (
         <>
-          <Modal isOpen={isModalOpen} onCloseClick={toggleModalAndResetItemInDisplay}>
+          <Modal
+            isOpen={isModalOpen}
+            onCloseClick={toggleModalAndResetItemInDisplay}
+          >
             {itemInDisplay && !isShowingForm ? (
               <ItemModal
                 itemTitle={itemInDisplay}
@@ -179,13 +184,13 @@ export default function PageList() {
               className={snackbarMessage[1]}
             />
           </section>
-          {(isMenuOpen || isShowingForm) &&
+          {(isMenuOpen || isShowingForm) && (
             <RightSidebar
               isShowingForm={isShowingForm}
               onButtonClick={toggleModalAndResetItemInDisplay}
               onTagClick={handleTagClick}
             />
-          }
+          )}
         </>
       )}
     </main>
