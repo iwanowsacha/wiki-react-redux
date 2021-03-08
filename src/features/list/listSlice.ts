@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { List } from '../../types';
-import { loadList } from '../../utils/loaders';
+import { loadArticle, loadList } from '../../utils/loaders';
+import { setDocumentTypeIndex } from '../general/generalSlice';
 
 interface ListState {
   title: string;
@@ -37,7 +38,9 @@ export const slice = createSlice({
         state.selectedBrowseImage = '';
         state.title = action.payload.document?.title || '';
       }
-    );
+    )
+    .addCase(loadArticle.fulfilled, (state) => { state = initialState})
+    .addCase(setDocumentTypeIndex, (state) => { state = initialState});
   },
 });
 

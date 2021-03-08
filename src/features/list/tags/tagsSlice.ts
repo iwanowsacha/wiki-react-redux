@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loadList } from '../../../utils/loaders';
+import { loadArticle, loadList } from '../../../utils/loaders';
+import { setDocumentTypeIndex } from '../../general/generalSlice';
 import { setFormVisiblity } from '../listSlice';
 
 interface TagsState {
@@ -76,7 +77,9 @@ export const slice = createSlice({
       .addCase(loadList.fulfilled, (state) => {
         state = initialState;
       })
-      .addCase(setFormVisiblity, resetTags);
+      .addCase(setFormVisiblity, resetTags)
+      .addCase(loadArticle.fulfilled, (state) => { resetTags(state); state.filterType = 'any'})
+      .addCase(setDocumentTypeIndex, (state) => { resetTags(state); state.filterType = 'any'});
   },
 });
 

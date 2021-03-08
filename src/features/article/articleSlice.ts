@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Article, ArticleQuickFact, ArticleSection } from '../../types';
-import { loadArticle } from '../../utils/loaders';
+import { loadArticle, loadList } from '../../utils/loaders';
+import { setDocumentTypeIndex } from '../general/generalSlice';
 
 function findSection(
   state,
@@ -151,7 +152,9 @@ export const slice = createSlice({
         Object.assign(state.sections, action.payload.document?.sections);
         Object.assign(state.quickFacts, action.payload.document?.quickFacts);
       }
-    );
+    )
+    .addCase(loadList.fulfilled, (state) => { state = initialState })
+    .addCase(setDocumentTypeIndex, (state) => { state = initialState });
   },
 });
 

@@ -4,15 +4,24 @@ import {
   PayloadAction,
   EntityId,
 } from '@reduxjs/toolkit';
-import { loadList } from '../../../utils/loaders';
+import { loadArticle, loadList } from '../../../utils/loaders';
 import { List, ListItem, ListItemImageChanges } from '../../../types';
 import { setFormVisiblity } from '../listSlice';
+import { setDocumentTypeIndex } from '../../general/generalSlice';
 
 let originalIdsOrder: Array<EntityId> = [];
 
 const itemsAdapter = createEntityAdapter({
   selectId: (item: ListItem) => item.title,
 });
+
+const resetState = (state) => {
+  state.allTags = [];
+  state.imagesChanges = { new: {}, rename: {}, delete: [] };
+  state.searchText = '';
+  originalIdsOrder = [];
+  itemsAdapter.removeAll(state);
+}
 
 const removeUnusedTags = (state, id: string): Array<string> => {
   const items = itemsAdapter.getSelectors().selectAll(state);
@@ -124,22 +133,19 @@ export const slice = createSlice({
       .addCase(
         loadList.fulfilled,
         (state, action: PayloadAction<{ document: List | null }>) => {
-          state.allTags = [];
-          state.imagesChanges = { new: {}, rename: {}, delete: [] };
-          state.searchText = '';
+          resetState(state);
           if (action.payload.document?.hasOwnProperty('items')) {
             itemsAdapter.setAll(state, action.payload.document.items);
             state.allTags = [...action.payload.document.allTags];
             originalIdsOrder = Array.from(state.ids);
-          } else {
-            originalIdsOrder = [];
-            itemsAdapter.removeAll(state);
           }
         }
       )
       .addCase(setFormVisiblity, (state) => {
         state.searchText = '';
-      });
+      })
+      .addCase(loadArticle.fulfilled, resetState)
+      .addCase(setDocumentTypeIndex, resetState)
   },
 });
 

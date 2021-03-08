@@ -5,7 +5,8 @@ import {
   Update,
 } from '@reduxjs/toolkit';
 import { List, ListItem, TagGroup } from '../../../types';
-import { loadList } from '../../../utils/loaders';
+import { loadArticle, loadList } from '../../../utils/loaders';
+import { setDocumentTypeIndex } from '../../general/generalSlice';
 import { updateItem } from '../items/itemsSlice';
 
 const groupAdapter = createEntityAdapter({
@@ -57,7 +58,9 @@ export const slice = createSlice({
           });
           groupAdapter.updateMany(state, updatableGroups);
         }
-      );
+      )
+      .addCase(loadArticle.fulfilled, (state) => { groupAdapter.removeAll(state) })
+      .addCase(setDocumentTypeIndex, (state) => { groupAdapter.removeAll(state) });
   },
 });
 
