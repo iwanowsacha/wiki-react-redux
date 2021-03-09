@@ -117,6 +117,19 @@ const createWindow = async () => {
     mainWindow = null;
   });
 
+  let shouldWindowClose = false;
+  mainWindow.on('close', (event) => {
+    if (!shouldWindowClose) {
+      event.preventDefault();
+      mainWindow?.webContents.send('on-app-close');
+    }
+  });
+  
+  ipcMain.handle('app-close-confirmation', () => {
+    shouldWindowClose = true;
+    mainWindow?.close();
+  });
+
   const menuBuilder = new MenuBuilder(mainWindow);
 
   menuBuilder.buildMenu();

@@ -50,6 +50,11 @@ export default function PageController() {
     });
   
     ipcRenderer?.on('open-index', () => dispatch(setDocumentTypeIndex()));
+
+    ipcRenderer?.on('on-app-close', async () => {
+      if (isEditingRef.current && !await shouldUnmount()) return;
+      ipcRenderer.invoke('app-close-confirmation');
+    });
   }, []);
 
 
