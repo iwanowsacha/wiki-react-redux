@@ -1,6 +1,5 @@
-import { createSelector, current } from '@reduxjs/toolkit';
 import { ipcRenderer } from 'electron/renderer';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Snackbar from '../../components/Snackbar';
 import { ArticleSection as ArticleSectionT } from '../../types';
@@ -45,7 +44,7 @@ export default function PageArticle() {
 
   useEffect(() => {
     if (!isMounted) return;
-    if (isEditing && snackbarMessage[0] !== 'There are unsaved changes') {
+    if (isEditing && snackbarMessage[0] !== 'There are unsaved changes' && articleTitle) {
       dispatch(setSnackbar(['Editing article', 'text-primary']));
     } else if (!isEditing) {
       if (openEditors > 0) {
@@ -57,12 +56,6 @@ export default function PageArticle() {
       // ipcRenderer.invoke('save-article', );
     }
   }, [isEditing]);
-
-  // useEffect(() => {
-  //     return function cleanup() {
-  //         console.log('unmounting');
-  //     }
-  // }, []);
 
   return (
     <>

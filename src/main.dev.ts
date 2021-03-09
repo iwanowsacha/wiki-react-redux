@@ -22,8 +22,7 @@ import {
 } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import * as fs from 'fs-extra';
-import { MessageBoxOptions, MessageBoxSyncOptions } from 'electron/main';
+import { MessageBoxOptions } from 'electron/main';
 import MenuBuilder from './menu';
 import { loadDocuments } from './directories';
 import { Article, DirectoriesList, List, ListItemImageChanges } from './types';
@@ -127,7 +126,7 @@ const createWindow = async () => {
   menu?.append(
     new MenuItem({
       click: () => {
-        mainWindow?.webContents.send('new-list');
+        mainWindow?.webContents.send('open-list', '');
       },
       label: 'New List',
     })
@@ -136,7 +135,7 @@ const createWindow = async () => {
   menu?.append(
     new MenuItem({
       click: () => {
-        mainWindow?.webContents.send('new-article');
+        mainWindow?.webContents.send('open-article', '');
       },
       label: 'New Article',
     })
@@ -268,3 +267,14 @@ const showMessageDialog = (isSync: boolean = false, options: MessageBoxOptions) 
     return dialog.showMessageBox(mainWindow, options);
   }
 }
+
+ipcMain.handle('on-component-unmount', () => {
+  const clicked = showMessageDialog(true, {
+    title: 'Unsaved changes',
+    message: 'You have unsaved changes, are you sure you want to exit?',
+    buttons: ['Cancel', 'Accept'],
+    cancelId: 0,
+    defaultId: 0
+  });
+  return clicked !== 0;
+});

@@ -1,10 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ipcRenderer } from 'electron';
 import { getDocuments, getIsEditing } from '../features/general/generalSlice';
 import IconButton from './IconButton';
 import Autocomplete from './Autocomplete';
 import { loadArticle, loadList } from '../utils/loaders';
+import useOnUnmount from '../utils/hooks/useOnUnmount';
 
 type HeaderProps = {
   showMenuButton: boolean;
@@ -25,9 +25,11 @@ export default function Header(props: HeaderProps) {
   const dispatch = useDispatch();
   const isEditing = useSelector(getIsEditing);
   const documents = useSelector(getDocuments);
+  const shouldUnmount = useOnUnmount();
   const suggestions = [...documents.articles, ...documents.lists];
 
-  const handleAutocompleteEnter = (value: string) => {
+  const handleAutocompleteEnter = async (value: string) => {
+    if (isEditing && !await shouldUnmount()) return;
     if (documents.lists.includes(value)) dispatch(loadList(value));
     if (documents.articles.includes(value)) dispatch(loadArticle(value));
   };

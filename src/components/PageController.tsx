@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ipcRenderer } from 'electron';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -7,6 +7,8 @@ import {
   toggleMenu,
   getDocumentTitle,
   setDocumentTypeIndex,
+  getIsEditing,
+  setSnackbar,
 } from '../features/general/generalSlice';
 import PageIndex from './Index/PageIndex';
 import Header from './Header';
@@ -14,15 +16,42 @@ import PageList from '../features/list/PageList';
 import { loadList, loadDocuments, loadArticle } from '../utils/loaders';
 import Spinner from './Spinner';
 import PageArticle from '../features/article/PageArticle';
+import useOnUnmount from '../utils/hooks/useOnUnmount';
 
 export default function PageController() {
   const dispatch = useDispatch();
   const documentType = useSelector(getDocumentType);
   const documentTitle = useSelector(getDocumentTitle);
+  const isEditing = useSelector(getIsEditing);
+  const isEditingRef = useRef(isEditing);
+  const shouldUnmount = useOnUnmount();
 
   useEffect(() => {
     dispatch(loadDocuments());
   });
+
+  useEffect(() => {
+    isEditingRef.current = isEditing;
+  }, [isEditing]);
+  
+
+  useEffect(() => {
+    ipcRenderer?.on('open-list', async (_event, title) => {
+      if (isEditingRef.current && !await shouldUnmount()) return;
+      dispatch(setSnackbar(['', '']));
+      dispatch(loadList(title));
+    });
+  
+    ipcRenderer?.on('open-article', async (event, title) => {
+      console.log(event);
+      if (isEditingRef.current && !await shouldUnmount()) return;
+      dispatch(setSnackbar(['', '']));
+      dispatch(loadArticle(title));
+    });
+  
+    ipcRenderer?.on('open-index', () => dispatch(setDocumentTypeIndex()));
+  }, []);
+
 
   const handleEditSaveClick = (type: string) => {
     if (type === 'save' || type === 'edit') dispatch(toggleIsEditing());
@@ -34,24 +63,6 @@ export default function PageController() {
   }
 
   const handleMenuClick = () => dispatch(toggleMenu());
-
-  ipcRenderer?.on('new-list', () => {
-    dispatch(loadList(''));
-  });
-
-  ipcRenderer?.on('new-article', () => {
-    dispatch(loadArticle(''));
-  });
-
-  ipcRenderer?.on('open-list', (_event, title) => {
-    dispatch(loadList(title));
-  });
-
-  ipcRenderer?.on('open-article', (_event, title) => {
-    dispatch(loadArticle(title));
-  });
-
-  ipcRenderer?.on('open-index', () => dispatch(setDocumentTypeIndex()));
 
   let page = null;
   switch (documentType) {
