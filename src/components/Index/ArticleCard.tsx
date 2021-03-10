@@ -1,5 +1,6 @@
-import React, { MouseEvent, SyntheticEvent } from 'react';
+import React, { SyntheticEvent } from 'react';
 import { useDispatch } from 'react-redux';
+import { sanitizeFilename } from '../../utils/filenameSanitizer';
 import { loadArticle } from '../../utils/loaders';
 
 type ArticleCardProps = {
@@ -10,8 +11,8 @@ export default function ArticleCard(props: ArticleCardProps) {
   const { title } = props;
   const dispatch = useDispatch();
 
-  const handleOpenArticle = (e: MouseEvent<HTMLButtonElement>) => {
-    dispatch(loadArticle(e.currentTarget.innerHTML));
+  const handleOpenArticle = () => {
+    dispatch(loadArticle(title));
   };
 
   const handleImageError = (e: SyntheticEvent<HTMLImageElement>) => {
@@ -23,7 +24,7 @@ export default function ArticleCard(props: ArticleCardProps) {
   return (
     <div className="bg-primary rounded-md flex flex-col">
       <img
-        src={`./articles/${title}/image.jpg`}
+        src={`./articles/${sanitizeFilename(title)}/image.jpg`}
         alt=""
         className="object-cover h-p-75 rounded-t-md"
         onError={handleImageError}

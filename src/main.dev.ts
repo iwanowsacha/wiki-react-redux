@@ -230,18 +230,16 @@ ipcMain.handle(
 ipcMain.handle(
   'save-article',
   async (_event, article: Article, newTitle: string) => {
-    const previousTitle: string = article.title ? article.title : newTitle;
+    const previousTitle: string = article.title ? article.title : '';
 
     await saveArticle(article, newTitle);
 
-    if (newTitle) {
-      if (previousTitle !== newTitle) {
-        documents.articles[
-          documents.articles.indexOf(previousTitle)
-        ] = newTitle;
-      } else if (previousTitle === newTitle) {
-        documents.articles.push(newTitle);
-      }
+    if (!previousTitle) {
+      documents.articles.push(newTitle);
+    } else if (previousTitle !== newTitle) {
+      documents.articles[
+        documents.articles.indexOf(previousTitle)
+      ] = newTitle;
     }
 
     mainWindow?.webContents.send('open-article', article.title);

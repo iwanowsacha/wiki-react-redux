@@ -1,6 +1,7 @@
 import path from 'path';
 import * as fs from 'fs-extra';
 import { DirectoriesList } from './types';
+import { unsanitizeFilename } from './utils/filenameSanitizer';
 
 export const DIRECTORIES: { [key: string]: string } = {
   articles: path.join(__dirname, 'articles'),
@@ -33,7 +34,7 @@ export const loadDocuments = async () => {
     await prepareDirectories();
 
     Object.entries(DIRECTORIES).forEach(([key, directory]) => {
-      directoriesList[key] = fs.readdirSync(directory);
+      directoriesList[key] = fs.readdirSync(directory).map((dir) => unsanitizeFilename(dir));
     });
   } catch (err) {
     console.log(err);

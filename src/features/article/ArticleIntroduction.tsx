@@ -18,13 +18,18 @@ import {
 } from './articleSlice';
 import OptionsMenu from './OptionsMenu';
 
-export default function ArticleIntroduction() {
+type ArticleIntroductionProps = {
+  onTitleChange: (value: string) => void;
+  titleText: string;
+}
+
+export default function ArticleIntroduction(props: ArticleIntroductionProps) {
   const dispatch = useDispatch();
+  const { onTitleChange, titleText } = props;
   const title = useSelector(getArticleTitle);
   const introduction = useSelector(getArticleIntroduction);
   const isArticleEditing = useSelector(getIsEditing);
   const [isBeingEdited, setIsBeingEdited] = useState(title === '');
-  const [titleText, setTitleText] = useState(title);
   const [editorContent, setEditorContent] = useState(introduction);
   const { articles } = useSelector(getDocuments);
 
@@ -34,13 +39,9 @@ export default function ArticleIntroduction() {
   };
 
   const handleEditCancel = () => {
-    setTitleText(title);
     setIsBeingEdited(false);
     dispatch(decrementOpenEditors());
-  };
-
-  const handleTitleChange = (value: string) => {
-    setTitleText(value);
+    onTitleChange('');
   };
 
   const handleEditorContentChange = (content: string) => {
@@ -62,6 +63,7 @@ export default function ArticleIntroduction() {
       return;
     }
     dispatch(saveArticleIntroduction(editorContent));
+    dispatch(decrementOpenEditors());
     dispatch(setSnackbar(['Article introduction saved', 'text-primary']));
     setIsBeingEdited(false);
   };
@@ -71,7 +73,7 @@ export default function ArticleIntroduction() {
       <div className="border-b-2 pb-2 flex border-primary mb-2">
         {isBeingEdited ? (
           <TextInput
-            onTextChange={handleTitleChange}
+            onTextChange={onTitleChange}
             text={titleText}
             color="p-2 bg-primary text-secondary"
             placeholder="Article's title"

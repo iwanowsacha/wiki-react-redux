@@ -184,3 +184,4 @@ export const getArticleImage = (state) => state.article.image;
 export const getArticleSections = (state) => state.article.sections;
 export const getArticleQuickFacts = (state) => state.article.quickFacts;
 export const getOpenEditorsTotal = (state) => state.article.openEditors;
+export const getArticle = (state) => state.article;

@@ -15,7 +15,17 @@ export default function PageIndex() {
             .slice(0, 8)
             .map((a: string) => <ArticleCard key={a} title={a} />)}
       </section>
-      <ListCard lists={documents.lists} />
+      <section className="bg-primary h-full rounded-md">
+        <h1 className="text-primary text-center uppercase m-5 text-lg">Lists</h1>
+        <ul className="text-primary text-center list-none">
+          {documents.lists &&
+            [...documents.lists].map((l: string) => {
+            return (
+              <ListCard key={l} title={l} />
+            );
+          })}
+        </ul>
+      </section>
     </main>
   );
 }

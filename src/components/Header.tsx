@@ -32,8 +32,6 @@ export default function Header(props: HeaderProps) {
     if (isEditing && !await shouldUnmount()) return;
     const type = value.slice(1, 2);
     const document = value.slice(3).trim();
-    console.log(type);
-    console.log(document);
     if (type === 'A' && documents.articles.includes(document)) {
       dispatch(loadArticle(document));
     } else if (type === 'L' && documents.lists.includes(document)) {

@@ -7,6 +7,7 @@ import {
   renameDirectory,
 } from '../../directories';
 import { List, ListItemImageChanges } from '../../types';
+import { sanitizeFilename } from '../filenameSanitizer';
 
 export const deleteList = async (title: string) => {
   await fs.remove(path.join(DIRECTORIES.lists, title));
@@ -18,18 +19,21 @@ export const saveList = async (
   listImages: ListItemImageChanges
 ) => {
   const previousTitle = list.title ? list.title : newTitle;
+
   if (newTitle && list.title !== newTitle) {
     list.title = newTitle;
   }
 
+  const sanitizedTitle = sanitizeFilename(list.title);
+
   if (previousTitle !== newTitle) {
     await renameDirectory(
-      path.join(DIRECTORIES.lists, previousTitle),
-      path.join(DIRECTORIES.lists, newTitle)
+      path.join(DIRECTORIES.lists, sanitizeFilename(previousTitle)),
+      path.join(DIRECTORIES.lists, sanitizedTitle)
     );
   } else {
     await createDirectoryIfNotExists(
-      path.join(DIRECTORIES.lists, list.title, 'images')
+      path.join(DIRECTORIES.lists, sanitizedTitle, 'images')
     );
   }
 
@@ -37,7 +41,7 @@ export const saveList = async (
 
   const json = JSON.stringify(list);
   await fs
-    .writeFile(path.join(DIRECTORIES.lists, list.title, 'list.json'), json)
+    .writeFile(path.join(DIRECTORIES.lists, sanitizedTitle, 'list.json'), json)
     .catch(console.log);
 };
 
@@ -45,7 +49,7 @@ const manageListItemImages = async (
   images: ListItemImageChanges,
   list: List
 ) => {
-  const unlink = listImagesDelete(images.delete, list.title);
+  const unlink = listImagesDelete(images.delete, sanitizeFilename(list.title));
   const rename = listImagesRename(images.rename, list);
   const copy = listImagesCopy(images.new, list);
   await Promise.all([unlink, rename, copy]);
@@ -68,14 +72,15 @@ const listImagesDelete = (images: Array<string>, title: string) => {
 };
 
 const listImagesRename = (images: { [key: string]: string }, list: List) => {
+  const sanitizedTitle = sanitizeFilename(list.title);
   const rename = Object.entries(images).map(([key, value]) => {
     list.items[list.items.findIndex((it) => it.title === key)].image =
       key + path.extname(value);
     return renameDirectory(
-      path.join(DIRECTORIES.lists, list.title, 'images', value),
+      path.join(DIRECTORIES.lists, sanitizedTitle, 'images', value),
       path.join(
         DIRECTORIES.lists,
-        list.title,
+        sanitizedTitle,
         'images',
         key + path.extname(value)
       )
@@ -85,6 +90,7 @@ const listImagesRename = (images: { [key: string]: string }, list: List) => {
 };
 
 const listImagesCopy = (images: { [key: string]: string }, list: List) => {
+  const sanitizedTitle = sanitizeFilename(list.title);
   const create = Object.entries(images).map(([key, value]) => {
     list.items[list.items.findIndex((it) => it.title === key)].image =
       key + path.extname(value);
@@ -93,7 +99,7 @@ const listImagesCopy = (images: { [key: string]: string }, list: List) => {
         decodeURI(pathStartsWithFile(value)),
         path.join(
           DIRECTORIES.lists,
-          list.title,
+          sanitizedTitle,
           'images',
           key + path.extname(value)
         )
@@ -111,7 +117,7 @@ ipcMain.handle('read-list', async (_event, title) => {
     return null;
   }
   const obj: List | undefined = await fs
-    .readJSON(path.join(DIRECTORIES.lists, title, 'list.json'))
+    .readJSON(path.join(DIRECTORIES.lists, sanitizeFilename(title), 'list.json'))
     .catch(console.log);
   return obj || null;
 });
