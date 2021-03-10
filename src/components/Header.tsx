@@ -26,12 +26,19 @@ export default function Header(props: HeaderProps) {
   const isEditing = useSelector(getIsEditing);
   const documents = useSelector(getDocuments);
   const shouldUnmount = useOnUnmount();
-  const suggestions = [...documents.articles, ...documents.lists];
+  const suggestions = [...Array.from(documents.articles, val => `(A) ${val}`), ...Array.from(documents.lists, val => `(L) ${val}`)];
 
   const handleAutocompleteEnter = async (value: string) => {
     if (isEditing && !await shouldUnmount()) return;
-    if (documents.lists.includes(value)) dispatch(loadList(value));
-    if (documents.articles.includes(value)) dispatch(loadArticle(value));
+    const type = value.slice(1, 2);
+    const document = value.slice(3).trim();
+    console.log(type);
+    console.log(document);
+    if (type === 'A' && documents.articles.includes(document)) {
+      dispatch(loadArticle(document));
+    } else if (type === 'L' && documents.lists.includes(document)) {
+      dispatch(loadList(document));
+    }
   };
 
   return (
