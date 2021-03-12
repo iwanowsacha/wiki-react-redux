@@ -17,7 +17,7 @@ const REVERSE_INVALID_CHARS: {[key: string]: string} = {
     '-gtn-': '>',
     '-scl-': ':',
     '-dqt-': '"',
-    '-bsl': '\\',
+    '-bsl-': '\\',
     '-vtb-': '|',
     '-qtm-': '?',
     '-astk-': '*'
