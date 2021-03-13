@@ -2,6 +2,7 @@ import { basename } from 'path';
 import React, { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import FilePickerButton from '../../components/FilePickerButton';
+import { DIRECTORIES } from '../../directories';
 import { sanitizeFilename } from '../../utils/filenameSanitizer';
 import { getArticleImage, setArticleImage } from './articleSlice';
 
@@ -15,7 +16,7 @@ export default function ArticleImage(props: ArticleImageProps) {
   const dispatch = useDispatch();
   const image = useSelector(getArticleImage);
   const selectedImage =
-    basename(image) === image ? `../src/articles/${sanitizeFilename(title)}/${image}` : image;
+    basename(image) === image ? `${DIRECTORIES.articles}/${sanitizeFilename(title)}/${image}` : image;
 
   const handleImageChange = (path: string) => {
     dispatch(setArticleImage(path));

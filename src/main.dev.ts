@@ -29,6 +29,7 @@ import { Article, DirectoriesList, List, ListItemImageChanges } from './types';
 import { deleteList, saveList } from './utils/list/list';
 import { deleteArticle, saveArticle } from './utils/article/article';
 
+
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';

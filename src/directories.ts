@@ -1,11 +1,14 @@
-import path from 'path';
+import getAppDataPath from 'appdata-path';
 import * as fs from 'fs-extra';
+import path from 'path';
 import { DirectoriesList } from './types';
 import { unsanitizeFilename } from './utils/filenameSanitizer';
 
+const appData = process.env.NODE_ENV === 'production' ? getAppDataPath("my-wiki") : `${__dirname}/..`;
+
 export const DIRECTORIES: { [key: string]: string } = {
-  articles: path.join(__dirname, 'articles'),
-  lists: path.join(__dirname, 'lists'),
+  articles: path.join(appData, 'articles'),
+  lists: path.join(appData, 'lists')
 };
 
 export const createDirectoryIfNotExists = async (directoryPath: string) => {
@@ -29,6 +32,7 @@ export const renameDirectory = async (
 
 export const loadDocuments = async () => {
   const directoriesList: DirectoriesList = {};
+  console.log(process.env.APPDATA);
 
   try {
     await prepareDirectories();

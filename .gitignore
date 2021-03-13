@@ -50,6 +50,8 @@ npm-debug.log.*
 *.scss.d.ts
 
 # App specific
+articles
+lists
 src/lists/*
 src/articles/*
 src/css/style.css

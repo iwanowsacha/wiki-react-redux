@@ -1,5 +1,6 @@
 import React, { SyntheticEvent } from 'react';
 import { useDispatch } from 'react-redux';
+import { DIRECTORIES } from '../../directories';
 import { sanitizeFilename } from '../../utils/filenameSanitizer';
 import { loadArticle } from '../../utils/loaders';
 
@@ -24,7 +25,7 @@ export default function ArticleCard(props: ArticleCardProps) {
   return (
     <div className="bg-primary rounded-md flex flex-col">
       <img
-        src={`./articles/${sanitizeFilename(title)}/image.jpg`}
+        src={`${DIRECTORIES.articles}/${sanitizeFilename(title)}/image.jpg`}
         alt=""
         className="object-cover h-p-75 rounded-t-md"
         onError={handleImageError}

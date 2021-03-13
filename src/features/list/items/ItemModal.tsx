@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import IconButton from '../../../components/IconButton';
 import Snackbar from '../../../components/Snackbar';
+import { DIRECTORIES } from '../../../directories';
+import { sanitizeFilename } from '../../../utils/filenameSanitizer';
 import useSnacbkbar from '../../../utils/hooks/useSnackbar';
 import { getIsEditing, setSnackbar } from '../../general/generalSlice';
 import { getListTitle, setBrowseImage, setFormVisiblity } from '../listSlice';
@@ -24,7 +26,7 @@ export default function ItemModal(props: ItemModalProps) {
 
   const image =
     basename(item?.image || '') === item?.image
-      ? `lists/${listTitle}/images/${item.image}`
+      ? `${DIRECTORIES.lists}/${sanitizeFilename(listTitle)}/images/${item.image}`
       : item?.image;
 
   const handleEditItemClick = () => {
