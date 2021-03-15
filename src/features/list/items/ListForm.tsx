@@ -232,6 +232,7 @@ export default function ListForm(props: ListFormProps) {
         </div>
         <span className="col-span-8 row-span-5 self-stretch">
           <Editor
+            init={{skin: false, content_css: false}}
             value={editorContent}
             onEditorChange={handleEditorContentChange}
           />
