@@ -117,7 +117,7 @@ export default function ListForm(props: ListFormProps) {
   const emptyForm = () => {
     setIsUpdatingItem(false);
     setItemTitle('');
-    setLinkType('local');
+    setLinkType('external');
     setLinkPath('');
     setEditorContent('');
     setNewTags('');
@@ -217,22 +217,30 @@ export default function ListForm(props: ListFormProps) {
             <RadioButton
               onChange={handleRadioChange}
               group="link"
-              title="Article link"
-              value="local"
-              checked={linkType === 'local'}
-            />
-            <RadioButton
-              onChange={handleRadioChange}
-              group="link"
               title="External link"
               value="external"
               checked={linkType === 'external'}
             />
+            <RadioButton
+              onChange={handleRadioChange}
+              group="link"
+              title="Article link"
+              value="local"
+              checked={linkType === 'local'}
+            />
           </div>
         </div>
-        <span className="col-span-8 row-span-5 self-stretch">
+        <span className="col-span-8 row-span-5 self-stretch text-secondary">
           <Editor
-            init={{skin: false, content_css: false}}
+            init={{
+              skin_url: `${__dirname}/utils/tinymce/skins/ui/my-wiki/`,
+              content_css: `${__dirname}/utils/tinymce/skins/content/my-wiki/content.min.css`,
+              height: '100%',
+              min_height: 300,
+              plugins: 'print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help quickbars',
+              menubar: 'file edit view insert format tools table tc help',
+              toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+            }}
             value={editorContent}
             onEditorChange={handleEditorContentChange}
           />

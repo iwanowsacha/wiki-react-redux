@@ -23,7 +23,7 @@ export default function RadioButton(props: RadioButtonProps) {
         name={group}
         title={title}
         defaultValue={value}
-        defaultChecked={checked}
+        checked={checked}
       />
       <span className="hidden md:inline text-secondary ml-2">{title}</span>
     </span>
