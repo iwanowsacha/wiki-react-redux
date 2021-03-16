@@ -39,6 +39,9 @@ export const slice = createSlice({
     setDocumentTypeIndex: (state) => {
       state.documentType = 'index';
       state.documentTitle = '';
+      state.isEditing = false;
+      state.isMenuOpen = false;
+      state.snackbar = ['', ''];
     }
   },
   extraReducers: (builder) => {

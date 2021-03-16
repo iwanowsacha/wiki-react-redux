@@ -71,14 +71,12 @@ export default function PageArticle() {
     if (isEditing && snackbarMessage[0] !== 'There are unsaved changes' && title) {
       dispatch(setSnackbar(['Editing article', 'text-primary']));
     } else if (!isEditing) {
-      console.log(openEditors);
       if (openEditors > 0) {
         dispatch(setSnackbar(['There are unsaved changes', 'text-red-500']));
         dispatch(toggleIsEditing());
         return;
       }
       ipcRenderer.invoke('save-article', article, titleText);
-      // dispatch(setSnackbar(['Article saved succesfully', 'text-primary']));
     }
   }, [isEditing]);
 
@@ -104,15 +102,15 @@ export default function PageArticle() {
         <div className="flex-grow px-6 pt-4 relative">
           <ArticleIntroduction onTitleChange={handleTitleChange} titleText={titleText}/>
           {sections &&
-            sections.map((section: ArticleSectionT) => (
+            sections.map((section: ArticleSectionT, index: number) => (
               <ArticleSection
-                key={section.title}
+                key={index+section.title}
                 section={section}
                 isArticleEditing={isEditing}
                 parent=""
               />
             ))}
-          {isEditing &&
+          {isEditing && !sections?.find((s) => s.title === '') &&
             <aside className="pb-2 flex border-primary mb-2">
               <button
                 className="bg-primary text-primary py-2 px-3"

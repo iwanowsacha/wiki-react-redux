@@ -131,11 +131,22 @@ const createWindow = async () => {
     mainWindow?.close();
   });
 
-  const menuBuilder = new MenuBuilder(mainWindow);
-
-  menuBuilder.buildMenu();
+  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
+    const menuBuilder = new MenuBuilder(mainWindow);
+  
+    menuBuilder.buildMenu();
+  }
 
   const menu = Menu.getApplicationMenu();
+
+  menu?.append(
+    new MenuItem({
+      click: () => {
+        mainWindow?.webContents.send('open-index', '');
+      },
+      label: 'Home',
+    })
+  );
 
   menu?.append(
     new MenuItem({

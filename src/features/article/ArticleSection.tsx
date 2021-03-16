@@ -1,7 +1,7 @@
-import { Editor } from '@tinymce/tinymce-react';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import TextInput from '../../components/ControlledTextInput';
+import TinymceEditor from '../../components/TinymceEditor';
 import { ArticleSection as ArticleSectionType } from '../../types';
 import { setSnackbar } from '../general/generalSlice';
 import {
@@ -104,6 +104,7 @@ export default function ArticleSection(props: ArticleSectionProps) {
         {isBeingEdited ? (
           <TextInput
             text={titleText}
+            placeholder="Section's title"
             onTextChange={handleTitleChange}
             color="p-2 bg-primary text-secondary"
           />
@@ -126,9 +127,10 @@ export default function ArticleSection(props: ArticleSectionProps) {
       </div>
       {isBeingEdited ? (
         <>
-          <Editor
-            value={editorContent}
-            onEditorChange={handleEditorContentChange}
+          <TinymceEditor
+            height='0'
+            editorContent={editorContent}
+            onEditorContentChange={handleEditorContentChange}
           />
           <div className="my-2 flex justify-center">
             <button
@@ -152,9 +154,9 @@ export default function ArticleSection(props: ArticleSectionProps) {
         />
       )}
       {sections &&
-        sections.map((s) => (
+        sections.map((s, index) => (
           <ArticleSection
-            key={s.title}
+            key={index+s.title}
             isArticleEditing={isArticleEditing}
             section={s}
             parent={id}

@@ -13,12 +13,13 @@ function findSection(
     (s: ArticleSection) => s.title === parents[0]
   );
   const index = returnParent ? parents.length - 1 : parents.length;
+  if (index === 0 && returnParent) return state;
   for (let i = 1; i < index; i++) {
     section = section.sections.find(
       (s: ArticleSection) => s.title === parents[i]
     );
   }
-  return section || state;
+  return section;
 }
 
 interface InitialState extends Article {
@@ -153,6 +154,7 @@ export const slice = createSlice({
         state.quickFacts = [];
         Object.assign(state.sections, action.payload?.sections || []);
         Object.assign(state.quickFacts, action.payload?.quickFacts || []);
+        state.openEditors = action.payload?.title ? 0 : 1;
       }
     )
     .addCase(loadList.fulfilled, (state) => { state = initialState })

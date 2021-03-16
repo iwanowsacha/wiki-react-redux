@@ -1,5 +1,4 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Editor } from '@tinymce/tinymce-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { basename } from 'path';
 import TextInput from '../../../components/ControlledTextInput';
@@ -8,6 +7,7 @@ import { getDocuments, setSnackbar } from '../../general/generalSlice';
 import { getSelectedTags, resetSelectedTags } from '../tags/tagsSlice';
 import { addItem, selectById, selectIds, updateItem } from './itemsSlice';
 import { getBrowseImage, getListTitle, setBrowseImage } from '../listSlice';
+import TinymceEditor from '../../../components/TinymceEditor';
 
 type ListFormProps = {
   item: string;
@@ -231,19 +231,7 @@ export default function ListForm(props: ListFormProps) {
           </div>
         </div>
         <span className="col-span-8 row-span-5 self-stretch text-secondary">
-          <Editor
-            init={{
-              skin_url: `${__dirname}/utils/tinymce/skins/ui/my-wiki/`,
-              content_css: `${__dirname}/utils/tinymce/skins/content/my-wiki/content.min.css`,
-              height: '100%',
-              min_height: 300,
-              plugins: 'print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help quickbars',
-              menubar: 'file edit view insert format tools table tc help',
-              toolbar: 'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
-            }}
-            value={editorContent}
-            onEditorChange={handleEditorContentChange}
-          />
+          <TinymceEditor editorContent={editorContent} onEditorContentChange={handleEditorContentChange} />
         </span>
         <div className="col-span-8">
           <div className="my-2 bg-primary py-2 px-3 text-secondary">

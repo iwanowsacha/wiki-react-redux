@@ -42,14 +42,16 @@ export default function PageController() {
       dispatch(loadList(title));
     });
   
-    ipcRenderer?.on('open-article', async (event, title) => {
-      console.log(event);
+    ipcRenderer?.on('open-article', async (_event, title) => {
       if (isEditingRef.current && !await shouldUnmount()) return;
       dispatch(setSnackbar(['', '']));
       dispatch(loadArticle(title));
     });
   
-    ipcRenderer?.on('open-index', () => dispatch(setDocumentTypeIndex()));
+    ipcRenderer?.on('open-index', async () => {
+      if (isEditingRef.current && !await shouldUnmount()) return;
+      dispatch(setDocumentTypeIndex());
+    });
 
     ipcRenderer?.on('on-app-close', async () => {
       if (isEditingRef.current && !await shouldUnmount()) return;

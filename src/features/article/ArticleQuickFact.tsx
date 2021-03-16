@@ -1,8 +1,8 @@
-import { Editor } from '@tinymce/tinymce-react';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import TextInput from '../../components/ControlledTextInput';
 import IconButton from '../../components/IconButton';
+import TinymceEditor from '../../components/TinymceEditor';
 import {
   saveQuickFact,
   deleteQuickFact,
@@ -16,7 +16,7 @@ export default function ArticleQuickFact(props: any) {
   const dispatch = useDispatch();
   const [isBeingEdited, setIsBeingEdited] = useState(false);
   const [factTitle, setFactTitle] = useState(title);
-  const [factBody, setFactBody] = useState(body);
+  const [factBody, setFactBody] = useState(body || 'Click to write');
 
   const handleFactTitleChange = (value: string) => {
     setFactTitle(value);
@@ -77,10 +77,10 @@ export default function ArticleQuickFact(props: any) {
             onTextChange={handleFactTitleChange}
           />
           <span className="flex-1 break-all">
-            <Editor
-              inline
-              value={factBody}
-              onEditorChange={handleEditorContentChange}
+            <TinymceEditor
+              isInline={true}
+              editorContent={factBody}
+              onEditorContentChange={handleEditorContentChange}
             />
           </span>
         </div>

@@ -2,6 +2,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import TextInput from '../../components/ControlledTextInput';
+import TinymceEditor from '../../components/TinymceEditor';
 import {
   getDocuments,
   getIsEditing,
@@ -97,9 +98,10 @@ export default function ArticleIntroduction(props: ArticleIntroductionProps) {
       </div>
       {isBeingEdited ? (
         <>
-          <Editor
-            value={editorContent}
-            onEditorChange={handleEditorContentChange}
+          <TinymceEditor
+            height='0'
+            editorContent={editorContent}
+            onEditorContentChange={handleEditorContentChange}
           />
           <div className="my-2 flex justify-center">
             {title &&

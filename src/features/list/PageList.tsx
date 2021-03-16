@@ -79,7 +79,6 @@ export default function PageList() {
         dispatch(toggleIsEditing());
         return;
       }
-      dispatch(setSnackbar(['List saved succesfully', 'text-primary']));
       ipcRenderer.invoke('save-list', list, listTitleText, itemsImageChanges);
     }
   }, [isEditing]);
