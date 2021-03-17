@@ -4,22 +4,27 @@ import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { getSearchText, selectAllItems } from './itemsSlice';
 import { getListTitle } from '../listSlice';
-import { getFilterType, getSelectedTags } from '../tags/tagsSlice';
+import { getCustomTags, getFilterType, getSelectedTags } from '../tags/tagsSlice';
 import ListItem from './ListItem';
 import { ListItem as ListItemT } from '../../../types';
-import { filter, filterByText } from '../../../utils/list/filters/filters';
+import { filter, filterByText, filterCustom } from '../../../utils/list/filters/filters';
 
 const getFilteredItems = createSelector(
-  [getSearchText, getSelectedTags, getFilterType, selectAllItems],
+  [getSearchText, getSelectedTags, getFilterType, getCustomTags, selectAllItems],
   (
     searchText: string,
     selectedTags: Array<string>,
     filterType: string,
+    customTags: {[key: string]: Array<string>},
     items: Array<ListItemT>
   ) => {
     let filtered;
     if (selectedTags.length > 0) {
-      filtered = filter(filterType, items, selectedTags);
+      if (filterType !== 'custom') {
+        filtered = filter(filterType, items, selectedTags);
+      } else {
+        filtered = filterCustom(items, customTags);
+      }
     }
     if (searchText) filtered = filterByText(filtered || items, searchText);
     return filtered || items;

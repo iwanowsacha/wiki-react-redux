@@ -1,5 +1,5 @@
 import { ListItem } from '../../../types';
-import { filter } from './filters';
+import { filter, filterByText, filterCustom } from './filters';
 
 describe('filters', () => {
   const items: Array<ListItem> = [];
@@ -31,6 +31,9 @@ describe('filters', () => {
 
       const filteredNone = filter('none', [], ['tag1', 'tag5']);
       expect(filteredNone).toBeUndefined();
+
+      const filteredCustom = filterCustom([], {customHas: ['tag1'], customNot: ['tag2']});
+      expect(filteredCustom).toBeUndefined();
     });
 
     it('should return undefined when items are undefined', () => {
@@ -45,6 +48,10 @@ describe('filters', () => {
       // @ts-ignore
       const filteredNone = filter('none', undefined, ['tag2', 'tag6']);
       expect(filteredNone).toBeUndefined();
+
+      // @ts-ignore
+      const filteredCustom = filterCustom(undefined, {customHas: ['tag1'], customNot: ['tag2']});
+      expect(filteredCustom).toBeUndefined();
     });
 
     it('should return undefined when tags are empty', () => {
@@ -56,6 +63,9 @@ describe('filters', () => {
 
       const filteredNone = filter('none', items, []);
       expect(filteredNone).toBeUndefined();
+
+      const filteredCustom = filterCustom(items, {customHas: [], customNot: []});
+      expect(filteredCustom).toBeUndefined();
     });
 
     it('should return undefined when tags are undefined', () => {
@@ -70,6 +80,10 @@ describe('filters', () => {
       // @ts-ignore
       const filteredNone = filter('none', items, undefined);
       expect(filteredNone).toBeUndefined();
+
+      // @ts-ignore
+      const filteredCustom = filterCustom(items, undefined);
+      expect(filteredCustom).toBeUndefined();
     });
 
     it('should return undefined when filter type does not exist', () => {
@@ -130,4 +144,46 @@ describe('filters', () => {
       expect(filtered).toHaveLength(0);
     });
   });
+
+  describe('filterByText', () => {
+    it('should return all items', () => {
+      const filtered = filterByText(items, 'item');
+      expect(filtered).toHaveLength(items.length);
+    });
+
+    it('should return one item', (done) => {
+      const filtered = filterByText(items, '3');
+      expect(filtered).toHaveLength(1);
+      if (!filtered) return done(new Error('Filtered is undefined'));
+      expect(filtered[0].title).toEqual('item 3');
+      done();
+    });
+  });
+
+  describe('filterCustom', () => {
+    it('should return one item', (done) => {
+      const filtered = filterCustom(items, {customHas: ['tag3'], customNot: ['tag7']});
+      expect(filtered).toHaveLength(1);
+      if (!filtered) return done(new Error('Filtered is undefined'));
+      expect(filtered[0].title).toEqual('item 1');
+      done();
+    });
+
+    it('should return no items', () => {
+      const filtered = filterCustom(items, {customHas: ['tag3', 'tag6'], customNot: ['tag7', 'tag8']});
+      expect(filtered).toHaveLength(0);
+    });
+
+    it('should return undefined when customNot is empty', () => {
+      const filtered = filterCustom(items, {customHas: ['tag3', 'tag6'], customNot: []});
+      expect(filtered).toBeUndefined();
+    });
+
+    it('should return undefined when customHas is empty', () => {
+      const filtered = filterCustom(items, {customHas: [], customNot: ['tag3', 'tag6']});
+      expect(filtered).toBeUndefined();
+    });
+
+  })
+
 });

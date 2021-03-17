@@ -29,6 +29,11 @@ const filterAll = (item: ListItem, selectedTags: Array<string>) =>
 const filterNone = (item: ListItem, selectedTags: Array<string>) =>
   !selectedTags.some((t) => item.tags.includes(t));
 
+export const filterCustom = (items: Array<ListItem>, customTags: {[key: string]: Array<string>}) => {
+  if (!items || !customTags || items?.length <= 0 || !customTags?.hasOwnProperty('customHas') || !customTags?.hasOwnProperty('customNot') || customTags?.customHas?.length <= 0 || customTags?.customNot?.length <= 0) return;
+  return items.filter((it) => customTags.customHas.every(t => it.tags.includes(t)) && !customTags.customNot.some(t => it.tags.includes(t)));
+}
+
 const filterTypes = new Map([
   ['any', filterAny],
   ['all', filterAll],
