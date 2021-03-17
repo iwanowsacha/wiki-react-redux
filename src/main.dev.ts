@@ -131,13 +131,16 @@ const createWindow = async () => {
     mainWindow?.close();
   });
 
+  let menu: Menu | null;
+
   if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
     const menuBuilder = new MenuBuilder(mainWindow);
   
     menuBuilder.buildMenu();
+    menu = Menu.getApplicationMenu();
+  } else {
+    menu = new Menu();
   }
-
-  const menu = Menu.getApplicationMenu();
 
   menu?.append(
     new MenuItem({

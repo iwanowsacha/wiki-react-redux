@@ -13,7 +13,7 @@ export default function Modal(props: ModalProps) {
   return (
     <CSSTransition unmountOnExit in={isOpen} timeout={300} classNames="fade-in">
       <div id="modal" className="modal">
-        <div className="modal-content h-full rounded-md">
+        <div className="modal-content hidden-scrollbar h-full rounded-md">
           <button
             type="button"
             className="absolute material-icons text-secondary z-100 text-2xl"

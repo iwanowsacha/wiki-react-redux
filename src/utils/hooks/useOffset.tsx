@@ -1,10 +1,14 @@
 import { useState, useEffect, RefObject } from 'react';
 
-export default function useOffset(elementRef: RefObject<HTMLElement>) {
+export default function useOffset(elementRef: RefObject<HTMLElement>, useParentOffset: boolean) {
   const [offset, setOffset] = useState(0);
 
   useEffect(() => {
-    setOffset(elementRef?.current?.offsetParent?.offsetTop || 0);
+    if (useParentOffset) {
+      setOffset(elementRef?.current?.offsetParent?.offsetTop || 0);
+    } else {
+      setOffset(elementRef?.current?.offsetTop || 0);
+    }
   }, [elementRef.current]);
 
   return offset;

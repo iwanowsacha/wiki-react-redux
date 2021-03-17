@@ -8,7 +8,7 @@ type SidePanelProps = {
 export default function SidePanel(props: SidePanelProps) {
   const { children } = props;
   const panelRef = useRef<HTMLSpanElement>(null);
-  const offset = useOffset(panelRef);
+  const offset = useOffset(panelRef, true);
 
   return (
     <span

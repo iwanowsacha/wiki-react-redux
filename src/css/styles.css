@@ -1299,7 +1299,7 @@ button:focus, button:active, input:focus {
   width: 100%;
 }
 
-.modal-content::-webkit-scrollbar {
+.hidden-scrollbar::-webkit-scrollbar {
   display: none;
 }
 
