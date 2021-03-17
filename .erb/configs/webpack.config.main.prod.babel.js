@@ -60,6 +60,7 @@ export default merge(baseConfig, {
       NODE_ENV: 'production',
       DEBUG_PROD: false,
       START_MINIMIZED: false,
+      FLUENTFFMPEG_COV: false
     }),
   ],
 

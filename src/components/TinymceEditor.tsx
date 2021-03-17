@@ -25,8 +25,8 @@ export default function TinymceEditor(props: TinymceEditorProps) {
             <span className={!isActive ? 'hidden' : ''}>
                 <Editor
                         init={{
-                            skin_url: `${__dirname}/utils/tinymce/skins/ui/my-wiki/`,
-                            content_css: `${__dirname}/utils/tinymce/skins/content/my-wiki/content.min.css`,
+                            skin_url: `../assets/tinymce/skins/ui/my-wiki/`,
+                            content_css: `../assets/tinymce/skins/content/my-wiki/content.min.css`,
                             inline: isInline,
                             height: height,
                             min_height: 300,

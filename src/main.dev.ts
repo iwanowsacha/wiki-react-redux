@@ -225,7 +225,13 @@ ipcMain.handle(
   ) => {
     const previousTitle: string = list.title ? list.title : newTitle;
 
-    await saveList(list, newTitle, images);
+    try {
+
+      await saveList(list, newTitle, images);
+    } catch (e) {
+      showMessageDialog(true, {title: 'error', message:e.message})
+    }
+
 
     if (newTitle) {
       if (previousTitle !== newTitle) {

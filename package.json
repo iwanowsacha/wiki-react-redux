@@ -30,8 +30,8 @@
     ]
   },
   "build": {
-    "productName": "ElectronReact",
-    "appId": "org.erb.ElectronReact",
+    "productName": "My Wiki",
+    "appId": "org.erb.mywiki",
     "files": [
       "dist/",
       "node_modules/",
@@ -74,7 +74,7 @@
       "target": [
         "AppImage"
       ],
-      "category": "Development"
+      "category": "Education"
     },
     "directories": {
       "app": "src",
@@ -82,7 +82,11 @@
       "output": "release"
     },
     "extraResources": [
-      "./assets/**"
+      "./assets/**",
+      {
+        "from": "./node_modules/ffmpeg-ffprobe-static",
+        "to": "app.asar.unpacked/ffmpeg"
+      }
     ],
     "publish": {
       "provider": "github",
@@ -179,6 +183,7 @@
     "@tinymce/tinymce-react": "^3.9.0",
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/fluent-ffmpeg": "^2.1.16",
     "@types/history": "4.7.6",
     "@types/jest": "^26.0.15",
     "@types/node": "14.14.10",

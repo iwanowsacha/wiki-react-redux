@@ -236,6 +236,7 @@ export default merge(baseConfig, {
      */
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development',
+      FLUENTFFMPEG_COV: false
     }),
 
     new webpack.LoaderOptionsPlugin({

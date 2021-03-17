@@ -51,8 +51,8 @@ const manageListItemImages = async (
   images: ListItemImageChanges,
   list: List
 ) => {
-  ffmpeg.setFfmpegPath(ffmpegPath);
-  ffmpeg.setFfprobePath(ffprobePath);
+  ffmpeg.setFfmpegPath(ffmpegPath?.replace('app.asar', 'app.asar.unpacked/ffmpeg') as string);
+  ffmpeg.setFfprobePath(ffprobePath?.replace('app.asar', 'app.asar.unpacked/ffmpeg') as string);
   const unlink = listImagesDelete(images.delete, sanitizeFilename(list.title));
   const rename = listImagesRename(images.rename, list);
   const copy = listImagesCopy(images.new, list);
