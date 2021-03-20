@@ -1,13 +1,13 @@
 {
   "name": "my-wiki",
   "productName": "My Wiki",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Desktop application to write personal wiki-like articles",
   "main": "./main.prod.js",
   "author": {
-    "name": "Electron React Boilerplate Maintainers",
-    "email": "electronreactboilerplate@gmail.com",
-    "url": "https://github.com/electron-react-boilerplate"
+    "name": "Sacha Iwanow",
+    "email": "iwanowsacha@gmail.com",
+    "url": "https://github.com/iwanowsacha"
   },
   "scripts": {
     "electron-rebuild": "node -r ../.erb/scripts/BabelRegister.js ../.erb/scripts/ElectronRebuild.js",
