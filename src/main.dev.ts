@@ -148,6 +148,7 @@ const createWindow = async () => {
         mainWindow?.webContents.send('open-index', '');
       },
       label: 'Home',
+      accelerator: 'CommandOrControl+H'
     })
   );
 
@@ -157,6 +158,7 @@ const createWindow = async () => {
         mainWindow?.webContents.send('open-list', '');
       },
       label: 'New List',
+      accelerator: 'CommandOrControl+L'
     })
   );
 
@@ -166,6 +168,7 @@ const createWindow = async () => {
         mainWindow?.webContents.send('open-article', '');
       },
       label: 'New Article',
+      accelerator: 'CommandOrControl+N'
     })
   );
 

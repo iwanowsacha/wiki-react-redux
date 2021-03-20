@@ -88,15 +88,18 @@ export default function PageController() {
   }
 
   return (
-    <div className="flex flex-col min-h-full">
-      <Header
-        showESButtons={documentType !== 'index' && documentType !== 'loading'}
-        showMenuButton={documentType === 'article' || documentType === 'list'}
-        onESButtonClick={handleEditSaveClick}
-        onDeleteButtonClick={handleDeleteClick}
-        onMenuButtonClick={handleMenuClick}
-      />
-      {page}
-    </div>
+    <>
+      <span id={documentType} />
+      <div className="flex flex-col h-full">
+        <Header
+          showESButtons={documentType !== 'index' && documentType !== 'loading'}
+          showMenuButton={documentType === 'article' || documentType === 'list'}
+          onESButtonClick={handleEditSaveClick}
+          onDeleteButtonClick={handleDeleteClick}
+          onMenuButtonClick={handleMenuClick}
+        />
+        {page}
+      </div>
+    </>
   );
 }

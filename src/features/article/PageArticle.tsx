@@ -85,7 +85,6 @@ export default function PageArticle() {
   }
 
   return (
-    <>
       <main className="flex flex-auto">
         {isMenuOpen && (
           <ArticleIndex articleTitle={title}>
@@ -128,6 +127,5 @@ export default function PageArticle() {
           />
         </div>
       </main>
-    </>
   );
 }

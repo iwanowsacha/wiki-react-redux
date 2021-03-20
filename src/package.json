@@ -1,7 +1,7 @@
 {
   "name": "my-wiki",
   "productName": "My Wiki",
-  "version": "1.1.0",
+  "version": "1.0.0",
   "description": "Desktop application to write personal wiki-like articles",
   "main": "./main.prod.js",
   "author": {
@@ -14,5 +14,7 @@
     "postinstall": "yarn electron-rebuild"
   },
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "ffmpeg-ffprobe-static": "^4.3.1-rc.6"
+  }
 }
