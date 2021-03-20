@@ -90,7 +90,7 @@ export default function PageController() {
   return (
     <>
       <span id={documentType} />
-      <div className="flex flex-col h-full">
+      <div className={`flex flex-col ${documentType === 'index' ? 'h-full' : 'min-h-full'}`}>
         <Header
           showESButtons={documentType !== 'index' && documentType !== 'loading'}
           showMenuButton={documentType === 'article' || documentType === 'list'}
