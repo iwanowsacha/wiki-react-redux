@@ -15,6 +15,7 @@ import {
   app,
   BrowserWindow,
   dialog,
+  globalShortcut,
   ipcMain,
   Menu,
   MenuItem,
@@ -28,6 +29,7 @@ import { loadDocuments } from './directories';
 import { Article, DirectoriesList, List, ListItemImageChanges } from './types';
 import { deleteList, saveList } from './utils/list/list';
 import { deleteArticle, saveArticle } from './utils/article/article';
+import { openDevTools } from 'electron-debug';
 
 
 export default class AppUpdater {
@@ -50,7 +52,7 @@ if (
   process.env.NODE_ENV === 'development' ||
   process.env.DEBUG_PROD === 'true'
 ) {
-  require('electron-debug')();
+  openDevTools();
 }
 
 const installExtensions = async () => {
@@ -209,7 +211,11 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.whenReady().then(createWindow).catch(console.log);
+app.whenReady().then(() => {
+  globalShortcut.register('CommandOrControl+Shift+I', () => {
+    openDevTools();
+  });
+}).then(createWindow).catch(console.log);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
