@@ -43,6 +43,9 @@ export default class AppUpdater {
 let mainWindow: BrowserWindow | null = null;
 let documents: DirectoriesList = {};
 
+app.commandLine.appendSwitch('high-dpi-support', '1');
+app.commandLine.appendSwitch('force-device-scale-factor', '1');
+
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
   sourceMapSupport.install();
@@ -215,10 +218,6 @@ app.whenReady().then(() => {
   globalShortcut.register('CommandOrControl+Shift+I', () => {
     openDevTools();
   });
-  if (process.platform === 'win32') {
-    app.commandLine.appendSwitch('high-dpi-support', '1');
-    app.commandLine.appendSwitch('force-device-scale-factor', '1');
-  }
 }).then(createWindow).catch(console.log);
 
 app.on('activate', () => {
