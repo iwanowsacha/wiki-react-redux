@@ -55,6 +55,8 @@ export default function PageController() {
 
     ipcRenderer?.on('on-app-close', async () => {
       if (isEditingRef.current && !await shouldUnmount()) return;
+      // Workaround to avoid bug of dynamically loaded tinymce editor preventing app from closing
+      dispatch(loadArticle(''));
       ipcRenderer.invoke('app-close-confirmation');
     });
   }, []);
