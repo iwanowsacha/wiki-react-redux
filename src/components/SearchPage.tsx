@@ -3,11 +3,12 @@ import React, { useEffect, useState } from 'react';
 import TextInput from './UncontrolledTextInput';
 import IconButton from './IconButton';
 import delay from '../utils/inputDelay';
-import { useDispatch } from 'react-redux';
-import { toggleSearchPage } from '../features/general/generalSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getDocumentTitle, toggleSearchPage } from '../features/general/generalSlice';
 
 export default function SearchPage() {
     const dispatch = useDispatch();
+    const changedDocument = useSelector(getDocumentTitle);
     const [matches, setMatches] = useState(0);
     const [currentMatch, setCurrentMatch] = useState(0);
     const [searchText, setSearchText] = useState('');
@@ -48,6 +49,11 @@ export default function SearchPage() {
             setCurrentMatch(result.activeMatchOrdinal);
         });
     }, []);
+
+    useEffect(() => {
+        if (!searchText) return;
+        ipcRenderer.send('search-in-page', searchText, {matchCase: isCaseSensitive});
+    }, [changedDocument]);
 
     return(
         <div className="bg-secondary fixed top-0 right-0 p-2 border-2 border-secondary rounded-md" style={{zIndex: 1000}}>
