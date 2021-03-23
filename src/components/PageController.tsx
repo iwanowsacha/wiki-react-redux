@@ -9,6 +9,8 @@ import {
   setDocumentTypeIndex,
   getIsEditing,
   setSnackbar,
+  toggleSearchPage,
+  getIsSearchingPage,
 } from '../features/general/generalSlice';
 import PageIndex from './Index/PageIndex';
 import Header from './Header';
@@ -17,11 +19,13 @@ import { loadList, loadDocuments, loadArticle } from '../utils/loaders';
 import Spinner from './Spinner';
 import PageArticle from '../features/article/PageArticle';
 import useOnUnmount from '../utils/hooks/useOnUnmount';
+import SearchPage from './SearchPage';
 
 export default function PageController() {
   const dispatch = useDispatch();
   const documentType = useSelector(getDocumentType);
   const documentTitle = useSelector(getDocumentTitle);
+  const isSearchingPage = useSelector(getIsSearchingPage);
   const isEditing = useSelector(getIsEditing);
   const isEditingRef = useRef(isEditing);
   const shouldUnmount = useOnUnmount();
@@ -59,6 +63,10 @@ export default function PageController() {
       dispatch(loadArticle(''));
       ipcRenderer.invoke('app-close-confirmation');
     });
+
+    ipcRenderer?.on('search-page', () => {
+      dispatch(toggleSearchPage());
+    });
   }, []);
 
 
@@ -91,6 +99,9 @@ export default function PageController() {
 
   return (
     <>
+      {isSearchingPage &&
+        <SearchPage />
+      }
       <span id={documentType} />
       <div className={`flex flex-col ${documentType === 'index' ? 'h-full' : 'min-h-full'}`}>
         <Header

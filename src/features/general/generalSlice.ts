@@ -9,6 +9,7 @@ export interface GeneralState {
   documentType: string;
   documentTitle: string;
   snackbar: Array<string>;
+  searchPage: boolean;
 }
 
 const initialState: GeneralState = {
@@ -21,6 +22,7 @@ const initialState: GeneralState = {
   documentType: 'index',
   documentTitle: '',
   snackbar: ['', ''],
+  searchPage: false
 };
 
 export const slice = createSlice({
@@ -42,6 +44,9 @@ export const slice = createSlice({
       state.isEditing = false;
       state.isMenuOpen = false;
       state.snackbar = ['', ''];
+    },
+    toggleSearchPage: (state) => {
+      state.searchPage = !state.searchPage;
     }
   },
   extraReducers: (builder) => {
@@ -78,7 +83,7 @@ export const slice = createSlice({
   },
 });
 
-export const { toggleIsEditing, setSnackbar, toggleMenu, setDocumentTypeIndex } = slice.actions;
+export const { toggleIsEditing, setSnackbar, toggleMenu, setDocumentTypeIndex, toggleSearchPage } = slice.actions;
 
 export const getDocuments = (state) => state.general.documents;
 export const getIsEditing = (state) => state.general.isEditing;
@@ -86,5 +91,6 @@ export const getDocumentType = (state) => state.general.documentType;
 export const getDocumentTitle = (state) => state.general.documentTitle;
 export const getSnackbar = (state) => state.general.snackbar;
 export const getIsMenuOpen = (state) => state.general.isMenuOpen;
+export const getIsSearchingPage = (state) => state.general.searchPage;
 
 export default slice.reducer;

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import FilePickerButton from '../../../components/FilePickerButton';
 import SidePanel from '../../../components/SidePanel';
 import SidePanelButton from '../../../components/SidePanelButton';
 import TextInput from '../../../components/UncontrolledTextInput';
+import delay from '../../../utils/inputDelay';
 import {
   getSearchText,
   orderItemsAsc,
@@ -30,14 +31,6 @@ export default function RightSidebar(props: RightSidebarProps) {
 
   const handleImageFilePicked = (path: string) => {
     dispatch(setBrowseImage(path));
-  };
-
-  const delay = (fn: any, ms: number) => {
-    let timer: any = 0;
-    return function (...args: any[]) {
-      clearTimeout(timer);
-      timer = setTimeout(fn.bind(this, ...args), ms || 0);
-    };
   };
 
   const handleItemSearch = (value: string) => {

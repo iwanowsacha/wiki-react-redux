@@ -119,6 +119,10 @@ const createWindow = async () => {
     }
   });
 
+  mainWindow.webContents.on('found-in-page', (_event, result) => {
+    mainWindow?.webContents.send('found-in-page', result);
+  });
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -217,6 +221,10 @@ app.on('window-all-closed', () => {
 app.whenReady().then(() => {
   globalShortcut.register('CommandOrControl+Shift+I', () => {
     openDevTools();
+  });
+  globalShortcut.register('CommandOrControl+F', () => {
+    mainWindow?.webContents.stopFindInPage('clearSelection');
+    mainWindow?.webContents.send('search-page');
   });
 }).then(createWindow).catch(console.log);
 
@@ -321,4 +329,12 @@ ipcMain.handle('on-component-unmount', () => {
     defaultId: 0
   });
   return clicked !== 0;
+});
+
+ipcMain.on('search-in-page', (_event, text, options?) => {
+  mainWindow?.webContents.findInPage(text, options);
+});
+
+ipcMain.on('stop-page-search', (_event, selection) => {
+  mainWindow?.webContents.stopFindInPage(selection);
 });
