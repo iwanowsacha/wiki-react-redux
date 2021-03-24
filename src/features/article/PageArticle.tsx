@@ -2,10 +2,12 @@ import { ipcRenderer } from 'electron';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
+import tinymce from 'tinymce';
 import Snackbar from '../../components/Snackbar';
 import { ArticleQuickFact, ArticleSection as ArticleSectionT } from '../../types';
 import useMounted from '../../utils/hooks/useMounted';
 import useSnacbkbar from '../../utils/hooks/useSnackbar';
+import { initSectionAnchor } from '../../utils/tinymcePlugin';
 import {
   getIsEditing,
   getIsMenuOpen,
@@ -56,11 +58,17 @@ export default function PageArticle() {
   const isEditing = useSelector(getIsEditing);
   const [isSnackbarOpen, openSnackbar] = useSnacbkbar(true);
   const [titleText, setTitleText] = useState(title);
+  // const [sectionParents, setSectionParents] = useState([]);
   const openEditors = useSelector(getOpenEditorsTotal);
 
   const handleAddSection = () => {
-    dispatch(addSection(''));
+    dispatch(addSection(''));   
   };
+
+  useEffect(() => {
+    initSectionAnchor(sections);
+  }, [sections]);
+
 
   useEffect(() => {
     if (snackbarMessage[0]) openSnackbar();

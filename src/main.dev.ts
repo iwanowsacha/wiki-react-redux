@@ -30,6 +30,7 @@ import { Article, DirectoriesList, List, ListItemImageChanges } from './types';
 import { deleteList, saveList } from './utils/list/list';
 import { deleteArticle, saveArticle } from './utils/article/article';
 import { openDevTools } from 'electron-debug';
+import electronLocalShortcut from 'electron-localshortcut';
 
 
 export default class AppUpdater {
@@ -96,6 +97,8 @@ const createWindow = async () => {
       nodeIntegration: true,
     },
   });
+
+  registerShortcuts();
 
   loadDocuments()
     .then((obj: { [key: string]: Array<string> }) => {
@@ -218,15 +221,18 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.whenReady().then(() => {
-  globalShortcut.register('CommandOrControl+Shift+I', () => {
+const registerShortcuts = () => {
+  electronLocalShortcut.register(mainWindow, 'CommandOrControl+Shift+I', () => {
     openDevTools();
   });
-  globalShortcut.register('CommandOrControl+F', () => {
+  
+  electronLocalShortcut.register(mainWindow, 'CommandOrControl+F', () => {
     mainWindow?.webContents.stopFindInPage('clearSelection');
     mainWindow?.webContents.send('search-page');
   });
-}).then(createWindow).catch(console.log);
+}
+
+app.whenReady().then(createWindow).catch(console.log);
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the

@@ -20,7 +20,6 @@ export default function ArticleListQuickFacts(
     dispatch(addQuickFact());
   };
 
-  console.log(facts);
   return (
     <div className="mt-2 border-t-2 border-primary">
       <div className="flex flex-col w-full">
