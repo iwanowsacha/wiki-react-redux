@@ -6,6 +6,7 @@ import ListCard from './ListCard';
 
 export default function PageIndex() {
   const documents = useSelector(getDocuments);
+  
   return (
     <main className="grid sm:grid-cols-2 lg:grid-cols-4 w-full h-full gap-5 px-6 my-8 flex-auto overflow-auto hidden-scrollbar">
         <section className="grid sm:grid-cols-2 lg:col-span-3 lg:grid-cols-4 gap-5 grid-rows-2">

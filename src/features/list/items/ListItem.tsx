@@ -18,7 +18,7 @@ export default function ListItem(props: ListItemProps) {
   };
   const imagePath =
     basename(image) === image ? `${DIRECTORIES.lists}/${sanitizeFilename(listTitle)}/images/${image}` : image;
-    console.log(DIRECTORIES);
+    
   return (
     <div className="list-item px-6" onClick={handleItemClick}>
       <div className="relative rounded-md bg-secondary" role="button">

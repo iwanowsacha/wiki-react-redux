@@ -100,6 +100,7 @@ export const slice = createSlice({
       }>
     ) => {
       const { id, changes } = action.payload;
+      console.log(changes);
       const unused = removeUnusedTags(state, id).filter(
         (t: string) => !changes.tags.includes(t)
       );

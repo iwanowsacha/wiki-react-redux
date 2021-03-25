@@ -27,11 +27,11 @@ export default function ListForm(props: ListFormProps) {
   const [newTags, setNewTags] = useState('');
   const [isUpdatingItem, setIsUpdatingItem] = useState(!!item);
   const [linkType, setLinkType] = useState(
-    !item?.link?.startsWith('local://') ? 'external' : 'local'
+    !item?.link?.startsWith('locala://') || !item?.link?.startsWith('locall://') ? 'external' : 'local'
   );
   const [linkPath, setLinkPath] = useState(
-    item?.link?.startsWith('local://')
-      ? item?.link.replace('local://', '')
+    item?.link?.startsWith('locala://') || item?.link?.startsWith('locall://')
+      ? item?.link.replace('locala://', '').replace('locall://', '')
       : item?.link || ''
   );
 
@@ -94,7 +94,6 @@ export default function ListForm(props: ListFormProps) {
   };
 
   const updateCurrentItem = (updatedItem: any) => {
-    console.log(item);
     if (!item) return;
     if (item.image === basename(updatedItem.image))
       updatedItem.image = item.image;
@@ -128,23 +127,18 @@ export default function ListForm(props: ListFormProps) {
 
   const sanitizeLink = () => {
     let link = '';
-    if (linkPath) {
-      if (linkType === 'local') {
-        if (
-          !documents.articles.includes(linkPath) &&
-          !documents.lists.includes(linkPath)
-        )
-          return link;
-        link = `local://${linkPath}`;
-      } else if (
-        linkType === 'external' &&
-        !linkPath.startsWith('http://') &&
-        !linkPath.startsWith('https://')
-      ) {
-        link = `http://${linkPath}`;
+    if (!linkPath) return link;
+    if (linkType === 'local') {
+      const isArticle = linkPath.startsWith('A') ? true : false;
+      if (isArticle) {
+        link = `locala://${linkPath.substr(1)}`;
       } else {
-        link = linkPath;
+        link = `locall://${linkPath.substr(1)}`;
       }
+    } else if (linkType === 'external' && !linkPath.startsWith('http://') && !linkPath.startsWith('https://')) {
+      link = `http://${linkPath}`;
+    } else {
+      link = linkPath;
     }
     return link;
   };
@@ -168,8 +162,6 @@ export default function ListForm(props: ListFormProps) {
       link: sanitizeLink(),
       tags: sanitizeTags(),
     };
-    console.log(isUpdatingItem);
-    console.log(newItem);
     isUpdatingItem ? updateCurrentItem(newItem) : addCurrentItem(newItem);
     emptyForm();
   };
@@ -201,15 +193,31 @@ export default function ListForm(props: ListFormProps) {
                 onChange={handleLocalLinkChange}
               >
                 <option value="">Link to</option>
-                {/* @TODO: Single array in state */}
-                {[...documents.articles, ...documents.lists].map((art) => {
+                <optgroup label="Articles">
+                  {
+                    documents.articles.map((a: string) => <option key={a} value={`A${a}`}>{a}</option>)
+                  }
+                </optgroup>
+                <optgroup label="Lists">
+                  {
+                    documents.lists.map((l: string) => {
+                      if (l === listTitle) return;
+                      return (
+                        <option key={l} value={`L${l}`}>
+                          {l}
+                        </option>
+                      )
+                    })
+                  }
+                </optgroup>
+               {/* {[...documents.articles, ...documents.lists].map((art) => {
                   if (art === listTitle) return '';
                   return (
                     <option key={art} value={art}>
                       {art}
                     </option>
                   );
-                })}
+                })} */}
               </select>
             )}
           </div>

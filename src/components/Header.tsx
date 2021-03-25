@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDocuments, getIsEditing } from '../features/general/generalSlice';
 import IconButton from './IconButton';
 import Autocomplete from './Autocomplete';
 import { loadArticle, loadList } from '../utils/loaders';
 import useOnUnmount from '../utils/hooks/useOnUnmount';
+import { initDocumentLink } from '../utils/tinymcePlugin';
 
 type HeaderProps = {
   showMenuButton: boolean;
@@ -27,6 +28,10 @@ export default function Header(props: HeaderProps) {
   const documents = useSelector(getDocuments);
   const shouldUnmount = useOnUnmount();
   const suggestions = [...Array.from(documents.articles, val => `(A) ${val}`), ...Array.from(documents.lists, val => `(L) ${val}`)];
+
+  useEffect(() => {
+    initDocumentLink(documents);
+  }, [documents])
 
   const handleAutocompleteEnter = async (value: string) => {
     if (isEditing && !await shouldUnmount()) return;

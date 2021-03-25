@@ -11,8 +11,8 @@ type TinymceEditorProps = {
 
 export default function TinymceEditor(props: TinymceEditorProps) {
     const { editorContent, onEditorContentChange, height = '100%', isInline = false } = props;
-    const plugins = isInline ? 'lists section-anchor' : 'section-anchor print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help quickbars';
-    const toolbar = isInline ? 'undo redo | section-anchor | bold italic underline strikethrough | link lists | forecolor backcolor' : 'undo redo | section-anchor | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl';
+    const plugins = isInline ? 'lists section-anchor document-link' : 'section-anchor document-link print preview importcss searchreplace autolink autosave save directionality visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help quickbars';
+    const toolbar = isInline ? 'undo redo | section-anchor document-link | bold italic underline strikethrough | link lists | forecolor backcolor' : 'undo redo | section-anchor document-link | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl';
     const [isActive, setIsActive] = useState(isInline);
 
     const handleEditorReady = () => setIsActive(true);

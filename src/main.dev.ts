@@ -191,16 +191,15 @@ const createWindow = async () => {
   mainWindow.webContents.on('new-window', (event, url) => {
     event.preventDefault();
     console.log(url);
-    if (url.startsWith('local://')) {
-      const document = url.replace('local://', '');
-      if (
-        !documents.articles.includes(document) &&
-        !documents.lists.includes(document)
-      )
-        return;
-      mainWindow?.webContents.send('open-list', url.replace('local://', ''));
-    } else if (!url.endsWith('/src/index.html')) {
+    if (!url.startsWith('locala://') && !url.startsWith('locall://') && !url.endsWith('/src/index.html')) {
       shell.openExternal(url);
+    } else if (url.startsWith('local')) {
+      const isArticle = url.startsWith('locala://') ? true : false;
+      const document = isArticle ? url.replace('locala://', '') : url.replace('locall://', '');
+      console.log(document);
+      if ((isArticle && documents.articles.includes(document)) || (!isArticle && documents.lists.includes(document))) {
+        mainWindow?.webContents.send(isArticle ? 'open-article' : 'open-list', document);
+      }
     }
   });
 
