@@ -166,7 +166,7 @@ function sectionTraverse (parent: string, section: ArticleSection) {
 }
 
 export function initSectionAnchor(sections: Array<ArticleSection>) {
-    _sections = [];
+    _sections = [{text: 'Introduction', value: 'intro'}];
     sections.map((v) => {
         sectionTraverse('', v);
     });

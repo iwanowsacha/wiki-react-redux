@@ -15,7 +15,9 @@ export default function ArticleIndex(props: ArticleIndexProps) {
   return (
     <span ref={indexRef}>
       <span className="bg-primary text-secondary p-2 fixed w-1/4 z-100 hidden-scrollbar overflow-y-auto" style={{top: offsetTop, bottom: 0}}>
-        <h3 className="text-center text-xl text-primary">{articleTitle}</h3>
+        <div className="text-center">
+          <a href="#intro" className="text-xl text-primary">{articleTitle}</a>
+        </div>
         <ol className="mt-2">{children}</ol>
       </span>
     </span>

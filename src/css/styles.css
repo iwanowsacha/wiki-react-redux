@@ -1446,6 +1446,19 @@ button:focus, button:active, input:focus {
   animation-delay: -0.15s;
 }
 
+ol {
+  counter-reset: item;
+}
+
+ol li {
+  display: block;
+}
+
+ol li:before {
+  content: counters(item, ".") ".  ";
+  counter-increment: item;
+}
+
 @keyframes lds-ring {
   0% {
     transform: rotate(0deg);

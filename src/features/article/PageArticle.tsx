@@ -106,7 +106,7 @@ export default function PageArticle() {
               ))}
           </ArticleIndex>
         )}
-        <div className="flex-grow px-6 pt-4 relative">
+        <div className="flex-grow px-6 pt-4 relative" id="intro">
           <ArticleIntroduction onTitleChange={handleTitleChange} titleText={titleText}/>
           {sections &&
             sections.map((section: ArticleSectionT, index: number) => (
