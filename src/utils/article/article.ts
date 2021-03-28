@@ -8,6 +8,7 @@ import {
   renameDirectory,
 } from '../../directories';
 import { sanitizeFilename } from '../filenameSanitizer';
+import convertToJPG from '../ffmpeg';
 
 export const deleteArticle = async (title: string) => {
   await fs.remove(path.join(DIRECTORIES.articles, title));
@@ -38,7 +39,7 @@ export const saveArticle = async (article: Article, newTitle: string) => {
   }
 
   if (basename(article.image) !== article.image) {
-    await fs.copyFile(article.image, path.join(DIRECTORIES.articles, sanitizedTitle, 'image.jpg'));
+    await convertToJPG(article.image, path.join(DIRECTORIES.articles, sanitizedTitle, 'image.jpg'));
     article.image = 'image.jpg';
   }
 

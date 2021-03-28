@@ -25,10 +25,10 @@ export default function PageIndex() {
             }
       
       </section>
-      <section className="bg-primary h-full rounded-md">
+      <section className="bg-primary h-full rounded-md overflow-auto hidden-scrollbar">
         {documents.lists.length > 0  
             ? (<>
-                <h1 className="text-primary text-center uppercase m-5 text-lg">Lists</h1>
+                <h1 className="text-primary text-center uppercase m-5 text-2xl">Lists</h1>
                 <ul className="text-primary text-center list-none">
                 {[...documents.lists].map((l: string) => {
                   return (

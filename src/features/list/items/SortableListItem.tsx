@@ -2,26 +2,32 @@ import React from 'react';
 import { basename } from 'path';
 import { DIRECTORIES } from '../../../directories';
 import { sanitizeFilename } from '../../../utils/filenameSanitizer';
+import { useSortable } from '@dnd-kit/sortable';
+import {CSS, Transition} from '@dnd-kit/utilities';
 
-type ListItemProps = {
+type SortableListItemProps = {
   title: string;
   image: string;
   listTitle: string;
   onItemClick(title: string): void;
 };
 
-export default function ListItem(props: ListItemProps) {
+export default function SortableListItem(props: SortableListItemProps) {
   const { title, image, listTitle } = props;
-  
+  const { attributes, listeners, setNodeRef, transform } = useSortable({id: title});
+
+  const style = {transform: CSS.Transform.toString(transform) || '', transition: CSS.Transition.toString({duration: 250, easing: 'ease'} as Transition)}
+
   const handleItemClick = () => {
     props.onItemClick(props.title);
   };
   const imagePath =
     basename(image) === image ? `${DIRECTORIES.lists}/${sanitizeFilename(listTitle)}/images/${image}` : image;
     
+
   return (
-    <div className="list-item px-6" onClick={handleItemClick}>
-      <div className="relative rounded-md bg-secondary" role="button">
+    <div ref={setNodeRef} style={style}  className="list-item px-6" onClick={handleItemClick}>
+      <div {...attributes} {...listeners} className="relative rounded-md bg-secondary" role="button">
         <img
           src={imagePath}
           alt=""

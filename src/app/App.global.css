@@ -2,6 +2,5 @@
  * @NOTE: Prepend a `~` to css file paths that are in your node_modules
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap');
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('~/node_modules/material-icons/iconfont/material-icons.css');
 @import '../css/styles.css';

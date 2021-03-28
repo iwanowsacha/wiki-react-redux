@@ -25,13 +25,13 @@ export default function TagPill(props: TagPillProps) {
   return (
     <div
       draggable={isDraggable}
-      className={`rounded-full py-1 px-2 text-xs m-1 inline-block truncate uppercase relative ${
+      className={`rounded-full py-1 px-2 m-1 inline-block truncate uppercase text-sm ${
         isSelected ? 'bg-select text-inverse' : 'bg-primary text-secondary'
       }`}
       onClick={handleTagClick}
       onDragStart={handleTagDrag}
     >
-      <span className="mr-4 uppercase">{title}</span>
+      {title}
     </div>
   );
 }

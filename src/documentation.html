@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wiki - Help</title>
+    <link rel="stylesheet" href="./dist/style.css" />
+    <style>
+        p {
+            margin-bottom: 1rem !important;
+        }
+
+        li {
+            margin-top: 1rem !important;
+        }
+
+        ol {
+            padding-top: 0.2rem !important;
+        }
+    </style>
+</head>
+<body class="bg-primary">
+    <div class="p-2 text-center">
+        Click on the buttons below to display information about that specific topic.
+    </div>
+    <div class="bg-secondary">
+        <ol>
+           <li data-show="home" class="p-2 w-full text-primary text-left border-b-2 border-primary">Home</li>
+            <div id="home" class="hidden w-full p-2 mt-2">
+                <p>
+                    The initial page, called "Home" will show you 8 random articles at the center (if there are enough)
+                    and any lists you may have on the right. You can click on the name of any of these documents to visit them.
+                </p>
+                <p>
+                    If you don't see all the lists on the right, you can scroll on the "Lists" card to see the ones missing.
+                </p>
+                <p>
+                    If there are no documents, you can press <strong class="text-primary p-1 rounded-md bg-primary">CTRL+N</strong> to create a new article or press <strong class="text-primary p-1 rounded-md bg-primary">CTRL+L</strong> to create a new list.
+                    Alternitavely, you can go to <strong class="text-primary p-1 rounded-md bg-primary">File -> New article/New list</strong> to create the documents.
+                </p>
+                <p>
+                    You may also search any documents you have by typing part of its name on the search bar on the header at top. The documents are prepend by (A) or (L) to indicate what type of document they are (Article or List).
+                </p>
+                <p>
+                    If you want to return to this page, you may press <strong class="text-primary p-1 rounded-md bg-primary">CTRL+H</strong> or go to <strong class="text-primary p-1 rounded-md bg-primary">File -> Home</strong> on the menu at top.
+                </p>
+            </div>
+            <li data-show="editing" class="p-2 w-full text-primary text-left border-b-2 border-primary">Editing mode</li>
+            <div id="editing" class="hidden w-full p-2 mt-2">
+                <p>
+                    When you open a document, whether it is an article or a list, you'll see the <strong class="text-primary p-1 rounded-md bg-primary material-icons">edit</strong> button on the top-right corner of the header.
+                    By pressing this button, you will be able to edit the current document.
+                </p>
+                <p>
+                    If you're in "Editing mode", or you're creating a new document, the icon will appear as <strong class="text-primary p-1 rounded-md bg-primary material-icons">save</strong>, which will allow you to save the current changes.
+                </p>
+            </div>
+            <li data-show="deleting" class="p-2 w-full text-primary text-left border-b-2 border-primary">Deleting</li>
+            <div id="deleting" class="hidden w-full p-2 mt-2">
+                <p>
+                    If you want to delete a document, whether it's an article or a list, you can click the <strong class="text-red-500 p-1 rounded-md bg-primary material-icons">delete</strong> button positioned on the top-right corner of the header.
+                    Clicking this button will ask you for confirmation, and if you accept, the document will be deleted and you'll be taken back to the "Home" page.
+                </p>
+                <p>
+                    If you click the button when creating a new document, nothing will happen.
+                </p>
+                <p class="font-bold">
+                    IMPORTANT: A DOCUMENT CAN'T BE RECOVERED ONCE IT IS DELETED.
+                </p>
+            </div>
+            <li data-show="article" class="p-2 w-full text-primary text-left border-b-2 border-primary">Article</li>
+            <div id="article" class="hidden w-full p-2 mt-2">
+                <p>
+                    On this page, you can create a new article with multiple sections and subsections, a main image and even some quick facts/details about it.
+                </p>
+                <ol>
+                    <li data-show="article-introduction" class="p-2 w-full text-primary text-left border-b-2 border-primary">Article - Introduction</li>
+                    <div id="article-introduction" class="hidden w-full p-2 mt-2">
+                        <p>
+                            You are first greeted by a box where you can input the article's name and an editor below it where you can write an introduction for it.
+                        </p>
+                        <p>
+                            Once you have entered a title for the article, you may save the introduction by clicking the <strong class="p-1 rounded-md bg-primary text-primary">SAVE</strong> button below the editor.
+                            Note that this doesn't save the article itself; just the introduction for it.
+                        </p>
+                        <p>
+                            After the introduction is saved and while you're in "Editing mode", you'll see <strong class="text-primary p-1 rounded-md bg-primary material-icons">more_vert</strong> the opposite end of the title. By clicking those
+                            dots, you can edit the article's name and introduction. You can also cancel the editing of the introduction by clicking the <strong class="text-red-500 p-1 rounded-md bg-primary">CANCEL</strong> button.
+                        </p>
+                    </div>
+                    <li data-show="article-image" class="p-2 w-full text-primary text-left border-b-2 border-primary">Article - Image</li>
+                    <div id="article-image" class="hidden w-full p-2 mt-2">
+                        <p>
+                            You'll see a placeholder image on the right side and below it, a button named <strong class="p-1 bg-primary rounded-md text-primary">BROWSE</strong>. By clicking that button, you can then choose
+                            an image from your system to become the article's main image.
+                        </p>
+                        <p>
+                            This image becomes the one you see in the "Home" page, when the article is "featured".
+                        </p>
+                    </div>
+                    <li data-show="article-facts" class="p-2 w-full text-primary text-left border-b-2 border-primary">Article - Quick Facts</li>
+                    <div id="article-facts" class="hidden w-full p-2 mt-2">
+                        <p>
+                            Below the main image, you'll see a button with a <strong class="text-primary p-1 rounded-md bg-primary material-icons">add</strong>. Clicking that button makes two boxes appear; on the left one you can enter the quick fact's title,
+                            and by clicking on the right one, you can enter a small editor where you can write whatever details you want for that fact.
+                        </p>
+                        <p>
+                            Once you're done writing the fact, you have to click the button <strong class="text-primary p-1 rounded-md bg-primary material-icons">save</strong> below it to save it. After that, the <strong class="text-primary p-1 rounded-md bg-primary material-icons">add</strong> button will reappear and you'll be able to add more facts.
+                        </p>
+                        <p>
+                            After saving a fact and while you're in "Editing mode", you can click the <strong class="text-primary p-1 rounded-md bg-primary material-icons">more_vert</strong> button to the right of the fact to move it up/down,
+                            edit it or delete it.
+                        </p>
+                    </div>
+                    <li data-show="article-sections" class="p-2 w-full text-primary text-left border-b-2 border-primary">Article - Sections</li>
+                    <div id="article-sections" class="hidden w-full p-2 mt-2">
+                        <p>
+                            On the bottom of the page, you'll see a button labeled <strong class="text-primary p-1 rounded-md bg-primary">Add section</strong>. Clicking that button will make a textbox and an editor appear above the button.
+                            This is used to create a new section, and the process is very similar to creating the article's introduction. You enter a name on the box at top, and write the content for the section in the editor.
+                        </p>
+                        <p>
+                            After writing the section, you have to click the <strong class="text-primary p-1 rounded-md bg-primary">SAVE</strong> button below it to save it; if you click the <strong class="text-red-500 p-1 rounded-md bg-primary">CANCEL</strong> when it's a new section, the section will disappear.
+                            While you're in "Editing mode", you'll see <strong class="text-primary p-1 rounded-md bg-primary material-icons">more_vert</strong> at the opposite end of the title. By clicking it, you'll be able to move the section (and all its subsections) up/down, edit it or delete it.
+                        </p>
+                        <p>
+                            When editing a section, you can cancel the editing by clicking the <strong class="text-red-500 p-1 rounded-md bg-primary">CANCEL</strong> button and the section will return to its previous title and content.
+                        </p>
+                        <p class="font-bold">
+                            IMPORTANT: THE ONLY WAY TO RECOVER A DELETED SECTION IS TO EXIT THE DOCUMENT WITHOUT SAVING THE CHANGES. IF YOU DELETE THE SECTION AND SAVE THE ARTICLE, THE SECTION WON'T BE RECOVERABLE.
+                        </p>
+                    </div>
+                    <li data-show="article-subsections" class="p-2 w-full text-primary text-left border-b-2 border-primary">Article - Subsections</li>
+                    <div id="article-subsections" class="hidden w-full p-2 mt-2">
+                        <p>
+                            Whenever you add a section, and you're in "Editing mode", you'll see a button below the section labeled <strong class="text-primary p-1 rounded-md bg-primary">Add section (Section's name)</strong>, which allows you to add a subsection to "Section's name".
+                            Clicking this button will prompt you to create a new section like before, but once you save it, it will become a subsection of the section indicated by the button previously mentioned.
+                        </p>
+                        <p>
+                            Subsections behave almost the same as normal sections, their difference is mostly noticable in how they look. You can use the <strong class="text-primary p-1 rounded-md bg-primary material-icons">more_vert</strong> to edit it,
+                            delete it or move it up/down to swap positions with other subsections on its same level.
+                        </p>
+                        <p>
+                            Subsections can also have subsections of their own (up to 4 levels deep). You'll see a button at the bottom of it labeled <strong class="text-primary p-1 rounded-md bg-primary">Add section (Section's name --- Subsection's name)</strong>.
+                            The process for this remains the same as the normal sections and subsections.
+                        </p>
+                    </div>
+                    <li data-show="article-index" class="p-2 w-full text-primary text-left border-b-2 border-primary">Article - Index</li>
+                    <div id="article-index" class="hidden w-full p-2 mt-2">
+                        <p>
+                            As you add sections and subsections to the article, these will be added to an index. You can open this index by pressing the <strong class="text-secondary p-1 rounded-md bg-primary material-icons">menu</strong> button on the top-left
+                            corner of the screen.
+                        </p>
+                        <p>
+                            Once the index is opened, you'll see all sections and its subsections numbered and in order. By clicking the name of any of the sections, you'll be taken to that section. This is an easy way to navigate your way through
+                            the article, without having to scroll to the position you want to see.
+                        </p>
+                        <p>
+                            If you click on the name of the article at top, you will be taken to the article's introduction.
+                        </p>
+                    </div>
+                    <li data-show="article-editor" class="p-2 w-full text-primary text-left border-b-2 border-primary">Article - Editor's custom functionality</li>
+                    <div id="article-editor" class="hidden w-full p-2 mt-2">
+                        <p>
+                            The editor counts with two custom buttons which are placed at the beginning of the toolbar (right after the undo/redo buttons).                   
+                        </p>
+                        <p>
+                            The first button <strong class="text-secondary p-1 rounded-md bg-primary material-icons">bookmark</strong> is only available for articles.
+                            It allows you to select one of the article's sections and create a link to it, similar to the Article's Index. This button is available in all
+                            article editors.
+                        </p>
+                        <p>
+                            The second button <strong class="text-secondary p-1 rounded-md bg-primary material-icons">link</strong> is available for both articles and lists.
+                            It allows you to select another document (article or list) and create a link to it. This button is available in all editors.
+                        </p>
+                    </div>
+                </ol>
+            </div>
+            <li data-show="list" class="p-2 w-full text-primary text-left border-b-2 border-primary">List</li>
+            <div id="list" class="hidden w-full p-2 mt-2">
+                <p>
+                    On this page, you can create a list of any kind of items you want (books, movies, drawings, video games, etc.). You can add any information you want to each item and even tag them to filter them later.
+                </p>
+                <ol>
+                    <li data-show="list-title" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Title</li>
+                    <div id="list-title" class="hidden w-full p-2 mt-2">
+                        <p>
+                            The title of the list can be entered on the textbox on the left sidebar. If the list is being edited, the box will appear below the current title and you can change it from here as well.
+                        </p>
+                        <p>
+                            There's no button to save the title; it is saved when the entire list is saved (see <a href="#editing">Editing mode</a>).
+                        </p>
+                    </div>
+                    <li data-show="list-new-item" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - New Item</li>
+                    <div id="list-new-item" class="hidden w-full p-2 mt-2">
+                        <p>
+                            To add items to the list, you need to be in "Editing mode" and click the button <strong class="text-primary p-1 rounded-md bg-primary">New</strong> on the left sidebar.
+                            When you click it, a form will be displayed where you can create a new item.
+                        </p>
+                        <p>
+                            All items must have a title and an image, which can be added by pressing the button labeled <strong class="text-primary p-1 rounded-md bg-primary">Image</strong> on the right sidebar.
+                            You can enter any information you need in the editor.
+                        </p>
+                        <p>
+                            Once you're done with the item, you can save it by pressing the <strong class="text-primary p-1 rounded-md bg-primary">SAVE</strong> button at the bottom of the page.
+                        </p>
+                        <ol>
+                            <li data-show="list-images" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Images</li>
+                            <div id="list-images" class="hidden w-full p-2 mt-2">
+                                <p>
+                                    When the list is saved, images are converted to JPG in an attempt to reduce their file size. Images with transparent background
+                                    have their backgrounds turned white.
+                                </p>
+                            </div>
+                            <li data-show="list-link" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Link</li>
+                            <div id="list-link" class="hidden w-full p-2 mt-2">
+                                <p>
+                                    The title of an item can be used as a link to an external URL or any other article/list you've created.
+                                    To change the type of link (external or article), you have to check to corresponding box to the left of the textbox.
+                                </p>
+                                <p>
+                                    External links have to be typed and document links can be selected from a dropdown menu.
+                                </p>
+                            </div>
+                            <li data-show="list-item-tags" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Tags</li>
+                            <div id="list-item-tags" class="hidden w-full p-2 mt-2">
+                                <p>
+                                    Below the editor you'll have a box where you can enter any tags you wish the item to have. Separate them using commas (,) to create multiple tags at the same time.
+                                </p>
+                                <p>
+                                    If the tags don't exist, they will be created automatically once you save the item. If you wish to use already existing tags without typing them, you can use the button on the right sidebar, labeled
+                                    <strong class="text-primary p-1 rounded-md bg-primary">Tags</strong> and select the tags from there.
+                                    To remove selected existing tags from the item, click them on the right sidebar.
+                                </p>
+                                <p>
+                                    If you type an existing tag, without selecting it, it won't be created again and the existing tag will be used. Tags are also case insesitive, so "Aa" and "AA" are considered the same.
+                                </p>
+                            </div>
+                        </ol>
+                    </div>
+                    <li data-show="list-items" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Items</li>
+                    <div id="list-items" class="hidden w-full p-2 mt-2">
+                        <p>
+                            All items will be displayed in the main page. If you were creating/editing an item, you can go back to the list by clicking the <strong class="text-primary p-1 rounded-md bg-primary">Items</strong> button
+                            on the left sidebar.
+                        </p>
+                        <p>
+                            When you hover over the image of an item, you will be able to see its name. If you click the item (image or title), a window will open and you will be able to see the item's information, 
+                            including tags and image.
+                        </p>
+                        <ol>
+                            <li data-show="list-item-move" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Moving</li>
+                            <div id="list-item-move" class="hidden w-full p-2 mt-2">
+                                <p>
+                                    While in "Editing mode", items can be moved around by dragging them and dropping them in a new position; keep in mind that
+                                    you have to <strong>click and hold</strong> the item for a brief moment to be able to drag it and drop it.
+                                </p>
+                                <p>
+                                    If the list is saved after moving an item to a new position, the new order will be saved as well.
+                                </p>
+                            </div>
+                            <li data-show="list-item-link" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Link</li>
+                            <div id="list-item-link" class="hidden w-full p-2 mt-2">
+                                <p>
+                                    If you linked the item to an external URL or a local document, you will be able to visit it by clicking the item's title (in the window with the item's information).
+                                </p>
+                                <p>
+                                    When the link is local and the document doesn't exist, nothing will happen.
+                                    External links are opened on the default browser, while local documents are opened on the current window.
+                                </p>
+                            </div>
+                            <li data-show="list-item-editing" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Item editing</li>
+                            <div id="list-item-editing" class="hidden w-full p-2 mt-2">
+                                <p>
+                                   While in "Editing mode" and with the item's information window open, you can click the <strong class="text-primary p-1 rounded-md bg-primary material-icons">edit</strong> button
+                                   at the opposite side of the item's title to edit it.
+                                </p>
+                                <p>
+                                    This will take you to the form you used to create the item, except that all the item's information will be loaded into the corresponding fields for you to edit.
+                                    If you remove any of the tags of the item (displayed on the right sidebar) and you save the item, if there are not other items with that tag, the tag will be deleted automatically.
+                                </p>
+                                <p>
+                                    Once you're done editing the item, you'd save it as normal.
+                                </p>
+                            </div>
+                            <li data-show="list-item-deleting" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Item deleting</li>
+                            <div id="list-item-deleting" class="hidden w-full p-2 mt-2">
+                                <p>
+                                   While in "Editing mode" and with the item's information window open, you can click the <strong class="text-red-500 p-1 rounded-md bg-primary material-icons">delete</strong> button
+                                   at the opposite side of the item's title to delete it.
+                                </p>
+                                <p>
+                                    A small prompt will appear at the bottom of the window to ask for confirmation. If you accept, the item will be deleted.
+                                </p>
+                                <p class="font-bold">
+                                    IMPORTANT: THE ONLY WAY TO RECOVER A DELETED ITEM IS TO EXIT THE DOCUMENT WITHOUT SAVING THE CHANGES. IF YOU DELETE THE ITEM AND SAVE THE LIST, THE ITEM WON'T BE RECOVERABLE.
+                                </p>
+                            </div>
+                        </ol>
+                    </div>
+                    <li data-show="list-order" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Order</li>
+                    <div id="list-order" class="hidden w-full p-2 mt-2">
+                        <p>
+                            Items can be ordered automatically (<strong>A to Z</strong> or <strong>Z to A</strong>) by clicking the corresponding button on the right sidebar.
+                        </p>
+                        <p>
+                            <strong class="text-primary p-1 rounded-md bg-primary">Original order</strong> will revert the order of items to the same order items were when the list was opened.
+                            If you order items differently and save the list, that will become the new original order.
+                        </p>
+                        <p>
+                            Keep in mind that order won't be persisted unless you're in "Editing mode" and you save the list once you've ordered the items.
+                        </p>
+                    </div>
+                    <li data-show="list-filter" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Filter</li>
+                    <div id="list-filter" class="hidden w-full p-2 mt-2">
+                        <p>
+                            Clicking the <strong class="text-primary p-1 rounded-md bg-primary">Filter</strong> button on the right sidebar will open a new window.
+                            In this window, you can select/unselect tags by tapping them and the items will be filtered according to the selected tags and the set filter option.
+                        </p>
+                        <ol>
+                            <li data-show="list-filter-tags" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Tags</li>
+                            <div id="list-filter-tags" class="hidden w-full p-2 mt-2">
+                                <p>
+                                    All tags are shown on the box on the left, and you can search specific tags by typing on the Search box above it.
+                                    Clicking a tag will select it and clicking it again will unselect it.
+                                </p>
+                                <p>
+                                    Tags are created or removed automatically when you add/remove an item. Tags are only removed when no item has that tag attached to it.
+                                </p>
+                            </div>
+                            <li data-show="list-filter-options" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Filter options</li>
+                            <div id="list-filter-options" class="hidden w-full p-2 mt-2">
+                                <p>
+                                    On the right side of the filter window you'll see a small box with the available options to filter the items.
+                                </p>
+                                <p>
+                                    <strong class="text-primary p-1 rounded-md bg-primary">Has one of selected</strong> will show items that have any of the selected tags.<br>
+                                    <strong class="text-primary p-1 rounded-md bg-primary">Has all selected</strong> will show items that have all the selected tags. If one of the selected tags is missing, the item will not be shown.<br>
+                                    <strong class="text-primary p-1 rounded-md bg-primary">Has none of selected</strong> will show items that have none of the selected tags. If the item has one of the selected tags, it won't be shown.
+                                </p>
+                                <ol>
+                                    <li data-show="list-filter-custom" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Custom</li>
+                                    <div id="list-filter-custom" class="hidden w-full p-2 mt-2">
+                                        <p>
+                                           Selecting the <strong class="text-primary p-1 rounded-md bg-primary">Custom</strong> filtering option will display two additional boxes below it,
+                                           labeled <strong>"Has these"</strong> and <strong>"Not these"</strong>.
+                                        </p>
+                                        <p>
+                                            You can drag and drop tags into these boxes to apply the filter. The filter will show any items that have all the tags under <strong>"Has these"</strong>
+                                            but have none of the tags under <strong>"Not these"</strong>. 
+                                        </p>
+                                        <p>
+                                            Clicking a tag under one of these two boxes will remove it from the box, but it won't unselect it. If one of the boxes has no tags in it, the filter won't be applied.
+                                        </p>
+                                    </div>
+                                </ol>
+                            </div>
+                            <li data-show="list-filter-groups" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Tag groups</li>
+                            <div id="list-filter-groups" class="hidden w-full p-2 mt-2">
+                                <p>
+                                    While in "Editing mode", there will be a new box above the filter options. In here, you can add/remove groups or remove tags from them.
+                                    Groups are simply boxes where you can drop tags to keep them organized.
+                                </p>
+                                <ol>
+                                    <li data-show="list-group-new" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - New group</li>
+                                    <div id="list-group-new" class="hidden w-full p-2 mt-2">
+                                        <p>
+                                            You can type the name of the group in the textbox that says <strong>"New group"</strong> and then click the <strong class="text-primary p-1 rounded-md bg-primary material-icons">add</strong>
+                                            button to the right to add it. The group will be placed in the middle of the window.
+                                        </p>
+                                    </div>
+                                    <li data-show="list-group-tags" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Tags</li>
+                                    <div id="list-group-tags" class="hidden w-full p-2 mt-2">
+                                        <p>
+                                            You can add tags to a group by simply dragging it and dropping it inside the group's box. This is only possible in "Editing mode".
+                                        </p>
+                                        <p>
+                                            To remove a tag from a group, drag the tag (from the group or the general tag box) and drop it in the box with dashed lines to the right, labeled
+                                            <strong class="text-red-500 bg-primary p-2">Drag here to remove from group</strong>
+                                        </p>
+                                        <p>
+                                            You can drag and drop a tag from a group into another, and it will become part of that new group automatically.
+                                        </p>
+                                    </div>
+                                    <li data-show="list-group-delete" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Delete group</li>
+                                    <div id="list-group-delete" class="hidden w-full p-2 mt-2">
+                                        <p>
+                                            To delete a group, simply select it from the dropdown menu to the right, in the <strong>"Group options"</strong> box and then click the
+                                            <strong class="text-red-500 p-1 rounded-md bg-primary material-icons">delete</strong> button to the side of the menu.
+                                        </p>
+                                    </div>
+                                </ol>
+                            </div>
+                        </ol>
+                    </div>
+                    <li data-show="list-fullscreen" class="p-2 w-full text-primary text-left border-b-2 border-primary">List - Fullscreen</li>
+                    <div id="list-fullscreen" class="hidden w-full p-2 mt-2">
+                        <p>
+                            By pressing the <strong class="text-secondary p-1 rounded-md bg-primary material-icons">menu</strong> button on the top-left corner of the screen,
+                            you can hide the sidebars and make the center section fill the width of the window.
+                        </p>
+                        <p>
+                            While adding or editing an item, the button will only hide the left sidebar and the right one will remain visible, as it's needed to save the item (image).
+                        </p>
+                    </div>
+                </ol>
+            </div>
+        </ol>
+    </div>
+
+    <script>
+        const buttons = document.querySelectorAll('li');
+        for(let b of buttons) {
+            b.addEventListener('click', showBlock)
+        }
+
+        function showBlock(event) {
+            const id = event.target.dataset.show;
+            const block = document.getElementById(id);
+            if (block.classList.contains('hidden')) {
+                block.classList.replace('hidden', 'block');
+            } else {
+                block.classList.replace('block', 'hidden');
+            }
+        }
+    </script>
+</body>
+</html>

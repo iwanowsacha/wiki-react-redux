@@ -32,7 +32,6 @@ export const renameDirectory = async (
 
 export const loadDocuments = async () => {
   const directoriesList: DirectoriesList = {};
-  console.log(process.env.APPDATA);
 
   try {
     await prepareDirectories();
@@ -43,6 +42,5 @@ export const loadDocuments = async () => {
   } catch (err) {
     console.log(err);
   }
-  console.log(directoriesList);
   return directoriesList;
 };

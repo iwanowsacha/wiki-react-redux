@@ -62,13 +62,14 @@ export default function TagGroupOptions() {
         <h1 className="mb-2 underline text-secondary">Group options</h1>
         <div className="m-2 flex bg-primary p-2 text-secondary">
           <TextInput
+            placeholder="New group"
             text={textAddGroup}
             onTextChange={handleTextAddGroupChange}
             color="bg-primary"
           />
           <button
             onClick={handleAddGroupButtonClick}
-            className="hidden ml-2 lg:block text-base text-secondary lg:text-2xl material-icons self-center justify-self-center lg:justify-self-end pl-1 lg:border-l-2 border-secondary"
+            className="hidden ml-2 lg:block text-base text-primary lg:text-2xl material-icons self-center justify-self-center lg:justify-self-end pl-1 lg:border-l-2 border-secondary"
           >
             add
           </button>

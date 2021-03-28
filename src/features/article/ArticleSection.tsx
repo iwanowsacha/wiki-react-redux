@@ -32,11 +32,11 @@ export default function ArticleSection(props: ArticleSectionProps) {
   let textClass = 'text-xl';
   const level = parent.split('---').length;
 
-  if (level >= 4) {
+  if (level >= 3) {
     textClass = 'text-sm';
-  } else if (level === 3) {
+  } else if (level === 2) {
     textClass = 'text-base';
-  } else if (level === 2 || parent) {
+  } else if (level === 1 || parent) {
     textClass = 'text-lg';
   }
 
@@ -97,8 +97,8 @@ export default function ArticleSection(props: ArticleSectionProps) {
   return (
     <section className="my-4 pb-2" id={id}>
       <div
-        className={`pb-2 flex border-primary font-bold ${
-          !parent ? 'border-b-2 ' : 'subsection-border'
+        className={`pb-2 flex border-primary ${
+          !parent ? 'border-b-2 font-bold' : 'subsection-border'
         }`}
       >
         {isBeingEdited ? (
@@ -110,7 +110,7 @@ export default function ArticleSection(props: ArticleSectionProps) {
           />
         ) : (
           <>
-            <h2 className={`text-primary font-bold ${textClass}`}>
+            <h2 className={`text-primary ${!parent ? 'font-bold' : ''} ${textClass}`}>
               {titleText}
             </h2>
             {isArticleEditing && (
@@ -162,7 +162,7 @@ export default function ArticleSection(props: ArticleSectionProps) {
             parent={id}
           />
         ))}
-      {!sections.find((s) => s.title === '') && title && isArticleEditing && (
+      {!sections.find((s) => s.title === '') && title && isArticleEditing && level < 3 && (
         <aside className="ml-4 pb-2 mb-2">
           <button
             className="bg-primary text-primary py-2 px-3"

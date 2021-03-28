@@ -38,13 +38,11 @@ export const slice = createSlice({
       state.selectedTags.splice(state.selectedTags.indexOf(tag), 1);
       if (state.filterType === 'custom') {
         let index = state.customHas.indexOf(tag);
-        console.log(index);
         if (index > -1) {
           state.customHas.splice(index, 1);
           return;
         }
         index = state.customNot.indexOf(tag);
-        console.log(index);
         if (index > -1) state.customNot.splice(index, 1);
       }
     },
@@ -74,9 +72,7 @@ export const slice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(loadList.fulfilled, (state) => {
-        state = initialState;
-      })
+      .addCase(loadList.fulfilled, (state) => { resetTags(state); state.filterType = 'any'})
       .addCase(setFormVisiblity, resetTags)
       .addCase(loadArticle.fulfilled, (state) => { resetTags(state); state.filterType = 'any'})
       .addCase(setDocumentTypeIndex, (state) => { resetTags(state); state.filterType = 'any'});

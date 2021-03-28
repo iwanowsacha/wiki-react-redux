@@ -8,6 +8,7 @@ import { loadArticle, loadList } from '../../../utils/loaders';
 import { List, ListItem, ListItemImageChanges } from '../../../types';
 import { setFormVisiblity } from '../listSlice';
 import { setDocumentTypeIndex } from '../../general/generalSlice';
+import arrayMove from 'array-move';
 
 let originalIdsOrder: Array<EntityId> = [];
 
@@ -100,7 +101,6 @@ export const slice = createSlice({
       }>
     ) => {
       const { id, changes } = action.payload;
-      console.log(changes);
       const unused = removeUnusedTags(state, id).filter(
         (t: string) => !changes.tags.includes(t)
       );
@@ -114,6 +114,7 @@ export const slice = createSlice({
     removeItem: (state, action: PayloadAction<string>) => {
       removeUnusedTags(state, action.payload);
       originalIdsOrder = originalIdsOrder.filter((id) => id !== action.payload);
+      state.imagesChanges.delete.push(`${action.payload}.jpg`);
       itemsAdapter.removeOne(state, action.payload);
     },
     searchItem: (state, action: PayloadAction<string>) => {
@@ -128,6 +129,12 @@ export const slice = createSlice({
     orderItemsRevert: (state) => {
       state.ids = Array.from(originalIdsOrder);
     },
+    sortItems: (state, action: PayloadAction<Array<string>>) => {
+      const oldIndex = state.ids.indexOf(action.payload[0]);
+      const newIndex = state.ids.indexOf(action.payload[1]);
+      if (oldIndex < 0 || newIndex < 0 ) return;
+      arrayMove.mutate(state.ids, oldIndex, newIndex);
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -158,6 +165,7 @@ export const {
   orderItemsAsc,
   orderItemsDesc,
   orderItemsRevert,
+  sortItems
 } = slice.actions;
 
 export default slice.reducer;

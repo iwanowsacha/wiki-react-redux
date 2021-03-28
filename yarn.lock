@@ -1113,6 +1113,38 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.2.tgz#8f03a22a04de437254e8ce8cc84ba39689288752"
   integrity sha512-HyYEUDeIj5rRQU2Hk5HTB2uHsbRQpF70nvMhVzi+VJR0X+xNEhjPui4/kBf3VeH/wqD28PT4sVOm8qqLjBrSZg==
 
+"@dnd-kit/accessibility@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/accessibility/-/accessibility-1.0.2.tgz#845f52387e07bef4f39c193c23079fb0feab79aa"
+  integrity sha512-aQq+B4But+369cYYtmXPUhqf26Fy9b/nR+uAP4cbhf3TXMlCqorT7bO7dT7cNe+me2DOf61GVr0mkrWtfsvR3A==
+  dependencies:
+    tslib "^2.0.0"
+
+"@dnd-kit/core@^2.0.0":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/core/-/core-2.0.2.tgz#56491b136c8ecd2f3b449ef1b88b258ff1d5022d"
+  integrity sha512-7yB7z5Cpz+b4R90lw7jGfVosoC+cz9fyw+VRDRsUsG8XvRkKO97LH8S2fCzEHaTFmABt0pZkNxYiN3FDAeEmqQ==
+  dependencies:
+    "@dnd-kit/accessibility" "^1.0.2"
+    "@dnd-kit/utilities" "^1.0.2"
+    tslib "^2.0.0"
+
+"@dnd-kit/sortable@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/sortable/-/sortable-2.0.0.tgz#a59a5df966ddb39b4a23b021add8e09d8c7d8fa2"
+  integrity sha512-0kUqKxZuBHnnY0yxz2imEEGxYPCp+QBL8wPqYSzc0x4LhCDIADIza6yT89SiCxMma2IjpkRIUrC6s1x0kssjRg==
+  dependencies:
+    "@dnd-kit/core" "^2.0.0"
+    "@dnd-kit/utilities" "^1.0.2"
+    tslib "^2.0.0"
+
+"@dnd-kit/utilities@^1.0.2":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@dnd-kit/utilities/-/utilities-1.0.3.tgz#9742d229a095bfd08d120b28657c936fb911237f"
+  integrity sha512-TlbsZ3pSiJ6jTDVuGDLY7yoHAjaiFyBWctxDslxAocUeCQVDlcpkGXcPtUKYyGczruUoYapsKlZS5rhLDR+RUg==
+  dependencies:
+    tslib "^2.0.0"
+
 "@electron/get@^1.0.1":
   version "1.12.4"
   resolved "https://registry.yarnpkg.com/@electron/get/-/get-1.12.4.tgz#a5971113fc1bf8fa12a8789dc20152a7359f06ab"
@@ -2431,6 +2463,11 @@ array-includes@^3.1.1, array-includes@^3.1.2:
     es-abstract "^1.18.0-next.2"
     get-intrinsic "^1.1.1"
     is-string "^1.0.5"
+
+array-move@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/array-move/-/array-move-3.0.1.tgz#179645cc0987b65953a4fc06b6df9045e4ba9618"
+  integrity sha512-H3Of6NIn2nNU1gsVDqDnYKY/LCdWvCMMOWifNGhKcVQgiZ6nOek39aESOvro6zmueP07exSl93YLvkN4fZOkSg==
 
 array-union@^1.0.1:
   version "1.0.2"
@@ -8056,6 +8093,11 @@ matcher@^3.0.0:
   dependencies:
     escape-string-regexp "^4.0.0"
 
+material-icons@^0.5.4:
+  version "0.5.4"
+  resolved "https://registry.yarnpkg.com/material-icons/-/material-icons-0.5.4.tgz#c9e8e89d93b1172ecb68090e368ee7b7bffecc9c"
+  integrity sha512-5ycazkNmIOtV78Ff3WgvxQESoJuujdRm0cNbf18fmyJN20jHyqp9rpwi4EfQyGimag0ZLElxtVg3H9enIKdOOw==
+
 md5.js@^1.3.4:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/md5.js/-/md5.js-1.3.5.tgz#b5d07b8e3216e3e27cd728d72f70d1e6a342005f"
@@ -11765,6 +11807,11 @@ tslib@^1.8.1, tslib@^1.9.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
+
+tslib@^2.0.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.1.0.tgz#da60860f1c2ecaa5703ab7d39bc05b6bf988b97a"
+  integrity sha512-hcVC3wYEziELGGmEEXue7D75zbwIIVUMWAVbHItGPx0ziyXxrOMQx4rQEVEV45Ut/1IotuEvwqPopzIOkDMf0A==
 
 tsutils@^3.17.1:
   version "3.21.0"

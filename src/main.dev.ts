@@ -15,7 +15,6 @@ import {
   app,
   BrowserWindow,
   dialog,
-  globalShortcut,
   ipcMain,
   Menu,
   MenuItem,
@@ -156,47 +155,77 @@ const createWindow = async () => {
 
   menu?.append(
     new MenuItem({
-      click: () => {
-        mainWindow?.webContents.send('open-index', '');
-      },
-      label: 'Home',
-      accelerator: 'CommandOrControl+H'
+      role: 'fileMenu',
+      submenu: [
+        {
+          click: () => {
+            mainWindow?.webContents.send('open-index', '');
+          },
+          label: 'Home',
+          accelerator: 'CommandOrControl+H'
+        },
+        {
+          click: () => {
+            mainWindow?.webContents.send('open-list', '');
+          },
+          label: 'New List',
+          accelerator: 'CommandOrControl+L'
+        },
+        {
+          click: () => {
+            mainWindow?.webContents.send('open-article', '');
+          },
+          label: 'New Article',
+          accelerator: 'CommandOrControl+N'
+        },
+        { type: 'separator' },
+        { role: 'quit'}
+      ]
     })
-  );
+  )
 
   menu?.append(
     new MenuItem({
-      click: () => {
-        mainWindow?.webContents.send('open-list', '');
-      },
-      label: 'New List',
-      accelerator: 'CommandOrControl+L'
-    })
-  );
-
-  menu?.append(
-    new MenuItem({
-      click: () => {
-        mainWindow?.webContents.send('open-article', '');
-      },
-      label: 'New Article',
-      accelerator: 'CommandOrControl+N'
+      label: 'Help',
+      type: 'submenu',
+      submenu: [
+        {
+          label: 'Documentation',
+          click: () => {
+            if (!mainWindow) return;
+            const docWindow = new BrowserWindow({parent: mainWindow, modal: true, show: false, maximizable: true});
+            docWindow.setMenuBarVisibility(false);
+            docWindow.loadFile('./documentation.html');
+            docWindow.once('ready-to-show', () => {
+              docWindow.show();
+            });
+          }
+        },
+        { type: 'separator'},
+        {
+          label: 'About...',
+          click: () => {
+            showMessageDialog(false, {
+              title: 'My Wiki',
+              type: 'info',
+              detail: `Version: ${app.getVersion()}\nRepository: github.com/iwanowsacha/wiki-react-redux`,
+              message: 'My Wiki'
+            });
+          }
+        }
+      ]
     })
   );
 
   Menu.setApplicationMenu(menu);
 
-  // Open urls in the user's browser
-  // @TODO: look into open local urls in a different window
   mainWindow.webContents.on('new-window', (event, url) => {
     event.preventDefault();
-    console.log(url);
     if (!url.startsWith('locala://') && !url.startsWith('locall://') && !url.endsWith('/src/index.html')) {
       shell.openExternal(url);
     } else if (url.startsWith('local')) {
       const isArticle = url.startsWith('locala://') ? true : false;
       const document = isArticle ? url.replace('locala://', '') : url.replace('locall://', '');
-      console.log(document);
       if ((isArticle && documents.articles.includes(document)) || (!isArticle && documents.lists.includes(document))) {
         mainWindow?.webContents.send(isArticle ? 'open-article' : 'open-list', document);
       }

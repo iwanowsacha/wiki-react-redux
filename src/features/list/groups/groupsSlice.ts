@@ -29,6 +29,8 @@ export const slice = createSlice({
         (state, action: PayloadAction<List | null>) => {
           if (action.payload?.hasOwnProperty('tagGroups')) {
             groupAdapter.setAll(state, action.payload.tagGroups);
+          } else {
+            groupAdapter.removeAll(state);
           }
         }
       )

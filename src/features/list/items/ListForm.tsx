@@ -26,14 +26,28 @@ export default function ListForm(props: ListFormProps) {
   const [editorContent, setEditorContent] = useState(item?.body || '');
   const [newTags, setNewTags] = useState('');
   const [isUpdatingItem, setIsUpdatingItem] = useState(!!item);
-  const [linkType, setLinkType] = useState(
-    !item?.link?.startsWith('locala://') || !item?.link?.startsWith('locall://') ? 'external' : 'local'
-  );
+
+  const linkPathInitialValue = () => {
+    if (item?.link.startsWith('locala://') && documents.articles.includes(item?.link.replace('locala://', ''))) {
+      return item.link.replace('locala://', 'A');
+    } else if (item?.link.startsWith('locall://') && documents.lists.includes(item?.link.replace('locall://', ''))) {
+      return item.link.replace('locall://', 'L');
+    }
+    return '';
+  }
+
   const [linkPath, setLinkPath] = useState(
-    item?.link?.startsWith('locala://') || item?.link?.startsWith('locall://')
-      ? item?.link.replace('locala://', '').replace('locall://', '')
+    item?.link.startsWith('local')
+      ? linkPathInitialValue()
       : item?.link || ''
   );
+
+  console.log(linkPath);
+
+  const [linkType, setLinkType] = useState(
+    !item?.link?.startsWith('local') && linkPath ? 'external' : 'local'
+  );
+
 
   const handleEditorContentChange = (content: string) => {
     setEditorContent(content);
@@ -56,18 +70,18 @@ export default function ListForm(props: ListFormProps) {
     if (
       value === 'local' &&
       isUpdatingItem &&
-      item?.link?.startsWith('local://')
+      item?.link.startsWith('local')
     ) {
-      setLinkPath(item?.link.replace('local://', ''));
+      setLinkPath(linkPathInitialValue());
     } else if (
       value === 'external' &&
       isUpdatingItem &&
-      !item?.link?.startsWith('local://')
+      !item?.link.startsWith('local')
     ) {
       setLinkPath(item?.link || '');
     } else {
       setLinkPath('');
-    }
+    } 
   };
 
   const handleNewTagsChange = (value: string) => {
@@ -210,14 +224,6 @@ export default function ListForm(props: ListFormProps) {
                     })
                   }
                 </optgroup>
-               {/* {[...documents.articles, ...documents.lists].map((art) => {
-                  if (art === listTitle) return '';
-                  return (
-                    <option key={art} value={art}>
-                      {art}
-                    </option>
-                  );
-                })} */}
               </select>
             )}
           </div>
@@ -225,16 +231,16 @@ export default function ListForm(props: ListFormProps) {
             <RadioButton
               onChange={handleRadioChange}
               group="link"
-              title="External link"
-              value="external"
-              checked={linkType === 'external'}
+              title="Article link"
+              value="local"
+              checked={linkType === 'local'}
             />
             <RadioButton
               onChange={handleRadioChange}
               group="link"
-              title="Article link"
-              value="local"
-              checked={linkType === 'local'}
+              title="External link"
+              value="external"
+              checked={linkType === 'external'}
             />
           </div>
         </div>

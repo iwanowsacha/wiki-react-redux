@@ -8,8 +8,7 @@ import {
 } from '../../directories';
 import { List, ListItemImageChanges } from '../../types';
 import { sanitizeFilename } from '../filenameSanitizer';
-import {ffmpegPath, ffprobePath} from 'ffmpeg-ffprobe-static';
-import ffmpeg from 'fluent-ffmpeg';
+import convertToJPG from '../ffmpeg';
 
 export const deleteList = async (title: string) => {
   await fs.remove(path.join(DIRECTORIES.lists, title));
@@ -25,6 +24,8 @@ export const saveList = async (
   if (newTitle && list.title !== newTitle) {
     list.title = newTitle;
   }
+
+  console.log(listImages);
 
   const sanitizedTitle = sanitizeFilename(list.title);
 
@@ -51,8 +52,6 @@ const manageListItemImages = async (
   images: ListItemImageChanges,
   list: List
 ) => {
-  ffmpeg.setFfmpegPath(ffmpegPath?.replace('app.asar', 'app.asar.unpacked') as string);
-  ffmpeg.setFfprobePath(ffprobePath?.replace('app.asar', 'app.asar.unpacked') as string);
   const unlink = listImagesDelete(images.delete, sanitizeFilename(list.title));
   const rename = listImagesRename(images.rename, list);
   const copy = listImagesCopy(images.new, list);
@@ -97,17 +96,11 @@ const listImagesCopy = (images: { [key: string]: string }, list: List) => {
   const sanitizedTitle = sanitizeFilename(list.title);
   const create = Object.entries(images).map(([key, value]) => {
     const newName = `${sanitizeFilename(key)}.jpg`;
-    convertToJPG(decodeURI(pathStartsWithFile(value)), path.join(DIRECTORIES.lists, sanitizedTitle, 'images', newName));
     list.items[list.items.findIndex((it) => it.title === key)].image = newName;
+    convertToJPG(decodeURI(pathStartsWithFile(value)), path.join(DIRECTORIES.lists, sanitizedTitle, 'images', newName));
   });
   return create;
 };
-
-const convertToJPG = (imagePath: string, newPath: string) => {
-  /* Because .jpg images don't have transparency, the alpha channel is set to white instead of the default black */
-  ffmpeg(imagePath).outputOptions(`-vf format=yuva444p,geq='if(lte(alpha(X,Y),16),255,p(X,Y))':'if(lte(alpha(X,Y),16),128,p(X,Y))':'if(lte(alpha(X,Y),16),128,p(X,Y))'`)
-  .output(newPath).run();
-}
 
 const pathStartsWithFile = (filePath: string) =>
   filePath.startsWith('file://') ? filePath.slice(7) : filePath;
