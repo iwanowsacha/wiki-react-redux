@@ -74,12 +74,14 @@ interface ItemsState {
   allTags: Array<string>;
   searchText: string;
   imagesChanges: ListItemImageChanges;
+  itemCount: number;
 }
 
 const initialState: ItemsState = {
   allTags: [],
   searchText: '',
   imagesChanges: { new: {}, rename: {}, delete: [] },
+  itemCount: 0
 };
 
 export const slice = createSlice({
@@ -101,6 +103,7 @@ export const slice = createSlice({
       }>
     ) => {
       const { id, changes } = action.payload;
+      console.log(changes);
       const unused = removeUnusedTags(state, id).filter(
         (t: string) => !changes.tags.includes(t)
       );
@@ -134,6 +137,9 @@ export const slice = createSlice({
       const newIndex = state.ids.indexOf(action.payload[1]);
       if (oldIndex < 0 || newIndex < 0 ) return;
       arrayMove.mutate(state.ids, oldIndex, newIndex);
+    },
+    setItemCount: (state, action: PayloadAction<number>) => {
+      state.itemCount = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -165,7 +171,8 @@ export const {
   orderItemsAsc,
   orderItemsDesc,
   orderItemsRevert,
-  sortItems
+  sortItems,
+  setItemCount
 } = slice.actions;
 
 export default slice.reducer;
@@ -179,3 +186,4 @@ export const {
 export const getAllTags = (state) => state.list.items.allTags;
 export const getImagesChanges = (state) => state.list.items.imagesChanges;
 export const getSearchText = (state) => state.list.items.searchText;
+export const getItemCount = (state) => state.list.items.itemCount;

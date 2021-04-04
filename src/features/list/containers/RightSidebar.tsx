@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import FilePickerButton from '../../../components/FilePickerButton';
 import SidePanel from '../../../components/SidePanel';
@@ -6,6 +6,7 @@ import SidePanelButton from '../../../components/SidePanelButton';
 import TextInput from '../../../components/UncontrolledTextInput';
 import delay from '../../../utils/inputDelay';
 import {
+  getItemCount,
   getSearchText,
   orderItemsAsc,
   orderItemsDesc,
@@ -28,6 +29,8 @@ export default function RightSidebar(props: RightSidebarProps) {
   const selectedImage = useSelector(getBrowseImage);
   const selectedTags = useSelector(getSelectedTags);
   const searchText = useSelector(getSearchText);
+  const itemCount = useSelector(getItemCount);
+  const [showOrderButtons, setShowOrderButtons] = useState(false);
 
   const handleImageFilePicked = (path: string) => {
     dispatch(setBrowseImage(path));
@@ -49,6 +52,10 @@ export default function RightSidebar(props: RightSidebarProps) {
     dispatch(orderItemsRevert());
   };
 
+  const handleOrderClick = () => {
+    setShowOrderButtons(!showOrderButtons);
+  }
+
   return (
     <SidePanel>
       {!isShowingForm ? (
@@ -63,15 +70,22 @@ export default function RightSidebar(props: RightSidebarProps) {
               />
             </div>
           </div>
-          <SidePanelButton id="orderAsc" onClick={handleOrderAsc}>
-            Order Asc (A-Z)
+          <SidePanelButton id="order" onClick={handleOrderClick}>
+            Order List
           </SidePanelButton>
-          <SidePanelButton id="orderDesc" onClick={handleOrderDesc}>
-            Order Desc (Z-A)
-          </SidePanelButton>
-          <SidePanelButton id="orderOriginal" onClick={handleOriginalOrder}>
-            Original Order
-          </SidePanelButton>
+          {showOrderButtons &&    
+            <div className="mx-3">
+              <SidePanelButton id="orderAsc" onClick={handleOrderAsc}>
+                Order Asc (A-Z)
+              </SidePanelButton>
+              <SidePanelButton id="orderDesc" onClick={handleOrderDesc}>
+                Order Desc (Z-A)
+              </SidePanelButton>
+              <SidePanelButton id="orderOriginal" onClick={handleOriginalOrder}>
+                Original Order
+              </SidePanelButton>
+            </div>
+          }
         </>
       ) : (
         <FilePickerButton
@@ -96,6 +110,9 @@ export default function RightSidebar(props: RightSidebarProps) {
       >
         {isShowingForm ? 'Tags' : 'Filter'}
       </SidePanelButton>
+      {!isShowingForm &&
+        <h2 className="mt-4 mx-3 text-primary text-center">{itemCount} item(s)</h2>
+      }
       <div className="hidden md:flex px-4 pb-4 flex-wrap flex-row mt-4">
         {selectedTags.length > 0 &&
           selectedTags.map((t: string) => (

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import tinymce from 'tinymce';
+import ScrollTop from '../../components/ScrollTop';
 import Snackbar from '../../components/Snackbar';
 import { ArticleQuickFact, ArticleSection as ArticleSectionT } from '../../types';
 import useMounted from '../../utils/hooks/useMounted';
@@ -134,6 +135,7 @@ export default function PageArticle() {
             className={snackbarMessage[1]}
           />
         </div>
+        <ScrollTop className="bg-primary text-primary"/>
       </main>
   );
 }

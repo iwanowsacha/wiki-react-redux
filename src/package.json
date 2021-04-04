@@ -1,7 +1,7 @@
 {
   "name": "my-wiki",
   "productName": "My Wiki",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Desktop application to write personal wiki-like articles",
   "main": "./main.prod.js",
   "author": {

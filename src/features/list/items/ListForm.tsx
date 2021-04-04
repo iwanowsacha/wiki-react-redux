@@ -42,8 +42,6 @@ export default function ListForm(props: ListFormProps) {
       : item?.link || ''
   );
 
-  console.log(linkPath);
-
   const [linkType, setLinkType] = useState(
     !item?.link?.startsWith('local') && linkPath ? 'external' : 'local'
   );
@@ -103,11 +101,13 @@ export default function ListForm(props: ListFormProps) {
     const separateNewTags = newTags
       ? newTags.split(',').map((t: string) => t.trim().toLowerCase())
       : [];
-    const tags = new Set([...separateNewTags, ...selectedTags]); // Avoid repeats
+    const tags = new Set([...selectedTags, ...separateNewTags]); // Avoid repeats
     return Array.from(tags);
   };
 
   const updateCurrentItem = (updatedItem: any) => {
+    console.log(updatedItem);
+    console.log(item);
     if (!item) return;
     if (item.image === basename(updatedItem.image))
       updatedItem.image = item.image;

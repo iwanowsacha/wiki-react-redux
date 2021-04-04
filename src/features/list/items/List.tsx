@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { getSearchText, selectAllItems, sortItems } from './itemsSlice';
+import { getSearchText, selectAllItems, setItemCount, sortItems } from './itemsSlice';
 import { getListTitle } from '../listSlice';
 import { getCustomTags, getFilterType, getSelectedTags } from '../tags/tagsSlice';
 import { ListItem as ListItemT } from '../../../types';
@@ -52,6 +52,10 @@ const List = React.memo(function List(props: ListProps) {
   const sensors = useSensors(
     useSensor(PointerSensor, {activationConstraint: {delay:100, tolerance: 3}})
   );
+
+  useEffect(() => {
+    dispatch(setItemCount(items.length));
+  }, [items.length]);
 
   useEffect(() => {
     setHasMore(true);

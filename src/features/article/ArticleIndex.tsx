@@ -18,7 +18,7 @@ export default function ArticleIndex(props: ArticleIndexProps) {
         <div className="text-center">
           <a href="#intro" className="text-xl text-primary">{articleTitle}</a>
         </div>
-        <ol className="mt-2">{children}</ol>
+        <ol className="mt-2 list-counter">{children}</ol>
       </span>
     </span>
   );

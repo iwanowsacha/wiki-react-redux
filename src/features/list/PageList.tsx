@@ -33,6 +33,7 @@ import { selectAllGroups } from './groups/groupsSlice';
 import useMounted from '../../utils/hooks/useMounted';
 import useModal from '../../utils/hooks/useModal';
 import useSnacbkbar from '../../utils/hooks/useSnackbar';
+import ScrollTop from '../../components/ScrollTop';
 
 const getList = createSelector(
   [getListTitle, selectAllItems, getAllTags, selectAllGroups],
@@ -61,6 +62,7 @@ export default function PageList() {
   const itemsImageChanges = useSelector(getImagesChanges);
   const isMenuOpen = useSelector(getIsMenuOpen);
   const [itemInDisplay, setItemInDisplay] = useState('');
+  const [itemToEdit, setItemToEdit] = useState('');
   const [isSnackbarOpen, openSnackbar] = useSnacbkbar(true);
   const [playFormAnimation, setPlayFormAnimation] = useState(false);
   const [listTitleText, setListTitleText] = useState('');
@@ -99,8 +101,9 @@ export default function PageList() {
   };
 
   const handleLeftSidebarButtonClick = (id: string) => {
-    if (isShowingForm && id !== 'items') return;
+    if ((isShowingForm && id !== 'items') || (!isShowingForm && id === 'items')) return;
     if (id === 'items') {
+      setItemToEdit('');
       setItemInDisplay('');
     }
     dispatch(setFormVisiblity(id !== 'items'));
@@ -117,11 +120,12 @@ export default function PageList() {
   const handleItemClick = (title: string) => {
     toggleModal();
     setItemInDisplay(title);
+    setItemToEdit(title);
   };
 
   const handleListTitleChange = (value: string) => setListTitleText(value);
 
-  const handleFormEmpty = () => setItemInDisplay('');
+  const handleFormEmpty = () => setItemToEdit('');
 
   return (
     <main className="flex relative flex-auto">
@@ -175,7 +179,7 @@ export default function PageList() {
                 <List onItemClick={handleItemClick} />
               </section>
             ) : (
-              <ListForm item={itemInDisplay} onFormEmptying={handleFormEmpty} />
+              <ListForm item={itemToEdit} onFormEmptying={handleFormEmpty} />
             )}
             <Snackbar
               isOpen={isSnackbarOpen}
@@ -192,6 +196,7 @@ export default function PageList() {
           )}
         </>
       )}
+      <ScrollTop className="bg-secondary text-primary"/>
     </main>
   );
 }
